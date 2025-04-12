@@ -24,3 +24,25 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/redirect-by-role', function () {
+    $user = auth()->user();
+
+    if ($user->role === 'admin') {
+        return redirect('/admin');
+    } else {
+        return redirect('/dashboard');
+    }
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin', function () {
+        return view('admin.dashboard');
+    });
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('user.dashboard');
+    })->name('dashboard');
+});
