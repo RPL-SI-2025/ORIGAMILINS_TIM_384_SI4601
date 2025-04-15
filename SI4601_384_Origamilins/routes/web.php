@@ -10,6 +10,10 @@ Route::get('/', function () {
 
 // testing aja
 Route::get('/produk', [Produk_Controller::class, 'index']);
+//route produk admin
+Route::get('/produk/tambah', [Produk_Controller::class, 'create'])->name('produk.tambah_produk');
+Route::post('/produk/store', [Produk_Controller::class, 'store'])->name('produk.store');
+Route::get('/produk', [Produk_Controller::class, 'index'])->name('produk.melihat_produk');
 
 // utama
 Route::middleware(['auth', 'admin'])->group(function () {
