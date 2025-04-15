@@ -7,12 +7,31 @@ use Illuminate\Http\Request;
 
 class Produk_Controller extends Controller
 {
-        public function index()
+    // Menampilkan semua produk
+    public function index()
     {
         $products = Produk::all();
+
+        // Jika admin, tampilkan view admin
+        if (request()->is('admin/*')) {
+            return view('admin.produk.index', compact('products'));
+        }
+
+        // Jika user biasa
         return view('produk.melihat_produk', compact('products'));
     }
 
+    // Menampilkan form tambah produk
+    public function create()
+    {
+        if (request()->is('admin/*')) {
+            return view('admin.produk.create');
+        }
+        return view('produk.tambah_produk');
+    }
+
+    // Menyimpan produk baru ke database
+    public function store(Request $request)
         public function create()
     {
         return view('produk.tambah_produk');
@@ -27,6 +46,15 @@ class Produk_Controller extends Controller
             'deskripsi' => 'required|string',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        Produk::create($produkData);
+
+        if (request()->is('admin/*')) {
+            return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil ditambahkan');
+        }
+
+        return redirect()->route('produk.melihat_produk')->with('success', 'Produk berhasil ditambahkan');
+    }
     
         Produk::create($produkData);
     

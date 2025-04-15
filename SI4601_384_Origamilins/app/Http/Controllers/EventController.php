@@ -50,6 +50,4 @@ class EventController extends Controller
         // Redirect ke halaman daftar event
         return redirect()->route('events.index')->with('success', 'Event berhasil ditambahkan!');
     }
-
-    // Method lain (edit, update, delete) bisa ditambahkan nanti sesuai kebutuhan
 }
