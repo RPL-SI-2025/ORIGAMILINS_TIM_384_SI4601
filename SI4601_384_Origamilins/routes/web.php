@@ -1,46 +1,33 @@
 <?php
 
 use App\Http\Controllers\Produk_Controller;
+use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\AdminMiddleware;
+use Illuminate\Support\Facades\Auth;
 
+// Halaman welcome
 Route::get('/', function () {
     return view('welcome');
 });
 
-// testing aja
-Route::get('/produk', [Produk_Controller::class, 'index']);
+// Authentication Routes
+Route::get('/logout', function() {
+    Auth::logout();
+    return redirect('/');
+})->name('logout');
 
-// utama
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/produk', [Produk_Controller::class, 'index'])->name('admin.produk.index');
-});
-
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
-
-Route::middleware(['auth:sanctum', 'verified'])->get('/redirect-by-role', function () {
-    $user = auth()->user();
-
-    if ($user->role === 'admin') {
-        return redirect('/admin');
-    } else {
-        return redirect('/dashboard');
+// Test route untuk admin middleware
+Route::get('/test-admin', function() {
+    if (!auth()->check()) {
+        return redirect()->route('login');
     }
-});
+    
+    $user = auth()->user();
+    return "Logged in as: {$user->name} (Role: {$user->role})";
+})->middleware('auth')->middleware(AdminMiddleware::class);
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin', function () {
-        return view('admin.dashboard');
-    });
-});
-
+// Route untuk user yang sudah login
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         return view('user.dashboard');
