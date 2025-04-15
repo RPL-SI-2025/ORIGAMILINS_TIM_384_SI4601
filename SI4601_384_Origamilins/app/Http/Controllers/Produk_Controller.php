@@ -11,6 +11,13 @@ class Produk_Controller extends Controller
     public function index()
     {
         $products = Produk::all();
+
+        // Jika admin, tampilkan view admin
+        if (request()->is('admin/*')) {
+            return view('admin.produk.index', compact('products'));
+        }
+
+        // Jika user biasa
         return view('produk.melihat_produk', compact('products'));
     }
 
