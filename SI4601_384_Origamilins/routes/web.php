@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Produk_Controller;
+use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -46,3 +47,6 @@ Route::middleware(['auth'])->group(function () {
         return view('user.dashboard');
     })->name('dashboard');
 });
+
+//event
+Route::resource('events', EventController::class);
