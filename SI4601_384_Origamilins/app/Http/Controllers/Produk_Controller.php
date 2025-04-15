@@ -32,12 +32,6 @@ class Produk_Controller extends Controller
 
     // Menyimpan produk baru ke database
     public function store(Request $request)
-        public function create()
-    {
-        return view('produk.tambah_produk');
-    } 
-
-        public function store(Request $request)
     {
         $produkData = $request->validate([
             'nama' => 'required|string|max:255',
@@ -55,9 +49,4 @@ class Produk_Controller extends Controller
 
         return redirect()->route('produk.melihat_produk')->with('success', 'Produk berhasil ditambahkan');
     }
-    
-        Produk::create($produkData);
-    
-        return redirect()->route('produk.melihat_produk')->with('success', 'Produk berhasil ditambahkan');
-    }    
 }
