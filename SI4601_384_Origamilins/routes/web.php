@@ -2,15 +2,19 @@
 
 use App\Http\Controllers\Produk_Controller;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserProfileController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// testing aja
 Route::get('/produk', [Produk_Controller::class, 'index']);
 
-// utama
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profilpengguna', [UserProfileController::class, 'create'])->name('profile.create');
+    Route::post('/profilpengguna', [UserProfileController::class, 'store'])->name('profile.store');
+});
+
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/produk', [Produk_Controller::class, 'index'])->name('admin.produk.index');
 });
@@ -46,3 +50,4 @@ Route::middleware(['auth'])->group(function () {
         return view('user.dashboard');
     })->name('dashboard');
 });
+
