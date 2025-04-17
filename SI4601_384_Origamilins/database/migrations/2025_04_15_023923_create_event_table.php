@@ -7,26 +7,26 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Jalankan migrasi untuk membuat tabel.
      */
     public function up(): void
     {
         Schema::create('event', function (Blueprint $table) {
-            $table->id();
+            $table->id(); 
             $table->string('nama_event');
-            $table->text('deskripsi')->nullable();
-            $table->date('tanggal_pelaksanaan');
-            $table->decimal('harga', 10, 2)->default(0);
-            $table->string('lokasi');
-            $table->timestamps(); // created_at & updated_at
+            $table->text('deskripsi')->nullable(); 
+            $table->date('tanggal_pelaksanaan'); 
+            $table->decimal('harga', 10, 2)->default(0); 
+            $table->string('lokasi'); 
+            $table->timestamps(); 
         });
     }
 
     /**
-     * Reverse the migrations.
+     * Mengembalikan perubahan saat rollback migrasi.
      */
     public function down(): void
     {
-        Schema::dropIfExists('event');
+        Schema::dropIfExists('event'); 
     }
 };
