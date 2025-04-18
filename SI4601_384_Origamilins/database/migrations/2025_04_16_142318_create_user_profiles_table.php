@@ -10,27 +10,18 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::table('user_profiles', function (Blueprint $table) {
-        if (!Schema::hasColumn('user_profiles', 'nama_lengkap')) {
+    {
+        Schema::create('user_profiles', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('nama_lengkap');
-        }
-        if (!Schema::hasColumn('user_profiles', 'nama_panggilan')) {
             $table->string('nama_panggilan');
-        }
-        if (!Schema::hasColumn('user_profiles', 'no_hp')) {
             $table->string('no_hp');
-        }
-        if (!Schema::hasColumn('user_profiles', 'email')) {
             $table->string('email');
-        }
-        if (!Schema::hasColumn('user_profiles', 'foto')) {
             $table->string('foto')->nullable();
-        }
-    });
-}
-
-
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.

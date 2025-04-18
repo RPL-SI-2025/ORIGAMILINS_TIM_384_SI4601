@@ -9,45 +9,51 @@ class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::all();
-
-        // Jika admin, tampilkan view admin
-        if (request()->is('admin/*')) {
-            return view('admin.event.index', compact('events'));
-        }
-
-        // Jika user biasa
-        return view('event.melihat_event', compact('events'));
+        $events = Event::latest()->get();
+        return view('admin.event.index', compact('events'));
     }
 
     public function create()
     {
-        // Jika admin, tampilkan view admin
-        if (request()->is('admin/*')) {
-            return view('admin.event.create');
-        }
-        return view('event.tambah_event');
+        return view('admin.event.create');
     }
 
     public function store(Request $request)
     {
-        // Validasi input
-        $eventData = $request->validate([
+        $request->validate([
             'nama_event' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'deskripsi' => 'required|string',
             'tanggal_pelaksanaan' => 'required|date',
             'harga' => 'required|numeric|min:0',
             'lokasi' => 'required|string|max:255',
+            'poster' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        // Simpan ke database
-        Event::create($eventData);
+        $data = $request->all();
 
-        // Redirect sesuai role
-        if (request()->is('admin/*')) {
-            return redirect()->route('admin.event.index')->with('success', 'Event berhasil ditambahkan!');
+        if ($request->hasFile('poster')) {
+            $file = $request->file('poster');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            
+            // Pastikan direktori ada
+            $path = public_path('images/events');
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+            
+            $file->move($path, $fileName);
+            $data['poster'] = 'images/events/' . $fileName;
         }
-        return redirect()->route('event.melihat_event')->with('success', 'Event berhasil ditambahkan!');
+
+        Event::create($data);
+
+        return redirect()->route('admin.event.index')
+            ->with('success', 'Event berhasil ditambahkan!');
+    }
+
+    public function show(Event $event)
+    {
+        return view('admin.event.show', compact('event'));
     }
 
     public function edit(Event $event)
@@ -57,24 +63,52 @@ class EventController extends Controller
 
     public function update(Request $request, Event $event)
     {
-        // Validasi input
-        $eventData = $request->validate([
+        $request->validate([
             'nama_event' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'deskripsi' => 'required|string',
             'tanggal_pelaksanaan' => 'required|date',
             'harga' => 'required|numeric|min:0',
             'lokasi' => 'required|string|max:255',
+            'poster' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        // Update data event
-        $event->update($eventData);
+        $data = $request->all();
 
-        return redirect()->route('admin.event.index')->with('success', 'Event berhasil diperbarui!');
+        if ($request->hasFile('poster')) {
+            // Hapus poster lama jika ada
+            if ($event->poster && file_exists(public_path($event->poster))) {
+                unlink(public_path($event->poster));
+            }
+
+            $file = $request->file('poster');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            
+            // Pastikan direktori ada
+            $path = public_path('images/events');
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+            
+            $file->move($path, $fileName);
+            $data['poster'] = 'images/events/' . $fileName;
+        }
+
+        $event->update($data);
+
+        return redirect()->route('admin.event.index')
+            ->with('success', 'Event berhasil diperbarui!');
     }
 
     public function destroy(Event $event)
     {
+        // Hapus poster jika ada
+        if ($event->poster && file_exists(public_path($event->poster))) {
+            unlink(public_path($event->poster));
+        }
+
         $event->delete();
-        return redirect()->route('admin.event.index')->with('success', 'Event berhasil dihapus!');
+
+        return redirect()->route('admin.event.index')
+            ->with('success', 'Event berhasil dihapus!');
     }
 }
