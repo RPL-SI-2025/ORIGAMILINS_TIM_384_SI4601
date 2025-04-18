@@ -10,6 +10,18 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
+    {
+        Schema::create('user_profiles', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('nama_lengkap');
+            $table->string('nama_panggilan');
+            $table->string('no_hp');
+            $table->string('email');
+            $table->string('foto')->nullable();
+            $table->timestamps();
+        });
+    }
 {
     Schema::table('user_profiles', function (Blueprint $table) {
         if (!Schema::hasColumn('user_profiles', 'nama_lengkap')) {
@@ -29,8 +41,6 @@ return new class extends Migration
         }
     });
 }
-
-
 
     /**
      * Reverse the migrations.

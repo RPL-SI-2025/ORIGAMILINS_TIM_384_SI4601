@@ -7,6 +7,30 @@ use Illuminate\Database\Eloquent\Model;
 
 class Produk extends Model
 {
+    protected $table = 'produk';
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'produk';
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'produk';
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'produk';
+
+    /**
+
     use HasFactory;
 
     /**
@@ -20,6 +44,9 @@ class Produk extends Model
         'harga',
         'stok',
         'kategori',
+        'deskripsi',
+        'gambar',
+        'gambar'
     ];
 
     /**
@@ -28,6 +55,7 @@ class Produk extends Model
      * @var array<string, string>
      */
     protected $casts = [
+        'harga' => 'decimal:2'
         'harga' => 'decimal:2',
         'stok' => 'integer',
     ];
