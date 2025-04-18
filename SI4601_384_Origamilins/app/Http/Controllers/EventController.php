@@ -7,22 +7,32 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-
     public function index()
     {
         $events = Event::all();
-        return view('event.index', compact('events'));
+
+        // Jika admin, tampilkan view admin
+        if (request()->is('admin/*')) {
+            return view('admin.event.index', compact('events'));
+        }
+
+        // Jika user biasa
+        return view('event.melihat_event', compact('events'));
     }
 
     public function create()
     {
-        return view('event.create');
+        // Jika admin, tampilkan view admin
+        if (request()->is('admin/*')) {
+            return view('admin.event.create');
+        }
+        return view('event.tambah_event');
     }
 
     public function store(Request $request)
     {
         // Validasi input
-        $request->validate([
+        $eventData = $request->validate([
             'nama_event' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'tanggal_pelaksanaan' => 'required|date',
@@ -31,17 +41,40 @@ class EventController extends Controller
         ]);
 
         // Simpan ke database
-        Event::create([
-            'nama_event' => $request->nama_event,
-            'deskripsi' => $request->deskripsi,
-            'tanggal_pelaksanaan' => $request->tanggal_pelaksanaan,
-            'harga' => $request->harga,
-            'lokasi' => $request->lokasi,
-        ]);
+        Event::create($eventData);
 
-        // Redirect ke halaman daftar event
-        return redirect()->route('events.index')->with('success', 'Event berhasil ditambahkan!');
+        // Redirect sesuai role
+        if (request()->is('admin/*')) {
+            return redirect()->route('admin.event.index')->with('success', 'Event berhasil ditambahkan!');
+        }
+        return redirect()->route('event.melihat_event')->with('success', 'Event berhasil ditambahkan!');
     }
 
-    // Method lain (edit, update, delete) bisa ditambahkan nanti sesuai kebutuhan
+    public function edit(Event $event)
+    {
+        return view('admin.event.edit', compact('event'));
+    }
+
+    public function update(Request $request, Event $event)
+    {
+        // Validasi input
+        $eventData = $request->validate([
+            'nama_event' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'tanggal_pelaksanaan' => 'required|date',
+            'harga' => 'required|numeric|min:0',
+            'lokasi' => 'required|string|max:255',
+        ]);
+
+        // Update data event
+        $event->update($eventData);
+
+        return redirect()->route('admin.event.index')->with('success', 'Event berhasil diperbarui!');
+    }
+
+    public function destroy(Event $event)
+    {
+        $event->delete();
+        return redirect()->route('admin.event.index')->with('success', 'Event berhasil dihapus!');
+    }
 }

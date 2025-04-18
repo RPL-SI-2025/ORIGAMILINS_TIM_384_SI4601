@@ -10,6 +10,13 @@ class Produk extends Model
     use HasFactory;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'produk';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<string>
@@ -20,6 +27,10 @@ class Produk extends Model
         'harga',
         'stok',
         'kategori',
+<<<<<<< Updated upstream
+=======
+        'gambar'
+>>>>>>> Stashed changes
     ];
 
     /**
