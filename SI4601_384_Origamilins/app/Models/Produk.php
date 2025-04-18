@@ -27,7 +27,7 @@ class Produk extends Model
         'kategori',
         'gambar',
         'deskripsi',
-        'gambar'
+        'gambar',
     ];
 
     /**

@@ -4,7 +4,7 @@
 <div class="container-fluid px-4 py-3">
     <h4 class="mb-4">Tambah Produk Baru</h4>
     
-    <form action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.produk.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         
         <div class="row mb-3">
@@ -68,7 +68,7 @@
         
         <div class="row mb-3">
             <div class="col-sm-10 offset-sm-2">
-                <a href="{{ route('produk.melihat_produk') }}" class="btn btn-light me-2">Batal</a>
+                <a href="{{ route('admin.produk.index') }}" class="btn btn-light me-2">Batal</a>
                 <button type="submit" class="btn btn-success">Simpan Produk</button>
             </div>
         </div>
