@@ -18,6 +18,13 @@ class Produk extends Model
     protected $table = 'produk';
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'produk';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<string>
@@ -29,8 +36,11 @@ class Produk extends Model
         'kategori',
         'deskripsi',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         'gambar',
 =======
+=======
+>>>>>>> Stashed changes
         'gambar'
     ];
 
@@ -41,6 +51,9 @@ class Produk extends Model
      */
     protected $casts = [
         'harga' => 'decimal:2'
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     ];
 }
