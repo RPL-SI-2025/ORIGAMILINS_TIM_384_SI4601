@@ -22,11 +22,13 @@ class Produk extends Model
      * @var array<string>
      */
     protected $fillable = [
-        'nama_produk',
-        'deskripsi',
+        'nama',
         'harga',
-        'stok',
         'kategori',
+<<<<<<< Updated upstream
+=======
+        'deskripsi',
+>>>>>>> Stashed changes
         'gambar'
     ];
 
@@ -36,7 +38,6 @@ class Produk extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'harga' => 'decimal:2',
-        'stok' => 'integer',
+        'harga' => 'decimal:2'
     ];
 }
