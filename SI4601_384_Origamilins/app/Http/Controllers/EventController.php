@@ -7,67 +7,41 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    // Menampilkan semua event
+
     public function index()
     {
         $events = Event::all();
-        return view('events.index', compact('events'));
+        return view('event.index', compact('events'));
     }
 
-    // Menampilkan form untuk membuat event baru
     public function create()
     {
-        return view('events.create');
+        return view('event.create');
     }
 
-    // Menyimpan event baru
     public function store(Request $request)
     {
+        // Validasi input
         $request->validate([
-            'nama_event' => 'required|string',
+            'nama_event' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'tanggal_pelaksanaan' => 'required|date',
-            'harga' => 'required|numeric',
-            'lokasi' => 'required|string',
+            'harga' => 'required|numeric|min:0',
+            'lokasi' => 'required|string|max:255',
         ]);
 
-        Event::create($request->all());
-
-        return redirect()->route('events.index');
-    }
-
-    // Menampilkan event tertentu
-    public function show(Event $event)
-    {
-        return view('events.show', compact('event'));
-    }
-
-    // Menampilkan form untuk mengedit event
-    public function edit(Event $event)
-    {
-        return view('events.edit', compact('event'));
-    }
-
-    // Memperbarui event
-    public function update(Request $request, Event $event)
-    {
-        $request->validate([
-            'nama_event' => 'required|string',
-            'deskripsi' => 'nullable|string',
-            'tanggal_pelaksanaan' => 'required|date',
-            'harga' => 'required|numeric',
-            'lokasi' => 'required|string',
+        // Simpan ke database
+        Event::create([
+            'nama_event' => $request->nama_event,
+            'deskripsi' => $request->deskripsi,
+            'tanggal_pelaksanaan' => $request->tanggal_pelaksanaan,
+            'harga' => $request->harga,
+            'lokasi' => $request->lokasi,
         ]);
 
-        $event->update($request->all());
-
-        return redirect()->route('events.index');
+        // Redirect ke halaman daftar event
+        return redirect()->route('events.index')->with('success', 'Event berhasil ditambahkan!');
     }
 
-    // Menghapus event
-    public function destroy(Event $event)
-    {
-        $event->delete();
-        return redirect()->route('events.index');
-    }
+    // Method lain (edit, update, delete) bisa ditambahkan nanti sesuai kebutuhan
 }
