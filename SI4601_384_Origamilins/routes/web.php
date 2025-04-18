@@ -73,6 +73,7 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
     Route::get('/produk/{product}/edit', [Produk_Controller::class, 'edit'])->name('admin.produk.edit');
     Route::put('/produk/{product}', [Produk_Controller::class, 'update'])->name('admin.produk.update');
     Route::delete('/produk/{product}', [Produk_Controller::class, 'destroy'])->name('admin.produk.destroy');
+    Route::get('/produk/{product}', [Produk_Controller::class, 'show'])->name('admin.produk.show');
 
     // Manajemen Event
     Route::get('/event', [EventController::class, 'index'])->name('admin.event.index');

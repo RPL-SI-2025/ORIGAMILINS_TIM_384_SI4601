@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class Produk_Controller extends Controller
 {
@@ -41,6 +42,17 @@ class Produk_Controller extends Controller
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            
+            // Upload gambar ke folder public/uploads/produk
+            $file->move(public_path('uploads/produk'), $filename);
+            
+            // Simpan path relatif ke database
+            $produkData['gambar'] = 'uploads/produk/' . $filename;
+        }
+
         Produk::create($produkData);
 
         if (request()->is('admin/*')) {
@@ -66,6 +78,22 @@ class Produk_Controller extends Controller
             'deskripsi' => 'required|string',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        if ($request->hasFile('gambar')) {
+            // Hapus gambar lama jika ada
+            if ($product->gambar && file_exists(public_path($product->gambar))) {
+                unlink(public_path($product->gambar));
+            }
+            
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            
+            // Upload gambar ke folder public/uploads/produk
+            $file->move(public_path('uploads/produk'), $filename);
+            
+            // Simpan path relatif ke database
+            $produkData['gambar'] = 'uploads/produk/' . $filename;
+        }
 
         $product->update($produkData);
 
