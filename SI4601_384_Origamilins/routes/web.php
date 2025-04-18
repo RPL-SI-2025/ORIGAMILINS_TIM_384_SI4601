@@ -70,6 +70,17 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
     Route::get('/produk', [Produk_Controller::class, 'index'])->name('admin.produk.index');
     Route::get('/produk/create', [Produk_Controller::class, 'create'])->name('admin.produk.create');
     Route::post('/produk', [Produk_Controller::class, 'store'])->name('admin.produk.store');
+    Route::get('/produk/{product}/edit', [Produk_Controller::class, 'edit'])->name('admin.produk.edit');
+    Route::put('/produk/{product}', [Produk_Controller::class, 'update'])->name('admin.produk.update');
+    Route::delete('/produk/{product}', [Produk_Controller::class, 'destroy'])->name('admin.produk.destroy');
+
+    // Manajemen Event
+    Route::get('/event', [EventController::class, 'index'])->name('admin.event.index');
+    Route::get('/event/create', [EventController::class, 'create'])->name('admin.event.create');
+    Route::post('/event', [EventController::class, 'store'])->name('admin.event.store');
+    Route::get('/event/{event}/edit', [EventController::class, 'edit'])->name('admin.event.edit');
+    Route::put('/event/{event}', [EventController::class, 'update'])->name('admin.event.update');
+    Route::delete('/event/{event}', [EventController::class, 'destroy'])->name('admin.event.destroy');
 });
 
 // Route untuk event

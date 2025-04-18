@@ -16,6 +16,66 @@
                 @if(session('success'))
                     <div class="alert alert-success">
                         {{ session('success') }}
+                <div class="card-body">
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Gambar</th>
+                                    <th>Nama Produk</th>
+                                    <th>Harga</th>
+                                    <th>Kategori</th>
+                                    <th>Deskripsi</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($products as $product)
+                                <tr>
+                                    <td>{{ $product->id }}</td>
+                                    <td>
+                                        @if($product->gambar)
+                                            @if(filter_var($product->gambar, FILTER_VALIDATE_URL))
+                                                <img src="{{ $product->gambar }}" alt="{{ $product->nama }}" class="img-thumbnail" style="max-width: 100px;">
+                                            @else
+                                                <img src="{{ asset('storage/' . $product->gambar) }}" alt="{{ $product->nama }}" class="img-thumbnail" style="max-width: 100px;">
+                                            @endif
+                                        @else
+                                            <span class="text-muted">No Image</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $product->nama }}</td>
+                                    <td>Rp {{ number_format($product->harga, 0, ',', '.') }}</td>
+                                    <td>{{ $product->kategori }}</td>
+                                    <td>{{ $product->deskripsi }}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="#" class="btn btn-info btn-sm me-2">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                            <a href="{{ route('admin.produk.edit', $product->id) }}" class="btn btn-warning btn-sm me-2">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                            <form action="{{ route('admin.produk.destroy', $product->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 @endif
 
