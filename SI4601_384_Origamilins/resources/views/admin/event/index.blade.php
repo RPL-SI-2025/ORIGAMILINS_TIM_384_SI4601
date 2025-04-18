@@ -35,7 +35,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>
                             @if($event->poster)
-                            <img src="{{ asset($event->poster) }}" alt="Poster {{ $event->nama_event }}" 
+                            <img src="{{ url($event->poster) }}" alt="Poster {{ $event->nama_event }}" 
                                  class="img-thumbnail" style="max-width: 100px;">
                             @else
                             <span class="text-muted">Tidak ada poster</span>
