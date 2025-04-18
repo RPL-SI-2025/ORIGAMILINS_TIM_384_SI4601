@@ -72,10 +72,11 @@
                                 @forelse(\App\Models\Produk::latest()->take(5)->get() as $produk)
                                     <div class="list-group-item">
                                         <div class="d-flex w-100 justify-content-between">
-                                            <h6 class="mb-1">{{ $produk->nama }}</h6>
+                                            <h6 class="mb-1">{{ $produk->nama_produk }}</h6>
                                             <small class="text-muted">Rp {{ number_format($produk->harga, 0, ',', '.') }}</small>
                                         </div>
                                         <p class="mb-1 text-muted small">{{ Str::limit($produk->deskripsi, 50) }}</p>
+                                        <small class="text-muted">Stok: {{ $produk->stok }}</small>
                                     </div>
                                 @empty
                                     <div class="list-group-item">Tidak ada produk</div>

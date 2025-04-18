@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('tanggal_pelaksanaan'); 
             $table->decimal('harga', 10, 2)->default(0); 
             $table->string('lokasi'); 
+            $table->string('poster')->nullable();
             $table->timestamps(); 
         });
     }
