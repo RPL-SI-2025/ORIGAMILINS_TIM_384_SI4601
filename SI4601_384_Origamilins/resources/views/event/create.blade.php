@@ -10,7 +10,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="{{ routxe('events.store') }}" method="POST">
+                    <form action="{{ route('events.store') }}" method="POST">
                         @csrf
 
                         <div class="mb-3">
