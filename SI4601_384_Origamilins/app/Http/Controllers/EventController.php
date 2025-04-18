@@ -7,26 +7,18 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    /**
-     * Tampilkan daftar semua event
-     */
+
     public function index()
     {
         $events = Event::all();
         return view('event.index', compact('events'));
     }
 
-    /**
-     * Tampilkan form tambah event
-     */
     public function create()
     {
         return view('event.create');
     }
 
-    /**
-     * Simpan data event baru
-     */
     public function store(Request $request)
     {
         // Validasi input
