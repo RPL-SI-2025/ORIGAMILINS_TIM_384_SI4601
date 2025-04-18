@@ -10,7 +10,11 @@
                 </div>
 
                 <div class="card-body">
+<<<<<<< HEAD:SI4601_384_Origamilins/resources/views/event/create.blade.php
+                    <form action="{{ route('events.store') }}" method="POST">
+=======
                     <form action="{{ route('admin.event.update', $event->id) }}" method="POST">
+>>>>>>> c8cf72f0e2a873da259f8fec69e694eaedb5bca7:SI4601_384_Origamilins/resources/views/admin/event/edit.blade.php
                         @csrf
                         @method('PUT')
 
