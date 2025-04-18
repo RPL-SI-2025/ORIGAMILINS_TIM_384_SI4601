@@ -7,9 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Produk extends Model
 {
     protected $table = 'produk';
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'produk';
 
-<<<<<<< Updated upstream
-=======
     /**
      * The table associated with the model.
      *
@@ -29,18 +33,12 @@ class Produk extends Model
      *
      * @var array<string>
      */
->>>>>>> Stashed changes
     protected $fillable = [
         'nama',
         'harga',
         'kategori',
         'deskripsi',
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         'gambar',
-=======
-=======
->>>>>>> Stashed changes
         'gambar'
     ];
 
@@ -51,9 +49,5 @@ class Produk extends Model
      */
     protected $casts = [
         'harga' => 'decimal:2'
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     ];
 }
