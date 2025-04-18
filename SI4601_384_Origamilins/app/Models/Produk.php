@@ -7,36 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Produk extends Model
 {
-    protected $table = 'produk';
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'produk';
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'produk';
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'produk';
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'produk';
-
     use HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'produk';
 
     /**
      * The attributes that are mass assignable.
@@ -49,8 +27,6 @@ class Produk extends Model
         'harga',
         'stok',
         'kategori',
-        'deskripsi',
-        'gambar',
         'gambar'
     ];
 
