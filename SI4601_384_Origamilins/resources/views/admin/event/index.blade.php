@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
 <div class="container">
@@ -6,8 +6,10 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Daftar Event</h5>
-                    <a href="{{ route('events.create') }}" class="btn btn-primary">Tambah Event</a>
+                    <h5 class="mb-0">Manajemen Event</h5>
+                    <a href="{{ route('admin.event.create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Tambah Event
+                    </a>
                 </div>
 
                 <div class="card-body">
@@ -18,7 +20,7 @@
                     @endif
 
                     <div class="table-responsive">
-                        <table class="table table-striped">
+                        <table class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -38,20 +40,21 @@
                                         <td>{{ $event->lokasi }}</td>
                                         <td>Rp {{ number_format($event->harga, 0, ',', '.') }}</td>
                                         <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ route('events.show', $event) }}" class="btn btn-info btn-sm">Detail</a>
-                                                <a href="{{ route('events.edit', $event) }}" class="btn btn-warning btn-sm">Edit</a>
-                                                <form action="{{ route('events.destroy', $event) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus event ini?')">Hapus</button>
-                                                </form>
-                                            </div>
+                                            <a href="{{ route('admin.event.edit', $event->id) }}" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                            <form action="{{ route('admin.event.destroy', $event->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus event ini?')">
+                                                    <i class="fas fa-trash"></i> Hapus
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center">Tidak ada event yang tersedia.</td>
+                                        <td colspan="6" class="text-center">Tidak ada event</td>
                                     </tr>
                                 @endforelse
                             </tbody>
