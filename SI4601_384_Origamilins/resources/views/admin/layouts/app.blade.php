@@ -104,6 +104,21 @@
             border-color: #0835d8;
             box-shadow: 0 0 0 0.2rem rgba(8, 53, 216, 0.25);
         }
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .brand-logo {
+            height: 35px;
+            width: auto;
+        }
+        .brand-text {
+            margin: 0;
+            color: #0835d8;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
     </style>
 
     @stack('styles')
@@ -113,7 +128,10 @@
         <nav class="admin-header">
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">Admin Dashboard</h4>
+                    <div class="brand-container">
+                        <img src="{{ asset('uploads/Logo Origamilins.png') }}" alt="Origamilins Logo" class="brand-logo">
+                        <h4 class="brand-text">Origamilins</h4>
+                    </div>
                     <div>
                         @auth
                             <span class="me-3 text-muted">{{ Auth::user()->name }}</span>
