@@ -27,10 +27,7 @@ class Produk extends Model
         'harga',
         'stok',
         'kategori',
-<<<<<<< Updated upstream
-=======
         'gambar'
->>>>>>> Stashed changes
     ];
 
     /**
