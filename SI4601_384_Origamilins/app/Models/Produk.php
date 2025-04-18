@@ -7,31 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Produk extends Model
 {
-    protected $table = 'produk';
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'produk';
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'produk';
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'produk';
-
-    /**
-
     use HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'produk';
 
     /**
      * The attributes that are mass assignable.
@@ -39,13 +22,10 @@ class Produk extends Model
      * @var array<string>
      */
     protected $fillable = [
-        'nama_produk',
-        'deskripsi',
+        'nama',
         'harga',
-        'stok',
         'kategori',
         'deskripsi',
-        'gambar',
         'gambar'
     ];
 
@@ -56,7 +36,5 @@ class Produk extends Model
      */
     protected $casts = [
         'harga' => 'decimal:2'
-        'harga' => 'decimal:2',
-        'stok' => 'integer',
     ];
 }
