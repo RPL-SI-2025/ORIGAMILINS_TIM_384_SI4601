@@ -1,5 +1,9 @@
 @extends('admin.layouts.app')
 
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -41,7 +45,7 @@
                                             @if(filter_var($product->gambar, FILTER_VALIDATE_URL))
                                                 <img src="{{ $product->gambar }}" alt="{{ $product->nama }}" class="img-thumbnail" style="max-width: 100px;">
                                             @else
-                                                <img src="{{ asset('storage/' . $product->gambar) }}" alt="{{ $product->nama }}" class="img-thumbnail" style="max-width: 100px;">
+                                                <img src="{{ asset($product->gambar) }}" alt="{{ $product->nama }}" class="img-thumbnail" style="max-width: 100px;">
                                             @endif
                                         @else
                                             <span class="text-muted">No Image</span>
@@ -53,16 +57,13 @@
                                     <td>{{ $product->deskripsi }}</td>
                                     <td>
                                         <div class="btn-group">
-                                            <a href="#" class="btn btn-info btn-sm">
-                                                <i class="fas fa-eye"></i> View
-                                            </a>
-                                            <a href="#" class="btn btn-warning btn-sm">
+                                            <a href="{{ route('admin.produk.edit', $product->id) }}" class="btn btn-warning btn-sm me-2">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
-                                            <form action="#" method="POST" class="d-inline">
+                                            <form action="{{ route('admin.produk.destroy', $product->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
                                                     <i class="fas fa-trash"></i> Delete
                                                 </button>
                                             </form>
