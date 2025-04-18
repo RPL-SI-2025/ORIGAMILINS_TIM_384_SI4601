@@ -26,7 +26,6 @@ class Produk extends Model
         'harga',
         'kategori',
         'deskripsi',
-        'deskripsi',
         'gambar'
     ];
 
