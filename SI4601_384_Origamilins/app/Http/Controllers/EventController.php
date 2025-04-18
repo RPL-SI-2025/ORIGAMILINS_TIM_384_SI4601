@@ -32,17 +32,10 @@ class EventController extends Controller
         $data = $request->all();
 
         if ($request->hasFile('poster')) {
-            $file = $request->file('poster');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            
-            // Pastikan direktori ada
-            $path = public_path('images/events');
-            if (!file_exists($path)) {
-                mkdir($path, 0777, true);
-            }
-            
-            $file->move($path, $fileName);
-            $data['poster'] = 'images/events/' . $fileName;
+            $image = $request->file('poster');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads'), $imageName);
+            $data['poster'] = '/uploads/' . $imageName;
         }
 
         Event::create($data);
@@ -80,17 +73,10 @@ class EventController extends Controller
                 unlink(public_path($event->poster));
             }
 
-            $file = $request->file('poster');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            
-            // Pastikan direktori ada
-            $path = public_path('images/events');
-            if (!file_exists($path)) {
-                mkdir($path, 0777, true);
-            }
-            
-            $file->move($path, $fileName);
-            $data['poster'] = 'images/events/' . $fileName;
+            $image = $request->file('poster');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads'), $imageName);
+            $data['poster'] = '/uploads/' . $imageName;
         }
 
         $event->update($data);

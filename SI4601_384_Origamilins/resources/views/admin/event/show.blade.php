@@ -11,28 +11,32 @@
 
     <div class="row">
         <div class="col-md-4">
-            <div class="card mb-4">
+            <div class="card mb-4 shadow-sm">
                 <div class="card-body text-center">
                     @if($event->poster)
-                        <img src="{{ asset($event->poster) }}" alt="Poster {{ $event->nama_event }}" 
-                             class="img-fluid rounded mb-3" style="max-height: 300px;">
+                    <img src="{{ url($event->poster) }}" alt="Poster {{ $event->nama_event }}" 
+                         class="img-fluid rounded mb-3" style="max-height: 400px; width: auto;">
                     @else
-                        <div class="text-muted">Tidak ada poster</div>
+                    <div class="no-poster-placeholder">
+                        <i class="fas fa-image fa-4x text-muted"></i>
+                        <p class="mt-2">Tidak ada poster</p>
+                    </div>
                     @endif
                 </div>
             </div>
         </div>
+        
         <div class="col-md-8">
-            <div class="card mb-4">
+            <div class="card mb-4 shadow-sm">
                 <div class="card-body">
-                    <table class="table table-borderless">
+                    <table class="table table-details">
                         <tr>
-                            <th style="width: 200px;">Nama Event</th>
+                            <th width="200">Nama Event</th>
                             <td>{{ $event->nama_event }}</td>
                         </tr>
                         <tr>
                             <th>Tanggal Pelaksanaan</th>
-                            <td>{{ \Carbon\Carbon::parse($event->tanggal_pelaksanaan)->format('d F Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($event->tanggal_pelaksanaan)->isoFormat('dddd, D MMMM Y') }}</td>
                         </tr>
                         <tr>
                             <th>Lokasi</th>
@@ -44,7 +48,7 @@
                         </tr>
                         <tr>
                             <th>Deskripsi</th>
-                            <td>{{ $event->deskripsi }}</td>
+                            <td>{!! nl2br(e($event->deskripsi)) !!}</td>
                         </tr>
                     </table>
 
@@ -67,17 +71,31 @@
 </div>
 
 <style>
-.table th {
-    font-weight: 600;
-    color: #333;
+.table-details th {
+    background-color: #f8f9fa;
+}
+
+.table-details td, .table-details th {
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.no-poster-placeholder {
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
 }
 
 .card {
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    border: none;
 }
 
-.img-fluid {
-    object-fit: contain;
+.shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+}
+
+.btn {
+    margin-right: 0.5rem;
 }
 </style>
 @endsection 
