@@ -3,12 +3,27 @@
 use App\Http\Controllers\Produk_Controller;
 use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\UserProfileController;
+
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Auth;
 
-// Halaman welcome
+
 Route::get('/', function () {
     return view('welcome');
+});
+
+
+Route::get('/produk', [Produk_Controller::class, 'index']);
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profilpengguna', [UserProfileController::class, 'create'])->name('profile.create');
+    Route::post('/profilpengguna', [UserProfileController::class, 'store'])->name('profile.store');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/produk', [Produk_Controller::class, 'index'])->name('admin.produk.index');
 });
 
 // Authentication Routes
@@ -17,10 +32,10 @@ Route::get('/logout', function () {
     return redirect('/');
 })->name('logout');
 
-// Route produk (publik/user)
 Route::get('/produk', [Produk_Controller::class, 'index'])->name('produk.melihat_produk');
 Route::get('/produk/tambah', [Produk_Controller::class, 'create'])->name('produk.tambah_produk');
 Route::post('/produk/store', [Produk_Controller::class, 'store'])->name('produk.store');
+
 
 // Test route untuk admin middleware
 Route::get('/test-admin', function () {
@@ -42,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
         return view('user.dashboard');
     })->name('dashboard');
 });
+
 
 // Route khusus admin
 Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(function () {
