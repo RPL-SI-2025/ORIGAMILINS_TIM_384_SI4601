@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Artikel;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Storage;
 
 class ArtikelFactory extends Factory
 {
@@ -18,4 +19,11 @@ class ArtikelFactory extends Factory
             'gambar' => 'uploads/artikel/default.jpg'
         ];
     }
-} 
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Artikel $artikel) {
+            Storage::disk('public')->exists(str_replace('storage/', '', $artikel->gambar));
+        });
+    }
+}

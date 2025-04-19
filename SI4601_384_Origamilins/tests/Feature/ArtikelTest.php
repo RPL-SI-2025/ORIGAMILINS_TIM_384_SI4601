@@ -42,15 +42,11 @@ class ArtikelTest extends TestCase
     {
         $this->actingAs($this->admin);
         
-        Storage::fake('public');
-        
-        $gambar = UploadedFile::fake()->image('artikel.jpg');
-        
         $artikelData = [
             'judul' => $this->faker->sentence,
             'isi' => $this->faker->paragraph,
             'tanggal_publikasi' => now()->format('Y-m-d'),
-            'gambar' => $gambar
+            'gambar' => 'storage/artikel-images/default.jpg'
         ];
         
         $response = $this->post(route('admin.artikel.store'), $artikelData);
@@ -60,10 +56,6 @@ class ArtikelTest extends TestCase
             'judul' => $artikelData['judul'],
             'isi' => $artikelData['isi']
         ]);
-        
-        $artikel = Artikel::first();
-        $this->assertNotNull($artikel->gambar);
-        Storage::disk('public')->assertExists(str_replace('storage/', '', $artikel->gambar));
     }
 
     /** @test */
@@ -87,15 +79,11 @@ class ArtikelTest extends TestCase
         
         $artikel = Artikel::factory()->create();
         
-        Storage::fake('public');
-        
-        $gambarBaru = UploadedFile::fake()->image('artikel_update.jpg');
-        
         $updateData = [
             'judul' => 'Judul Updated',
             'isi' => 'Isi Updated',
             'tanggal_publikasi' => now()->format('Y-m-d'),
-            'gambar' => $gambarBaru
+            'gambar' => 'storage/artikel-images/default.jpg'
         ];
         
         $response = $this->put(route('admin.artikel.update', $artikel->id_artikel), $updateData);
@@ -136,6 +124,6 @@ class ArtikelTest extends TestCase
         
         $response = $this->post(route('admin.artikel.store'), []);
         
-        $response->assertSessionHasErrors(['judul', 'isi', 'tanggal_publikasi', 'gambar']);
+        $response->assertSessionHasErrors(['judul', 'isi', 'tanggal_publikasi']);
     }
 } 

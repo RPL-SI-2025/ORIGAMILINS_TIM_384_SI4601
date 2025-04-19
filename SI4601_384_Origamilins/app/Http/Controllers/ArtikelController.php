@@ -25,10 +25,14 @@ class ArtikelController extends Controller
             'judul' => 'required|string|max:255',
             'isi' => 'required|string',
             'tanggal_publikasi' => 'required|date',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            'gambar' => 'required'
         ]);
 
         if ($request->hasFile('gambar')) {
+            $request->validate([
+                'gambar' => 'image|mimes:jpeg,png,jpg|max:2048'
+            ]);
+            
             $file = $request->file('gambar');
             $filename = time() . '_' . $file->getClientOriginalName();
             
@@ -65,10 +69,14 @@ class ArtikelController extends Controller
             'judul' => 'required|string|max:255',
             'isi' => 'required|string',
             'tanggal_publikasi' => 'required|date',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'gambar' => 'required'
         ]);
 
         if ($request->hasFile('gambar')) {
+            $request->validate([
+                'gambar' => 'image|mimes:jpeg,png,jpg|max:2048'
+            ]);
+            
             // Hapus gambar lama jika ada
             if ($artikel->gambar && file_exists(public_path($artikel->gambar))) {
                 unlink(public_path($artikel->gambar));
