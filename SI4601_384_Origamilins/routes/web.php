@@ -9,6 +9,7 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\ArtikelController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -79,18 +80,19 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
     Route::get('/event', [EventController::class, 'index'])->name('admin.event.index');
     Route::get('/event/create', [EventController::class, 'create'])->name('admin.event.create');
     Route::post('/event', [EventController::class, 'store'])->name('admin.event.store');
-    Route::get('/event/{event}/edit', [EventController::class, 'edit'])->name('admin.event.edit');
-    Route::put('/event/{event}', [EventController::class, 'update'])->name('admin.event.update');
-    Route::delete('/event/{event}', [EventController::class, 'destroy'])->name('admin.event.destroy');
-
-    // Manajemen Event
-    Route::get('/event', [EventController::class, 'index'])->name('admin.event.index');
-    Route::get('/event/create', [EventController::class, 'create'])->name('admin.event.create');
-    Route::post('/event', [EventController::class, 'store'])->name('admin.event.store');
     Route::get('/event/{event}', [EventController::class, 'show'])->name('admin.event.show');
     Route::get('/event/{event}/edit', [EventController::class, 'edit'])->name('admin.event.edit');
     Route::put('/event/{event}', [EventController::class, 'update'])->name('admin.event.update');
     Route::delete('/event/{event}', [EventController::class, 'destroy'])->name('admin.event.destroy');
+
+    // Manajemen Artikel
+    Route::get('/artikel', [ArtikelController::class, 'index'])->name('admin.artikel.index');
+    Route::get('/artikel/create', [ArtikelController::class, 'create'])->name('admin.artikel.create');
+    Route::post('/artikel', [ArtikelController::class, 'store'])->name('admin.artikel.store');
+    Route::get('/artikel/{id_artikel}', [ArtikelController::class, 'show'])->name('admin.artikel.show');
+    Route::get('/artikel/{id_artikel}/edit', [ArtikelController::class, 'edit'])->name('admin.artikel.edit');
+    Route::put('/artikel/{id_artikel}', [ArtikelController::class, 'update'])->name('admin.artikel.update');
+    Route::delete('/artikel/{id_artikel}', [ArtikelController::class, 'destroy'])->name('admin.artikel.destroy');
 });
 
 // Debug login
