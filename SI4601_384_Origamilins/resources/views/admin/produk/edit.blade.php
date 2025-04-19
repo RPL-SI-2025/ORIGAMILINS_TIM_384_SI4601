@@ -89,20 +89,16 @@
 @push('scripts')
 <script>
 function formatRupiah(angka) {
-    // Hapus semua karakter non-digit
     angka = angka.replace(/\D/g, '');
-    
-    // Format dengan titik sebagai pemisah ribuan
     return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
 document.getElementById('harga').addEventListener('blur', function(e) {
     if (this.value !== '') {
-        // Pastikan minimal 0
         let nilai = parseInt(this.value.replace(/\./g, '')) || 0;
         this.value = formatRupiah(nilai.toString());
     }
 });
 </script>
 @endpush
-@endsection 
+@endsection

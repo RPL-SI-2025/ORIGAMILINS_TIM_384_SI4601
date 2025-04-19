@@ -1,5 +1,7 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Edit Artikel')
+
 @section('content')
 <div class="container-fluid px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -14,6 +16,7 @@
             <form action="{{ route('admin.artikel.update', $artikel->id_artikel) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
+
                 <div class="mb-3">
                     <label for="judul" class="form-label">Judul Artikel</label>
                     <input type="text" class="form-control @error('judul') is-invalid @enderror" 
@@ -79,7 +82,9 @@
         </div>
     </div>
 </div>
+@endsection
 
+@push('styles')
 <style>
 .preview-image, .current-image {
     width: 300px;
@@ -92,6 +97,7 @@
     min-height: 400px;
 }
 </style>
+@endpush
 
 @push('scripts')
 <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/super-build/ckeditor.js"></script>
@@ -110,15 +116,7 @@ ClassicEditor
             ],
             shouldNotGroupWhenFull: true
         },
-        language: 'id',
-        heading: {
-            options: [
-                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-                { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
-            ]
-        }
+        language: 'id'
     })
     .catch(error => {
         console.error(error);
@@ -133,16 +131,13 @@ document.getElementById('images').addEventListener('change', function(event) {
         reader.onload = function(e) {
             const previewContainer = document.createElement('div');
             previewContainer.className = 'position-relative';
-            previewContainer.innerHTML = `
-                <img src="${e.target.result}" class="preview-image" alt="Preview">
-            `;
+            previewContainer.innerHTML = `<img src="${e.target.result}" class="preview-image" alt="Preview">`;
             preview.appendChild(previewContainer);
         }
         reader.readAsDataURL(file);
     });
 });
 
-// Handle image deletion
 document.querySelectorAll('.delete-image').forEach(button => {
     button.addEventListener('click', function() {
         const imageId = this.dataset.imageId;
@@ -158,4 +153,3 @@ document.querySelectorAll('.delete-image').forEach(button => {
 });
 </script>
 @endpush
-@endsection 

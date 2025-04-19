@@ -23,11 +23,11 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Gambar</th>
-                            <th>Judul</th>
-                            <th>Tanggal Publikasi</th>
-                            <th>Aksi</th>
+                            <th style="width: 5%">No</th>
+                            <th style="width: 20%">Gambar</th>
+                            <th style="width: 35%">Judul</th>
+                            <th style="width: 20%">Tanggal Publikasi</th>
+                            <th style="width: 20%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,9 +36,11 @@
                             <td>{{ $index + 1 }}</td>
                             <td>
                                 @if($artikel->gambar)
-                                <img src="{{ $artikel->gambar }}" 
-                                     alt="Gambar Artikel" 
-                                     class="artikel-thumbnail">
+                                <div class="artikel-image-container">
+                                    <img src="{{ asset($artikel->gambar) }}" 
+                                         alt="Gambar Artikel" 
+                                         class="artikel-thumbnail">
+                                </div>
                                 @else
                                 <span class="text-muted">Tidak ada gambar</span>
                                 @endif
@@ -85,11 +87,21 @@
 </div>
 
 <style>
+.artikel-image-container {
+    width: 200px;
+    height: 120px;
+    overflow: hidden;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+}
+
 .artikel-thumbnail {
-    width: 100px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 4px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .table th {
@@ -114,5 +126,20 @@
 .table td {
     vertical-align: middle;
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .artikel-image-container {
+        width: 150px;
+        height: 90px;
+    }
+}
+
+@media (max-width: 576px) {
+    .artikel-image-container {
+        width: 100px;
+        height: 60px;
+    }
+}
 </style>
-@endsection 
+@endsection

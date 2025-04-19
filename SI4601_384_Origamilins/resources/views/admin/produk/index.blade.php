@@ -80,9 +80,46 @@ use Illuminate\Support\Facades\Storage;
                         </tr>
                     </thead>
                     <tbody id="productTableBody">
-                        @include('admin.produk._product_table', ['products' => $products])
+                        @foreach($products as $product)
+                        <tr>
+                            <td>{{ $product->id }}</td>
+                            <td>
+                                @if($product->gambar)
+                                    @if(filter_var($product->gambar, FILTER_VALIDATE_URL))
+                                        <img src="{{ $product->gambar }}" alt="{{ $product->nama }}" class="img-thumbnail" style="max-width: 100px;">
+                                    @else
+                                        <img src="{{ asset('storage/' . $product->gambar) }}" alt="{{ $product->nama }}" class="img-thumbnail" style="max-width: 100px;">
+                                    @endif
+                                @else
+                                    <span class="text-muted">No Image</span>
+                                @endif
+                            </td>
+                            <td>{{ $product->nama }}</td>
+                            <td>Rp {{ number_format($product->harga, 0, ',', '.') }}</td>
+                            <td>{{ $product->kategori }}</td>
+                            <td>{{ $product->deskripsi }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{{ route('admin.produk.edit', $product->id) }}" class="btn btn-warning btn-sm me-2">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <form action="{{ route('admin.produk.destroy', $product->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
+                {{-- Pagination --}}
+                <div class="d-flex justify-content-end mt-3">
+                    {{ $products->withQueryString()->links() }}
+                </div>
             </div>
         </div>
     </div>
@@ -96,32 +133,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const productTableBody = document.getElementById('productTableBody');
     let debounceTimer;
 
-    // Function to update filters in URL without reloading page
     function updateURL() {
         const formData = new FormData(filterForm);
         const params = new URLSearchParams();
-        
+
         for (const [key, value] of formData.entries()) {
             if (value) params.append(key, value);
         }
-        
+
         const newURL = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
         window.history.pushState({}, '', newURL);
     }
 
-    // Function to fetch filtered products
     function fetchFilteredProducts() {
         const formData = new FormData(filterForm);
         const params = new URLSearchParams();
-        
+
         for (const [key, value] of formData.entries()) {
             if (value) params.append(key, value);
         }
 
         fetch(`{{ route('admin.produk.index') }}?${params.toString()}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
         .then(response => response.json())
         .then(data => {
@@ -130,24 +163,24 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => console.error('Error:', error));
     }
 
-    // Debounced function to prevent too many requests
     window.debouncedFetch = function() {
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(fetchFilteredProducts, 300);
+        debounceTimer = setTimeout(() => {
+            updateURL();
+            fetchFilteredProducts();
+        }, 300);
     }
 
-    // Reset filter button
     resetFilter.addEventListener('click', function() {
         filterForm.reset();
         fetchFilteredProducts();
         updateURL();
     });
 
-    // Initial fetch if there are URL parameters
     if (window.location.search) {
         fetchFilteredProducts();
     }
 });
 </script>
 @endpush
-@endsection 
+@endsection

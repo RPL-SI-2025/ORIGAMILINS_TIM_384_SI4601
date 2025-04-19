@@ -31,4 +31,3 @@ class Event extends Model
     {
         return $this->hasMany(EventReview::class);
     }
-}

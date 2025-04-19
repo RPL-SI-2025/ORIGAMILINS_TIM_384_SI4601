@@ -32,20 +32,22 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="isi" class="form-label">Isi Artikel</label>
-                    <textarea class="form-control @error('isi') is-invalid @enderror" 
-                              id="editor" name="isi" rows="10" required>{{ old('isi') }}</textarea>
+                    <label for="editor" class="form-label">Isi Artikel</label>
+                    <div class="editor-container">
+                        <textarea class="form-control @error('isi') is-invalid @enderror" 
+                                id="editor" name="isi" style="display: none;">{{ old('isi') }}</textarea>
+                    </div>
                     @error('isi')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="mb-3">
-                    <label for="images" class="form-label">Gambar Artikel</label>
-                    <input type="file" class="form-control @error('images.*') is-invalid @enderror" 
-                           id="images" name="images[]" accept="image/jpeg,image/jpg,image/png" multiple>
-                    <div class="form-text">Upload satu atau lebih gambar (format: JPEG, JPG, PNG. Max: 2MB per gambar)</div>
-                    @error('images.*')
+                    <label for="gambar" class="form-label">Gambar Artikel</label>
+                    <input type="file" class="form-control @error('gambar') is-invalid @enderror" 
+                           id="gambar" name="gambar" accept="image/jpeg,image/jpg,image/png">
+                    <div class="form-text">Upload gambar (format: JPEG, JPG, PNG. Max: 2MB)</div>
+                    @error('gambar')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -69,45 +71,123 @@
     margin-top: 10px;
 }
 
+.editor-container {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.ck.ck-editor {
+    width: 100% !important;
+}
+
 .ck-editor__editable_inline {
     min-height: 400px;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.ck.ck-toolbar {
+    border-radius: 4px 4px 0 0 !important;
+    border-bottom: 1px solid #ddd !important;
+    background: #f8f9fa !important;
+}
+
+.ck.ck-content {
+    border-radius: 0 0 4px 4px !important;
+    border: none !important;
+    border-top: none !important;
+}
+
+.ck-content table {
+    border-collapse: collapse;
+    margin: 1em 0;
+}
+
+.ck-content table td,
+.ck-content table th {
+    border: 1px solid #bbb;
+    padding: 0.4em;
+}
+
+.ck-content figure.image {
+    margin: 1em 0;
+}
+
+.ck-content figure.image img {
+    max-width: 100%;
+    height: auto;
+}
+
+.ck-content figure.image-style-side {
+    float: right;
+    margin-left: 1.5em;
+    max-width: 50%;
+}
+
+.ck-content figure.image-style-align-left {
+    float: left;
+    margin-right: 1.5em;
+}
+
+.ck-content figure.image-style-align-center {
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>
 
 @push('scripts')
 <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
 <script>
-ClassicEditor
-    .create(document.querySelector('#editor'), {
-        toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'blockQuote', 'insertTable', 'undo', 'redo'],
-        heading: {
-            options: [
-                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-                { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
-            ]
-        }
-    })
-    .catch(error => {
-        console.error(error);
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    ClassicEditor
+        .create(document.querySelector('#editor'), {
+            toolbar: {
+                items: [
+                    'heading', '|',
+                    'bold', 'italic', 'underline', 'strikethrough', '|',
+                    'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+                    'alignment', '|',
+                    'bulletedList', 'numberedList', '|',
+                    'outdent', 'indent', '|',
+                    'link', 'blockQuote', 'insertTable', '|',
+                    'undo', 'redo'
+                ],
+                shouldNotGroupWhenFull: true
+            },
+            language: 'id',
+            table: {
+                contentToolbar: [
+                    'tableColumn',
+                    'tableRow',
+                    'mergeTableCells',
+                    'tableCellProperties',
+                    'tableProperties'
+                ]
+            }
+        })
+        .then(editor => {
+            console.log('Editor initialized');
+        })
+        .catch(error => {
+            console.error('Editor failed to initialize:', error);
+        });
+});
 
-document.getElementById('images').addEventListener('change', function(event) {
+document.getElementById('gambar').addEventListener('change', function(event) {
     const preview = document.getElementById('image-preview');
     preview.innerHTML = '';
     
-    Array.from(event.target.files).forEach(file => {
+    const file = event.target.files[0];
+    if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            const imgContainer = document.createElement('div');
-            imgContainer.innerHTML = `
+            preview.innerHTML = `
                 <img src="${e.target.result}" class="preview-image" alt="Preview">
             `;
-            preview.appendChild(imgContainer);
         }
         reader.readAsDataURL(file);
-    });
+    }
 });
 </script>
 @endpush

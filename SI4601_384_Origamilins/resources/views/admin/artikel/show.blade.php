@@ -34,7 +34,7 @@
 
             @if($artikel->gambar)
             <div class="article-image mb-4">
-                <img src="{{ $artikel->gambar }}" class="img-fluid rounded" alt="Artikel Image">
+                <img src="{{ asset($artikel->gambar) }}" class="img-fluid rounded" alt="Artikel Image">
             </div>
             @endif
 
@@ -80,11 +80,18 @@
     padding: 0.75rem;
 }
 
-.article-image img {
-    max-height: 500px;
-    width: 100%;
-    object-fit: contain;
+.article-image {
     background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.article-image img {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    margin: 0 auto;
 }
 
 .btn {
@@ -96,6 +103,10 @@
         margin: 0.5rem;
         display: block;
         width: 100%;
+    }
+
+    .article-image img {
+        max-height: 300px;
     }
 }
 </style>

@@ -19,4 +19,4 @@ class DatabaseSeeder extends Seeder
             EventReviewSeeder::class,
         ]);
     }
-} 
+}
