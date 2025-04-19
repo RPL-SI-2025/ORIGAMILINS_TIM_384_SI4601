@@ -11,11 +11,54 @@ class Produk_Controller extends Controller
     // Menampilkan semua produk
     public function index()
     {
+ Nabiel
+        $query = Produk::query();
+
+        // Filter by category
+        if (request()->has('kategori') && request('kategori') != '') {
+            $query->where('kategori', request('kategori'));
+        }
+
+        // Filter by price range
+        if (request()->has('harga') && request('harga') != '') {
+            $priceRange = explode('-', request('harga'));
+            $minPrice = $priceRange[0];
+            $maxPrice = $priceRange[1];
+
+            if ($maxPrice == '0') {
+                // Untuk filter "Diatas X"
+                $query->where('harga', '>=', $minPrice);
+            } else {
+                $query->whereBetween('harga', [$minPrice, $maxPrice]);
+            }
+        }
+
+        // Filter by name
+        if (request()->has('nama') && request('nama') != '') {
+            $query->where('nama', 'like', '%' . request('nama') . '%');
+        }
+
+        $products = $query->get();
+        $categories = Produk::distinct()->pluck('kategori');
+
+        // Jika request AJAX, return JSON
+        if (request()->ajax()) {
+            return response()->json([
+                'products' => $products,
+                'html' => view('admin.produk._product_table', compact('products'))->render()
+            ]);
+        }
+
+        // Jika admin, tampilkan view admin
+        if (request()->is('admin/*')) {
+            return view('admin.produk.index', compact('products', 'categories'));
+
         $products = Produk::all();
 
         // Jika admin, tampilkan view admin
         if (request()->is('admin/*')) {
             return view('admin.produk.index', compact('products'));
+ main
         }
 
         // Jika user biasa
@@ -42,6 +85,11 @@ class Produk_Controller extends Controller
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+ Nabiel
+        // Konversi harga dari format dengan titik menjadi angka biasa
+        $produkData['harga'] = (float) str_replace('.', '', $request->harga);
+
+ main
         if ($request->hasFile('gambar')) {
             $file = $request->file('gambar');
             $filename = time() . '_' . $file->getClientOriginalName();
@@ -79,6 +127,12 @@ class Produk_Controller extends Controller
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+ Nabiel
+        // Konversi harga dari format dengan titik menjadi angka biasa
+        $produkData['harga'] = (float) str_replace('.', '', $request->harga);
+
+
+ main
         if ($request->hasFile('gambar')) {
             // Hapus gambar lama jika ada
             if ($product->gambar && file_exists(public_path($product->gambar))) {
@@ -99,4 +153,24 @@ class Produk_Controller extends Controller
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil diperbarui');
     }
+ Nabiel
+
+    /**
+     * Menghapus produk
+     */
+    public function destroy(Produk $product)
+    {
+        // Hapus gambar jika ada
+        if ($product->gambar && file_exists(public_path($product->gambar))) {
+            unlink(public_path($product->gambar));
+        }
+
+        // Hapus produk dari database
+        $product->delete();
+
+        return redirect()->route('admin.produk.index')
+            ->with('success', 'Produk berhasil dihapus');
+    }
+
+main
 }

@@ -104,7 +104,7 @@
         display: block;
         width: 100%;
     }
-    
+
     .article-image img {
         max-height: 300px;
     }

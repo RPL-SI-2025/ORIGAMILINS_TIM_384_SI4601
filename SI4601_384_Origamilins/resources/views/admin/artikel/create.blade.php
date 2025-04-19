@@ -52,7 +52,7 @@
                     @enderror
                 </div>
 
-                <div id="image-preview" class="mb-3"></div>
+                <div id="image-preview" class="mb-3 d-flex flex-wrap gap-2"></div>
 
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Simpan Artikel
@@ -87,7 +87,6 @@
     overflow-y: auto;
 }
 
-/* Styling untuk toolbar CKEditor */
 .ck.ck-toolbar {
     border-radius: 4px 4px 0 0 !important;
     border-bottom: 1px solid #ddd !important;
@@ -100,7 +99,6 @@
     border-top: none !important;
 }
 
-/* Styling untuk tabel di dalam editor */
 .ck-content table {
     border-collapse: collapse;
     margin: 1em 0;
@@ -112,7 +110,6 @@
     padding: 0.4em;
 }
 
-/* Styling untuk gambar di dalam editor */
 .ck-content figure.image {
     margin: 1em 0;
 }

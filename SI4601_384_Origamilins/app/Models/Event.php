@@ -19,4 +19,15 @@ class Event extends Model
         'lokasi',
         'poster'
     ];
-}
+
+    protected $casts = [
+        'tanggal_pelaksanaan' => 'datetime',
+    ];
+
+    /**
+     * Get the reviews for the event.
+     */
+    public function reviews()
+    {
+        return $this->hasMany(EventReview::class);
+    }

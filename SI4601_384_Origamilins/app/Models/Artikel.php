@@ -22,4 +22,4 @@ class Artikel extends Model
     protected $casts = [
         'tanggal_publikasi' => 'datetime'
     ];
-} 
+}
