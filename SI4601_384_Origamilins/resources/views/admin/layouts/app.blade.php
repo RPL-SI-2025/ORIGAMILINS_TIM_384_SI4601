@@ -106,6 +106,9 @@
         }
     </style>
 
+    <!-- TinyMCE -->
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
     @stack('styles')
 </head>
 <body>
@@ -139,6 +142,9 @@
                         </a>
                         <a href="{{ route('admin.event.index') }}" class="list-group-item {{ request()->routeIs('admin.event.*') ? 'active' : '' }}">
                             <i class="fas fa-calendar me-2"></i> Manajemen Event
+                        </a>
+                        <a href="{{ route('admin.artikel.index') }}" class="list-group-item {{ request()->routeIs('admin.artikel.*') ? 'active' : '' }}">
+                            <i class="fas fa-newspaper me-2"></i> Manajemen Artikel
                         </a>
                     </div>
                 </div>
