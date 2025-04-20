@@ -121,6 +121,9 @@
         }
     </style>
 
+    <!-- TinyMCE -->
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
     @stack('styles')
 </head>
 <body>
@@ -158,6 +161,15 @@
                         <a href="{{ route('admin.event.index') }}" class="list-group-item {{ request()->routeIs('admin.event.*') ? 'active' : '' }}">
                             <i class="fas fa-calendar me-2"></i> Manajemen Event
                         </a>
+                        <a href="{{ route('admin.artikel.index') }}" class="list-group-item {{ request()->routeIs('admin.artikel.*') ? 'active' : '' }}">
+                            <i class="fas fa-newspaper me-2"></i> Manajemen Artikel
+                        </a>
+                        <a href="{{ route('admin.users.index') }}" class="list-group-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                            <i class="fas fa-users me-2"></i> Manajemen User
+                        </a>
+                        <a href="{{ route('admin.event-reviews.index') }}" class="list-group-item {{ request()->routeIs('admin.event-reviews.*') ? 'active' : '' }}">
+                            <i class="fas fa-star me-2"></i> Ulasan Event
+                        </a>
                     </div>
                 </div>
 
@@ -175,4 +187,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
 </body>
-</html> 
+</html>

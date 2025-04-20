@@ -38,7 +38,9 @@
             <div class="col-sm-6">
                 <div class="input-group">
                     <span class="input-group-text">Rp</span>
-                    <input type="number" class="form-control" id="harga" name="harga" value="{{ old('harga', $product->harga) }}">
+                    <input type="text" class="form-control" id="harga" name="harga" 
+                           value="{{ old('harga', number_format($product->harga, 0, ',', '.')) }}"
+                           oninput="this.value = formatRupiah(this.value)" placeholder="0">
                 </div>
                 @error('harga')
                     <span class="text-danger small">{{ $message }}</span>
@@ -83,4 +85,20 @@
         </div>
     </form>
 </div>
-@endsection 
+
+@push('scripts')
+<script>
+function formatRupiah(angka) {
+    angka = angka.replace(/\D/g, '');
+    return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+document.getElementById('harga').addEventListener('blur', function(e) {
+    if (this.value !== '') {
+        let nilai = parseInt(this.value.replace(/\./g, '')) || 0;
+        this.value = formatRupiah(nilai.toString());
+    }
+});
+</script>
+@endpush
+@endsection

@@ -9,45 +9,73 @@ class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::all();
+        $events = Event::query();
 
-        // Jika admin, tampilkan view admin
-        if (request()->is('admin/*')) {
-            return view('admin.event.index', compact('events'));
+        // Filter by name
+        if (request()->has('nama_event') && request('nama_event') != '') {
+            $events->where('nama_event', 'like', '%' . request('nama_event') . '%');
         }
 
-        // Jika user biasa
-        return view('event.melihat_event', compact('events'));
+        // Filter by price range
+        if (request()->has('harga_min') && request('harga_min') != '') {
+            $events->where('harga', '>=', request('harga_min'));
+        }
+        if (request()->has('harga_max') && request('harga_max') != '') {
+            $events->where('harga', '<=', request('harga_max'));
+        }
+
+        // Filter by location
+        if (request()->has('lokasi') && request('lokasi') != '') {
+            $events->where('lokasi', 'like', '%' . request('lokasi') . '%');
+        }
+
+        // Filter by date range
+        if (request()->has('tanggal_awal') && request('tanggal_awal') != '') {
+            $events->where('tanggal_pelaksanaan', '>=', request('tanggal_awal'));
+        }
+        if (request()->has('tanggal_akhir') && request('tanggal_akhir') != '') {
+            $events->where('tanggal_pelaksanaan', '<=', request('tanggal_akhir'));
+        }
+
+        $events = $events->latest()->get();
+
+        return view('admin.event.index', compact('events'));
     }
 
     public function create()
     {
-        // Jika admin, tampilkan view admin
-        if (request()->is('admin/*')) {
-            return view('admin.event.create');
-        }
-        return view('event.tambah_event');
+        return view('admin.event.create');
     }
 
     public function store(Request $request)
     {
-        // Validasi input
-        $eventData = $request->validate([
+        $request->validate([
             'nama_event' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'deskripsi' => 'required|string',
             'tanggal_pelaksanaan' => 'required|date',
             'harga' => 'required|numeric|min:0',
             'lokasi' => 'required|string|max:255',
+            'poster' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        // Simpan ke database
-        Event::create($eventData);
+        $data = $request->all();
 
-        // Redirect sesuai role
-        if (request()->is('admin/*')) {
-            return redirect()->route('admin.event.index')->with('success', 'Event berhasil ditambahkan!');
+        if ($request->hasFile('poster')) {
+            $image = $request->file('poster');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads'), $imageName);
+            $data['poster'] = '/uploads/' . $imageName;
         }
-        return redirect()->route('event.melihat_event')->with('success', 'Event berhasil ditambahkan!');
+
+        Event::create($data);
+
+        return redirect()->route('admin.event.index')
+            ->with('success', 'Event berhasil ditambahkan!');
+    }
+
+    public function show(Event $event)
+    {
+        return view('admin.event.show', compact('event'));
     }
 
     public function edit(Event $event)
@@ -57,24 +85,45 @@ class EventController extends Controller
 
     public function update(Request $request, Event $event)
     {
-        // Validasi input
-        $eventData = $request->validate([
+        $request->validate([
             'nama_event' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'deskripsi' => 'required|string',
             'tanggal_pelaksanaan' => 'required|date',
             'harga' => 'required|numeric|min:0',
             'lokasi' => 'required|string|max:255',
+            'poster' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        // Update data event
-        $event->update($eventData);
+        $data = $request->all();
 
-        return redirect()->route('admin.event.index')->with('success', 'Event berhasil diperbarui!');
+        if ($request->hasFile('poster')) {
+            // Hapus poster lama jika ada
+            if ($event->poster && file_exists(public_path($event->poster))) {
+                unlink(public_path($event->poster));
+            }
+
+            $image = $request->file('poster');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads'), $imageName);
+            $data['poster'] = '/uploads/' . $imageName;
+        }
+
+        $event->update($data);
+
+        return redirect()->route('admin.event.index')
+            ->with('success', 'Event berhasil diperbarui!');
     }
 
     public function destroy(Event $event)
     {
+        // Hapus poster jika ada
+        if ($event->poster && file_exists(public_path($event->poster))) {
+            unlink(public_path($event->poster));
+        }
+
         $event->delete();
-        return redirect()->route('admin.event.index')->with('success', 'Event berhasil dihapus!');
+
+        return redirect()->route('admin.event.index')
+            ->with('success', 'Event berhasil dihapus!');
     }
 }

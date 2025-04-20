@@ -25,6 +25,7 @@ class Produk extends Model
         'nama',
         'harga',
         'kategori',
+        'gambar',
         'deskripsi',
         'gambar',
     ];
@@ -35,6 +36,7 @@ class Produk extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'harga' => 'decimal:2'
+        'harga' => 'decimal:2',
+        'stok' => 'integer'
     ];
 }
