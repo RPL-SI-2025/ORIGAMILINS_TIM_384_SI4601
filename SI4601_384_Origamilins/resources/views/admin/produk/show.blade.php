@@ -61,10 +61,10 @@
                         <a href="{{ route('admin.produk.edit', $product->id) }}" class="btn btn-warning">
                             <i class="fas fa-edit"></i> Edit Produk
                         </a>
-                        <form action="{{ route('admin.produk.destroy', $product->id) }}" method="POST" class="d-inline">
+                        <form action="{{ route('admin.produk.destroy', $product->id) }}" method="POST" class="d-inline" id="delete-form-detail">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
+                            <button type="button" class="btn btn-danger" onclick="confirmDelete('delete-form-detail')">
                                 <i class="fas fa-trash"></i> Hapus Produk
                             </button>
                         </form>

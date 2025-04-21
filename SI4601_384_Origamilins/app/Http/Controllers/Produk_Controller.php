@@ -37,6 +37,9 @@ class Produk_Controller extends Controller
             $query->where('nama', 'like', '%' . request('nama') . '%');
         }
 
+        // Order by ID to maintain consistent ordering
+        $query->orderBy('id', 'asc');
+        
         $products = $query->paginate(10);
         $categories = Produk::distinct()->pluck('kategori');
 

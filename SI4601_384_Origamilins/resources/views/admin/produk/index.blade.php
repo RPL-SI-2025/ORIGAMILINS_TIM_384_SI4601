@@ -70,7 +70,7 @@ use Illuminate\Support\Facades\Storage;
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>No</th>
                             <th>Gambar</th>
                             <th>Nama Produk</th>
                             <th>Harga</th>
@@ -81,9 +81,9 @@ use Illuminate\Support\Facades\Storage;
                         </tr>
                     </thead>
                     <tbody id="productTableBody">
-                        @foreach($products as $product)
+                        @foreach($products as $key => $product)
                         <tr>
-                            <td>{{ $product->id }}</td>
+                            <td>{{ $products->firstItem() + $key }}</td>
                             <td>
                                 @if($product->gambar)
                                     @if(filter_var($product->gambar, FILTER_VALIDATE_URL))
@@ -112,10 +112,10 @@ use Illuminate\Support\Facades\Storage;
                                     <a href="{{ route('admin.produk.edit', $product->id) }}" class="btn btn-warning btn-sm me-2">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    <form action="{{ route('admin.produk.destroy', $product->id) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('admin.produk.destroy', $product->id) }}" method="POST" class="d-inline" id="delete-form-{{ $product->id }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('delete-form-{{ $product->id }}')">
                                             <i class="fas fa-trash"></i> Delete
                                         </button>
                                     </form>
