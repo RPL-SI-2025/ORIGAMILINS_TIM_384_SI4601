@@ -55,11 +55,32 @@
                     <div class="input-group">
                         <span class="input-group-text">Rp</span>
                         <input type="number" class="form-control @error('harga') is-invalid @enderror" 
-                               id="harga" name="harga" value="{{ old('harga') }}" required min="0">
+                               id="harga" name="harga" value="{{ old('harga', 0) }}" required min="0">
                     </div>
                     @error('harga')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="kuota" class="form-label">Kuota Peserta</label>
+<<<<<<< Updated upstream
+                    <input type="number" class="form-control @error('kuota') is-invalid @enderror" id="kuota"
+                        name="kuota" value="{{ old('kuota') }}" required min="1">
+                    @error('kuota')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+=======
+                    <input type="number" class="form-control @error('kuota') is-invalid @enderror" 
+                           id="kuota" name="kuota" value="{{ old('kuota', 0) }}" required min="1">
+                    @error('kuota')
+                        <div class="invalid-feedback">{{ $message }}</div>
+>>>>>>> Stashed changes
+                    @enderror
+                    <div class="form-text">
+                        Masukkan jumlah maksimal peserta yang dapat mengikuti event ini
+                    </div>
                 </div>
 
                 <div class="mb-3">
