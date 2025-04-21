@@ -49,6 +49,17 @@
         </div>
         
         <div class="row mb-3">
+            <label for="stok" class="col-sm-2 col-form-label">Stok</label>
+            <div class="col-sm-6">
+                <input type="number" class="form-control" id="stok" name="stok" 
+                       value="{{ old('stok', $product->stok) }}" min="0">
+                @error('stok')
+                    <span class="text-danger small">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+        
+        <div class="row mb-3">
             <label for="gambar" class="col-sm-2 col-form-label">Gambar Produk</label>
             <div class="col-sm-6">
                 @if($product->gambar)
