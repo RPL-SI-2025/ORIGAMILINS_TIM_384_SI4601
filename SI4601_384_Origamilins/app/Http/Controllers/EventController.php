@@ -9,7 +9,36 @@ class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::latest()->get();
+        $events = Event::query();
+
+        // Filter by name
+        if (request()->has('nama_event') && request('nama_event') != '') {
+            $events->where('nama_event', 'like', '%' . request('nama_event') . '%');
+        }
+
+        // Filter by price range
+        if (request()->has('harga_min') && request('harga_min') != '') {
+            $events->where('harga', '>=', request('harga_min'));
+        }
+        if (request()->has('harga_max') && request('harga_max') != '') {
+            $events->where('harga', '<=', request('harga_max'));
+        }
+
+        // Filter by location
+        if (request()->has('lokasi') && request('lokasi') != '') {
+            $events->where('lokasi', 'like', '%' . request('lokasi') . '%');
+        }
+
+        // Filter by date range
+        if (request()->has('tanggal_awal') && request('tanggal_awal') != '') {
+            $events->where('tanggal_pelaksanaan', '>=', request('tanggal_awal'));
+        }
+        if (request()->has('tanggal_akhir') && request('tanggal_akhir') != '') {
+            $events->where('tanggal_pelaksanaan', '<=', request('tanggal_akhir'));
+        }
+
+        $events = $events->latest()->get();
+
         return view('admin.event.index', compact('events'));
     }
 
