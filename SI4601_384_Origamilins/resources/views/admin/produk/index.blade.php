@@ -106,6 +106,9 @@ use Illuminate\Support\Facades\Storage;
                             <td>{{ $product->deskripsi }}</td>
                             <td>
                                 <div class="btn-group">
+                                    <a href="{{ route('admin.produk.show', $product->id) }}" class="btn btn-info btn-sm me-2">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
                                     <a href="{{ route('admin.produk.edit', $product->id) }}" class="btn btn-warning btn-sm me-2">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>

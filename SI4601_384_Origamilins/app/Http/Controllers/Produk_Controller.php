@@ -54,7 +54,7 @@ class Produk_Controller extends Controller
         }
 
         // Jika user biasa
-        return view('produk.melihat_produk', compact('products'));
+        return view('admin.produk.show', compact('products'));
     }
 
     // Menampilkan form tambah produk
@@ -64,6 +64,14 @@ class Produk_Controller extends Controller
             return view('admin.produk.create');
         }
         return view('produk.tambah_produk');
+    }
+
+    /**
+     * Display the specified product.
+     */
+    public function show(Produk $product)
+    {
+        return view('admin.produk.show', compact('product'));
     }
 
     // Menyimpan produk baru
@@ -114,14 +122,13 @@ class Produk_Controller extends Controller
             'harga' => 'required|numeric|min:0',
             'kategori' => 'required|string|max:100',
             'deskripsi' => 'required|string',
+            'stok' => 'required|integer|min:0',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Konversi harga dari format dengan titik menjadi angka biasa
         $produkData['harga'] = (float) str_replace('.', '', $request->harga);
 
-        // Konversi harga dari format dengan titik menjadi angka biasa
-        $produkData['harga'] = (float) str_replace('.', '', $request->harga);
         if ($request->hasFile('gambar')) {
             // Hapus gambar lama jika ada
             if ($product->gambar && file_exists(public_path($product->gambar))) {
