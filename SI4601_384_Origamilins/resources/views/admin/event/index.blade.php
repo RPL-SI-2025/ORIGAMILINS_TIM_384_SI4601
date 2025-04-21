@@ -73,7 +73,7 @@
 
     <div class="card mb-4">
         <div class="card-body">
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -82,6 +82,8 @@
                         <th>Tanggal</th>
                         <th>Lokasi</th>
                         <th>Harga</th>
+                        <th>Kuota</th>
+                        <th>Status</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -102,19 +104,37 @@
                         <td>{{ $event->lokasi }}</td>
                         <td>Rp {{ number_format($event->harga, 0, ',', '.') }}</td>
                         <td>
-                            <a href="{{ route('admin.event.show', $event->id) }}" class="btn btn-sm btn-info">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="{{ route('admin.event.edit', $event->id) }}" class="btn btn-sm btn-warning">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <form action="{{ route('admin.event.destroy', $event->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus event ini?')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
+                            <span class="badge {{ $event->kuota_terisi >= $event->kuota ? 'bg-danger' : 'bg-success' }}">
+                                {{ $event->kuota_terisi }}/{{ $event->kuota }}
+                            </span>
+                        </td>
+                        <td>
+                            @if($event->tanggal_pelaksanaan < now())
+                                <span class="badge bg-secondary">Selesai</span>
+                            @else
+                                @if($event->kuota_terisi >= $event->kuota)
+                                    <span class="badge bg-danger">Full</span>
+                                @else
+                                    <span class="badge bg-success">Tersedia</span>
+                                @endif
+                            @endif
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="{{ route('admin.event.show', $event->id) }}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ route('admin.event.edit', $event->id) }}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ route('admin.event.destroy', $event->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus event ini?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @empty

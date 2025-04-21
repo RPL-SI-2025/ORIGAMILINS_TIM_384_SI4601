@@ -63,6 +63,20 @@
                 </div>
 
                 <div class="mb-3">
+                    <label for="kuota" class="form-label">Kuota Peserta</label>
+                    <input type="number" class="form-control @error('kuota') is-invalid @enderror" id="kuota"
+                        name="kuota" value="{{ old('kuota') }}" required min="1">
+                    @error('kuota')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                    <div class="form-text">
+                        Masukkan jumlah maksimal peserta yang dapat mengikuti event ini
+                    </div>
+                </div>
+
+                <div class="mb-3">
                     <label for="poster" class="form-label">Poster Event</label>
                     <input type="file" class="form-control @error('poster') is-invalid @enderror" 
                            id="poster" name="poster" accept="image/*" required>

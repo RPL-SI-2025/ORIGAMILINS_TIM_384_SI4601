@@ -17,7 +17,9 @@ class Event extends Model
         'tanggal_pelaksanaan',
         'harga',
         'lokasi',
-        'poster'
+        'poster',
+        'kuota',
+        'kuota_terisi'
     ];
 
     protected $casts = [
@@ -25,6 +27,21 @@ class Event extends Model
     ];
 
     /**
+     * Check if event still has available seats
+     */
+    public function hasAvailableSeats(): bool
+    {
+        return $this->kuota > $this->kuota_terisi;
+    }
+
+    /**
+     * Get remaining seats
+     */
+    public function getRemainingSeats(): int
+    {
+        return $this->kuota - $this->kuota_terisi;
+    }
+}
      * Get the reviews for the event.
      */
     public function reviews()
