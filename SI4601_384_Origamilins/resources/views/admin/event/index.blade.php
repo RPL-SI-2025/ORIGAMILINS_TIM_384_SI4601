@@ -15,6 +15,62 @@
     </div>
     @endif
 
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header py-2">
+                    <h5 class="mb-0">Filter Event</h5>
+                </div>
+                <div class="card-body py-2">
+                    <form action="{{ route('admin.event.index') }}" method="GET">
+                        <div class="row g-2">
+                            <div class="col-md-2">
+                                <div class="mb-2">
+                                    <label for="nama_event" class="form-label small">Nama Event</label>
+                                    <input type="text" class="form-control form-control-sm" id="nama_event" name="nama_event" value="{{ request('nama_event') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-2">
+                                    <label for="lokasi" class="form-label small">Lokasi</label>
+                                    <input type="text" class="form-control form-control-sm" id="lokasi" name="lokasi" value="{{ request('lokasi') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-2">
+                                    <label for="tanggal_awal" class="form-label small">Tanggal Awal</label>
+                                    <input type="date" class="form-control form-control-sm" id="tanggal_awal" name="tanggal_awal" value="{{ request('tanggal_awal') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-2">
+                                    <label for="tanggal_akhir" class="form-label small">Tanggal Akhir</label>
+                                    <input type="date" class="form-control form-control-sm" id="tanggal_akhir" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-2">
+                                    <label for="harga_min" class="form-label small">Harga Min</label>
+                                    <input type="number" class="form-control form-control-sm" id="harga_min" name="harga_min" value="{{ request('harga_min') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-2">
+                                    <label for="harga_max" class="form-label small">Harga Max</label>
+                                    <input type="number" class="form-control form-control-sm" id="harga_max" name="harga_max" value="{{ request('harga_max') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <button type="submit" class="btn btn-primary btn-sm">Cari</button>
+                            <a href="{{ route('admin.event.index') }}" class="btn btn-secondary btn-sm">Reset</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card mb-4">
         <div class="card-body">
             <table class="table table-striped">

@@ -42,3 +42,9 @@ class Event extends Model
         return $this->kuota - $this->kuota_terisi;
     }
 }
+     * Get the reviews for the event.
+     */
+    public function reviews()
+    {
+        return $this->hasMany(EventReview::class);
+    }
