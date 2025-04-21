@@ -40,6 +40,7 @@
                             <td>Rp {{ number_format($event->harga, 0, ',', '.') }}</td>
                         </tr>
                         <tr>
+<<<<<<< Updated upstream
                             <th>Kuota Peserta</th>
                             <td>
                                 <div class="d-flex align-items-center">
@@ -61,6 +62,31 @@
                                             @endif
                                         @endif
                                     </span>
+=======
+                            <th>Status Kuota</th>
+                            <td>
+                                <div class="mb-2">
+                                    <div class="progress" style="height: 25px;">
+                                        <div class="progress-bar {{ $event->kuota_terisi >= $event->kuota ? 'bg-danger' : 'bg-success' }}" 
+                                             role="progressbar" 
+                                             style="width: {{ ($event->kuota_terisi / max($event->kuota, 1)) * 100 }}%">
+                                            {{ $event->kuota_terisi }}/{{ $event->kuota }} Peserta
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    @if($event->tanggal_pelaksanaan < now())
+                                        <span class="badge bg-secondary">Event Selesai</span>
+                                    @else
+                                        @if($event->kuota_terisi >= $event->kuota)
+                                            <span class="badge bg-danger">Kuota Penuh</span>
+                                        @else
+                                            <span class="badge bg-success">
+                                                Tersisa {{ $event->kuota - $event->kuota_terisi }} kursi
+                                            </span>
+                                        @endif
+                                    @endif
+>>>>>>> Stashed changes
                                 </div>
                             </td>
                         </tr>
@@ -89,31 +115,43 @@
 </div>
 
 <style>
-.table-details th {
-    background-color: #f8f9fa;
+.progress {
+    background-color: #e9ecef;
+    border-radius: 0.25rem;
+    overflow: hidden;
 }
 
-.table-details td, .table-details th {
+.progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.875rem;
+    transition: width 0.6s ease;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 500;
+}
+
+.table td, .table th {
     padding: 1rem;
     border-bottom: 1px solid #dee2e6;
 }
 
-.no-poster-placeholder {
-    padding: 2rem;
-    background-color: #f8f9fa;
-    border-radius: 0.25rem;
-}
-
 .card {
     border: none;
-}
-
-.shadow-sm {
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
 }
 
 .btn {
-    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+}
+
+.badge {
+    font-size: 0.875rem;
+    padding: 0.5em 1em;
 }
 </style>
 @endsection 

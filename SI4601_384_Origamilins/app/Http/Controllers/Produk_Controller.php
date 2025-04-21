@@ -11,7 +11,6 @@ class Produk_Controller extends Controller
     // Menampilkan semua produk
     public function index()
     {
- Nabiel
         $query = Produk::query();
 
         // Filter by category
@@ -58,13 +57,12 @@ class Produk_Controller extends Controller
         // Jika admin, tampilkan view admin
         if (request()->is('admin/*')) {
             return view('admin.produk.index', compact('products'));
- main
         }
 
         // Jika user biasa
         return view('produk.melihat_produk', compact('products'));
     }
-
+    }
     // Menampilkan form tambah produk
     public function create()
     {
@@ -84,12 +82,9 @@ class Produk_Controller extends Controller
             'deskripsi' => 'required|string',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
- Nabiel
         // Konversi harga dari format dengan titik menjadi angka biasa
         $produkData['harga'] = (float) str_replace('.', '', $request->harga);
 
- main
         if ($request->hasFile('gambar')) {
             $file = $request->file('gambar');
             $filename = time() . '_' . $file->getClientOriginalName();
@@ -127,12 +122,9 @@ class Produk_Controller extends Controller
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
- Nabiel
         // Konversi harga dari format dengan titik menjadi angka biasa
         $produkData['harga'] = (float) str_replace('.', '', $request->harga);
 
-
- main
         if ($request->hasFile('gambar')) {
             // Hapus gambar lama jika ada
             if ($product->gambar && file_exists(public_path($product->gambar))) {
@@ -153,7 +145,7 @@ class Produk_Controller extends Controller
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil diperbarui');
     }
- Nabiel
+
 
     /**
      * Menghapus produk
@@ -172,5 +164,4 @@ class Produk_Controller extends Controller
             ->with('success', 'Produk berhasil dihapus');
     }
 
-main
 }
