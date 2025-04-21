@@ -75,6 +75,7 @@ use Illuminate\Support\Facades\Storage;
                             <th>Nama Produk</th>
                             <th>Harga</th>
                             <th>Kategori</th>
+                            <th>Stok</th>
                             <th>Deskripsi</th>
                             <th>Aksi</th>
                         </tr>
@@ -97,6 +98,11 @@ use Illuminate\Support\Facades\Storage;
                             <td>{{ $product->nama }}</td>
                             <td>Rp {{ number_format($product->harga, 0, ',', '.') }}</td>
                             <td>{{ $product->kategori }}</td>
+                            <td>
+                                <span class="badge {{ $product->stok > 0 ? 'bg-success' : 'bg-danger' }}">
+                                    {{ $product->stok }}
+                                </span>
+                            </td>
                             <td>{{ $product->deskripsi }}</td>
                             <td>
                                 <div class="btn-group">

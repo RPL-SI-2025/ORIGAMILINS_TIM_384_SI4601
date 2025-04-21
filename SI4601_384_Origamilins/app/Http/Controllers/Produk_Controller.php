@@ -37,7 +37,7 @@ class Produk_Controller extends Controller
             $query->where('nama', 'like', '%' . request('nama') . '%');
         }
 
-        $products = $query->get();
+        $products = $query->paginate(10);
         $categories = Produk::distinct()->pluck('kategori');
 
         // Jika request AJAX, return JSON
@@ -51,18 +51,12 @@ class Produk_Controller extends Controller
         // Jika admin, tampilkan view admin
         if (request()->is('admin/*')) {
             return view('admin.produk.index', compact('products', 'categories'));
-
-        $products = Produk::all();
-
-        // Jika admin, tampilkan view admin
-        if (request()->is('admin/*')) {
-            return view('admin.produk.index', compact('products'));
         }
 
         // Jika user biasa
         return view('produk.melihat_produk', compact('products'));
     }
-    }
+
     // Menampilkan form tambah produk
     public function create()
     {
@@ -82,6 +76,7 @@ class Produk_Controller extends Controller
             'deskripsi' => 'required|string',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
         // Konversi harga dari format dengan titik menjadi angka biasa
         $produkData['harga'] = (float) str_replace('.', '', $request->harga);
 
@@ -125,6 +120,8 @@ class Produk_Controller extends Controller
         // Konversi harga dari format dengan titik menjadi angka biasa
         $produkData['harga'] = (float) str_replace('.', '', $request->harga);
 
+        // Konversi harga dari format dengan titik menjadi angka biasa
+        $produkData['harga'] = (float) str_replace('.', '', $request->harga);
         if ($request->hasFile('gambar')) {
             // Hapus gambar lama jika ada
             if ($product->gambar && file_exists(public_path($product->gambar))) {
@@ -146,7 +143,6 @@ class Produk_Controller extends Controller
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil diperbarui');
     }
 
-
     /**
      * Menghapus produk
      */
@@ -163,5 +159,4 @@ class Produk_Controller extends Controller
         return redirect()->route('admin.produk.index')
             ->with('success', 'Produk berhasil dihapus');
     }
-
 }
