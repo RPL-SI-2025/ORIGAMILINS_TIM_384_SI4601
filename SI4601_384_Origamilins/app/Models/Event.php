@@ -23,7 +23,10 @@ class Event extends Model
     ];
 
     protected $casts = [
-        'tanggal_pelaksanaan' => 'datetime',
+        'tanggal_pelaksanaan' => 'date',
+        'harga' => 'decimal:2',
+        'kuota' => 'integer',
+        'kuota_terisi' => 'integer'
     ];
 
     /**
@@ -48,3 +51,20 @@ class Event extends Model
     {
         return $this->hasMany(EventReview::class);
     }
+
+    /**
+     * Check if event still has available seats
+     */
+    public function hasAvailableSeats(): bool
+    {
+        return $this->kuota > $this->kuota_terisi;
+    }
+
+    /**
+     * Get remaining seats
+     */
+    public function getRemainingSeats(): int
+    {
+        return max(0, $this->kuota - $this->kuota_terisi);
+    }
+}

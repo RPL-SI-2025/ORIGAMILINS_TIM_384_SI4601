@@ -37,7 +37,7 @@
                     <label for="tanggal_pelaksanaan" class="form-label">Tanggal Pelaksanaan</label>
                     <input type="date" class="form-control @error('tanggal_pelaksanaan') is-invalid @enderror" 
                            id="tanggal_pelaksanaan" name="tanggal_pelaksanaan" 
-                           value="{{ old('tanggal_pelaksanaan', $event->tanggal_pelaksanaan) }}" required>
+                           value="{{ old('tanggal_pelaksanaan', $event->tanggal_pelaksanaan->format('Y-m-d')) }}" required>
                     @error('tanggal_pelaksanaan')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -66,18 +66,49 @@
 
                 <div class="mb-3">
                     <label for="kuota" class="form-label">Kuota Peserta</label>
+<<<<<<< Updated upstream
                     <input type="number" class="form-control @error('kuota') is-invalid @enderror" id="kuota"
                         name="kuota" value="{{ old('kuota', $event->kuota) }}" required min="1">
                     @error('kuota')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
+=======
+                    <input type="number" class="form-control @error('kuota') is-invalid @enderror" 
+                           id="kuota" name="kuota" value="{{ old('kuota', $event->kuota) }}" required min="{{ $event->kuota_terisi }}">
+                    @error('kuota')
+                        <div class="invalid-feedback">{{ $message }}</div>
+>>>>>>> Stashed changes
                     @enderror
                     <div class="form-text">
                         Masukkan jumlah maksimal peserta yang dapat mengikuti event ini
                     </div>
+<<<<<<< Updated upstream
                     <div class="form-text text-info">
                         Kuota terisi saat ini: {{ $event->kuota_terisi }} peserta
+=======
+                    <div class="mt-2">
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar {{ $event->kuota_terisi >= $event->kuota ? 'bg-danger' : 'bg-success' }}" 
+                                 role="progressbar" 
+                                 style="width: {{ ($event->kuota_terisi / max($event->kuota, 1)) * 100 }}%">
+                                {{ $event->kuota_terisi }}/{{ $event->kuota }} Peserta
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            @if($event->tanggal_pelaksanaan < now())
+                                <span class="badge bg-secondary">Event Selesai</span>
+                            @else
+                                @if($event->kuota_terisi >= $event->kuota)
+                                    <span class="badge bg-danger">Kuota Penuh</span>
+                                @else
+                                    <span class="badge bg-success">
+                                        Tersisa {{ $event->kuota - $event->kuota_terisi }} kursi
+                                    </span>
+                                @endif
+                            @endif
+                        </div>
+>>>>>>> Stashed changes
                     </div>
                 </div>
 
@@ -127,6 +158,21 @@ document.getElementById('poster').onchange = function(evt) {
 </script>
 
 <style>
+.progress {
+    background-color: #e9ecef;
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+.progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.875rem;
+    transition: width 0.6s ease;
+}
+
 .form-label {
     font-weight: 500;
 }
@@ -141,6 +187,11 @@ document.getElementById('poster').onchange = function(evt) {
     background-color: #fff;
     border-radius: 0.25rem;
     object-fit: contain;
+}
+
+.badge {
+    font-size: 0.875rem;
+    padding: 0.5em 1em;
 }
 </style>
 @endsection 

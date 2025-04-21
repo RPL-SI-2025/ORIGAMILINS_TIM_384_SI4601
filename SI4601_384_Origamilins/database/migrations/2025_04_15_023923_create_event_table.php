@@ -19,6 +19,8 @@ return new class extends Migration
             $table->decimal('harga', 10, 2)->default(0); 
             $table->string('lokasi'); 
             $table->string('poster')->nullable();
+            $table->integer('kuota')->default(0);
+            $table->integer('kuota_terisi')->default(0);
             $table->timestamps(); 
         });
     }
