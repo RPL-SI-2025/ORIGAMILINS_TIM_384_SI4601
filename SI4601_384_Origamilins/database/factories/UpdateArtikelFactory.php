@@ -6,7 +6,7 @@ use App\Models\Artikel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class ArtikelFactory extends Factory
+class UpdateArtikelFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
@@ -28,54 +28,10 @@ class ArtikelFactory extends Factory
             'judul' => $judul,
             'isi' => $this->faker->paragraphs(3, true), // Minimal 50 karakter
             'tanggal_publikasi' => $this->faker->dateTimeBetween('-1 month', 'now'),
-            'gambar' => 'uploads/artikel/default.jpg',
+            'gambar' => 'uploads/artikel/test.jpg',
             'created_at' => now(),
             'updated_at' => now(),
         ];
-    }
-
-    /**
-     * Indicate that the artikel is published today.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    public function publishedToday()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'tanggal_publikasi' => now(),
-            ];
-        });
-    }
-
-    /**
-     * Indicate that the artikel is published in the future.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     *
-     * @throws \Exception
-     */
-    public function publishedInFuture()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'tanggal_publikasi' => $this->faker->dateTimeBetween('+1 day', '+1 month'),
-            ];
-        });
-    }
-
-    /**
-     * Indicate that the artikel has a long title.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    public function longTitle()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'judul' => Str::random(256),
-            ];
-        });
     }
 
     /**
@@ -133,4 +89,60 @@ class ArtikelFactory extends Factory
             ];
         });
     }
-}
+
+    /**
+     * Indicate that the artikel has a long title.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function longTitle()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'judul' => Str::random(256),
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the artikel has no image.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function noImage()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'gambar' => null,
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the artikel has invalid image format.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function invalidImageFormat()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'gambar' => 'uploads/artikel/test.pdf',
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the artikel has large image size.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function largeImageSize()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'gambar' => 'uploads/artikel/large.jpg',
+            ];
+        });
+    }
+} 

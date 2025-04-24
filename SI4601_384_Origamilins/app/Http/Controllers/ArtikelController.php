@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Artikel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ArtikelController extends Controller
 {
@@ -21,15 +23,15 @@ class ArtikelController extends Controller
     public function store(Request $request)
     {
         $artikelData = $request->validate([
-            'judul' => 'required|string|max:255',
-            'isi' => 'required|string',
-            'tanggal_publikasi' => 'required|date',
+            'judul' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
+            'isi' => 'required|string|min:50',
+            'tanggal_publikasi' => 'required|date|before_or_equal:today',
             'gambar' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         if ($request->hasFile('gambar')) {
             $file = $request->file('gambar');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
 
             // Upload gambar ke folder public/uploads/artikel
             $file->move(public_path('uploads/artikel'), $filename);
@@ -61,9 +63,9 @@ class ArtikelController extends Controller
         $artikel = Artikel::findOrFail($id_artikel);
 
         $artikelData = $request->validate([
-            'judul' => 'required|string|max:255',
-            'isi' => 'required|string',
-            'tanggal_publikasi' => 'required|date',
+            'judul' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
+            'isi' => 'required|string|min:50',
+            'tanggal_publikasi' => 'required|date|before_or_equal:today',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
@@ -74,7 +76,7 @@ class ArtikelController extends Controller
             }
 
             $file = $request->file('gambar');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
 
             // Upload gambar ke folder public/uploads/artikel
             $file->move(public_path('uploads/artikel'), $filename);
@@ -82,6 +84,9 @@ class ArtikelController extends Controller
             // Simpan path relatif ke database
             $artikelData['gambar'] = 'uploads/artikel/' . $filename;
         }
+
+        // Sanitize HTML content
+        $artikelData['isi'] = strip_tags($artikelData['isi'], '<p><br><h1><h2><h3><h4><h5><h6><ul><ol><li><strong><em><u><blockquote><img><a>');
 
         $artikel->update($artikelData);
 
