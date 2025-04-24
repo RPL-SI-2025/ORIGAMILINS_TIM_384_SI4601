@@ -94,10 +94,10 @@ class Produk_Controller extends Controller
         if ($request->hasFile('gambar')) {
             $file = $request->file('gambar');
             $filename = time() . '_' . $file->getClientOriginalName();
-            
+
             // Upload gambar ke folder public/uploads/produk
             $file->move(public_path('uploads/produk'), $filename);
-            
+
             // Simpan path relatif ke database
             $produkData['gambar'] = 'uploads/produk/' . $filename;
         }
@@ -137,13 +137,13 @@ class Produk_Controller extends Controller
             if ($product->gambar && file_exists(public_path($product->gambar))) {
                 unlink(public_path($product->gambar));
             }
-            
+
             $file = $request->file('gambar');
             $filename = time() . '_' . $file->getClientOriginalName();
-            
+
             // Upload gambar ke folder public/uploads/produk
             $file->move(public_path('uploads/produk'), $filename);
-            
+
             // Simpan path relatif ke database
             $produkData['gambar'] = 'uploads/produk/' . $filename;
         }
@@ -153,9 +153,7 @@ class Produk_Controller extends Controller
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil diperbarui');
     }
 
-    /**
-     * Menghapus produk
-     */
+    // Menghapus produk
     public function destroy(Produk $product)
     {
         // Hapus gambar jika ada

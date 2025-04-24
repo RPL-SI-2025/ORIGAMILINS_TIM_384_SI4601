@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\EventReviewController;
+use App\Http\Controllers\PesananController;
+use App\Http\Controllers\PesananEventController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,6 +31,16 @@ Route::middleware(['auth'])->group(function () {
         }
         return view('user.dashboard');
     })->name('dashboard');
+
+    // Pesanan Produk
+    Route::get('/pesananproduk', [PesananController::class, 'index'])->name('admin.pesananproduk.index');
+    Route::get('/pesananproduk/{id_pesanan}/edit', [PesananController::class, 'edit'])->name('admin.pesananproduk.edit');
+    Route::put('/pesananproduk/{id_pesanan}', [PesananController::class, 'update'])->name('admin.pesananproduk.update');
+
+    // Pesanan Event
+    Route::get('/pesananevent', [PesananEventController::class, 'index'])->name('admin.pesananevent.index');
+    Route::get('/pesananevent/{id_pesanan_event}/edit', [PesananEventController::class, 'edit'])->name('admin.pesananevent.edit');
+    Route::put('/pesananevent/{id_pesanan_event}', [PesananEventController::class, 'update'])->name('admin.pesananevent.update');
 });
 
 // Admin Route Sementara
@@ -103,6 +115,10 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
     Route::get('/artikel/{id_artikel}/edit', [ArtikelController::class, 'edit'])->name('admin.artikel.edit');
     Route::put('/artikel/{id_artikel}', [ArtikelController::class, 'update'])->name('admin.artikel.update');
     Route::delete('/artikel/{id_artikel}', [ArtikelController::class, 'destroy'])->name('admin.artikel.destroy');
+
+    // Manajemen Pesanan
+    Route::get('/pesanan/{id_pesanan}/edit', [PesananController::class, 'edit'])->name('admin.pesanan.edit');
+    Route::put('/pesanan/{id_pesanan}', [PesananController::class, 'update'])->name('admin.pesanan.update');
 });
 
 // Debug Login Info
