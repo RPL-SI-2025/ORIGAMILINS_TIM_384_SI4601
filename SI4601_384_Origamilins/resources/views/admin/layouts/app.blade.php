@@ -174,6 +174,9 @@
                         <a href="{{ route('admin.event-reviews.index') }}" class="list-group-item {{ request()->routeIs('admin.event-reviews.*') ? 'active' : '' }}">
                             <i class="fas fa-star me-2"></i> Ulasan Event
                         </a>
+                        <a href="{{ route('admin.product-reviews.index') }}" class="list-group-item {{ request()->routeIs('admin.product-reviews.*') ? 'active' : '' }}">
+                            <i class="fas fa-star me-2"></i> Ulasan Produk
+                        </a>
                     </div>
                 </div>
 

@@ -11,6 +11,7 @@ use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\EventReviewController;
 use App\Http\Controllers\PesananController;
 use App\Http\Controllers\PesananEventController;
+use App\Http\Controllers\ProductReviewController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -119,6 +120,14 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
     // Manajemen Pesanan
     Route::get('/pesanan/{id_pesanan}/edit', [PesananController::class, 'edit'])->name('admin.pesanan.edit');
     Route::put('/pesanan/{id_pesanan}', [PesananController::class, 'update'])->name('admin.pesanan.update');
+
+    // Product Review Routes
+    Route::prefix('product-reviews')->name('admin.product-reviews.')->group(function () {
+        Route::get('/', [ProductReviewController::class, 'index'])->name('index');
+        Route::get('/{review}', [ProductReviewController::class, 'show'])->name('show');
+        Route::post('/{review}/approve', [ProductReviewController::class, 'approve'])->name('approve');
+        Route::post('/{review}/reject', [ProductReviewController::class, 'reject'])->name('reject');
+    });
 });
 
 // Debug Login Info

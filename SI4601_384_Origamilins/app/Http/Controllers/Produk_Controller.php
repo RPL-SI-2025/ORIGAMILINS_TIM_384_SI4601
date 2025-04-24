@@ -85,6 +85,7 @@ class Produk_Controller extends Controller
             'harga' => 'required|numeric|min:0',
             'kategori' => 'required|string|max:100',
             'deskripsi' => 'required|string',
+            'stok' => 'required|integer|min:0',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
