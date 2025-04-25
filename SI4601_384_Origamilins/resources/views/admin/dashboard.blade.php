@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Statistik Produk -->
-        <div class="col-xl-6 col-md-6 mb-4">
+        <div class="col-xl-4 col-md-6 mb-4">
             <div class="card border-left-primary h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -30,7 +30,7 @@
         </div>
 
         <!-- Statistik Event -->
-        <div class="col-xl-6 col-md-6 mb-4">
+        <div class="col-xl-4 col-md-6 mb-4">
             <div class="card border-left-success h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -54,6 +54,32 @@
                 </div>
             </div>
         </div>
+
+        <!-- Statistik Artikel -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-info h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Manajemen Artikel
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                Total: {{ \App\Models\Artikel::count() }}
+                            </div>
+                            <div class="mt-3">
+                                <a href="{{ route('admin.artikel.index') }}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-newspaper me-1"></i> Kelola Artikel
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-newspaper fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Aktivitas Terbaru -->
@@ -66,7 +92,7 @@
                 <div class="card-body">
                     <div class="row">
                         <!-- Produk Terbaru -->
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <h6 class="border-bottom pb-2">Produk Terbaru</h6>
                             <div class="list-group list-group-flush">
                                 @forelse(\App\Models\Produk::latest()->take(5)->get() as $produk)
@@ -85,19 +111,38 @@
                         </div>
 
                         <!-- Event Terbaru -->
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <h6 class="border-bottom pb-2">Event Terbaru</h6>
                             <div class="list-group list-group-flush">
                                 @forelse(\App\Models\Event::latest()->take(5)->get() as $event)
                                     <div class="list-group-item">
                                         <div class="d-flex w-100 justify-content-between">
                                             <h6 class="mb-1">{{ $event->nama_event }}</h6>
-                                            <small class="text-muted">{{ date('d M Y', strtotime($event->tanggal_pelaksanaan)) }}</small>
+                                            <small class="text-muted">{{ $event->tanggal_event ? $event->tanggal_event->format('d/m/Y') : 'Tanggal belum diatur' }}</small>
                                         </div>
                                         <p class="mb-1 text-muted small">{{ Str::limit($event->deskripsi, 50) }}</p>
+                                        <small class="text-muted">Kuota: {{ $event->kuota }}</small>
                                     </div>
                                 @empty
                                     <div class="list-group-item">Tidak ada event</div>
+                                @endforelse
+                            </div>
+                        </div>
+
+                        <!-- Artikel Terbaru -->
+                        <div class="col-md-4">
+                            <h6 class="border-bottom pb-2">Artikel Terbaru</h6>
+                            <div class="list-group list-group-flush">
+                                @forelse(\App\Models\Artikel::latest()->take(5)->get() as $artikel)
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">{{ $artikel->judul }}</h6>
+                                            <small class="text-muted">{{ $artikel->tanggal_publikasi->format('d/m/Y') }}</small>
+                                        </div>
+                                        <p class="mb-1 text-muted small">{{ Str::limit(strip_tags($artikel->isi), 50) }}</p>
+                                    </div>
+                                @empty
+                                    <div class="list-group-item">Tidak ada artikel</div>
                                 @endforelse
                             </div>
                         </div>
