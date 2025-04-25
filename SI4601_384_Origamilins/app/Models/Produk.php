@@ -24,10 +24,11 @@ class Produk extends Model
     protected $fillable = [
         'nama',
         'harga',
+        'harga_dasar',
         'kategori',
+        'ukuran',
         'gambar',
-        'deskripsi',
-        'stok'
+        'deskripsi'
     ];
 
     /**
@@ -37,6 +38,6 @@ class Produk extends Model
      */
     protected $casts = [
         'harga' => 'decimal:2',
-        'stok' => 'integer'
+        'harga_dasar' => 'decimal:2'
     ];
 }
