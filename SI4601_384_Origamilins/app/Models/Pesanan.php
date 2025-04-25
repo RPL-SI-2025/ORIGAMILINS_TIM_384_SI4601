@@ -16,6 +16,7 @@ class Pesanan extends Model
     protected $fillable = [
         'nama_pemesan',
         'nama_produk',
+        'ekspedisi',
         'status',
         'created_at',
         'updated_at'
@@ -33,6 +34,17 @@ class Pesanan extends Model
             'Dikonfirmasi' => 'Dikonfirmasi',
             'Selesai' => 'Selesai',
             'Dibatalkan' => 'Dibatalkan'
+        ];
+    }
+
+    public static function getEkspedisiOptions()
+    {
+        return [
+            'JNE' => 'JNE',
+            'J&T' => 'J&T',
+            'SiCepat' => 'SiCepat',
+            'Pos Indonesia' => 'Pos Indonesia',
+            'TIKI' => 'TIKI'
         ];
     }
 } 

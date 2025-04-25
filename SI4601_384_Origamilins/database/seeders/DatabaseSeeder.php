@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             ArtikelSeeder::class,
             EventReviewSeeder::class,
             ProductReviewSeeder::class,
+            PesananSeeder::class,
+            PesananEventSeeder::class,
         ]);
     }
 }

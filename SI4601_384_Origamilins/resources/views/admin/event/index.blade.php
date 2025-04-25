@@ -24,16 +24,16 @@
                 <div class="card-body py-2">
                     <form action="{{ route('admin.event.index') }}" method="GET">
                         <div class="row g-2">
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="mb-2">
                                     <label for="nama_event" class="form-label small">Nama Event</label>
-                                    <input type="text" class="form-control form-control-sm" id="nama_event" name="nama_event" value="{{ request('nama_event') }}">
+                                    <input type="text" class="form-control form-control-sm" id="nama_event" name="nama_event" value="{{ request('nama_event') }}" placeholder="Cari nama event...">
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="mb-2">
                                     <label for="lokasi" class="form-label small">Lokasi</label>
-                                    <input type="text" class="form-control form-control-sm" id="lokasi" name="lokasi" value="{{ request('lokasi') }}">
+                                    <input type="text" class="form-control form-control-sm" id="lokasi" name="lokasi" value="{{ request('lokasi') }}" placeholder="Cari lokasi...">
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -50,14 +50,16 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-2">
-                                    <label for="harga_min" class="form-label small">Harga Min</label>
-                                    <input type="number" class="form-control form-control-sm" id="harga_min" name="harga_min" value="{{ request('harga_min') }}">
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="mb-2">
-                                    <label for="harga_max" class="form-label small">Harga Max</label>
-                                    <input type="number" class="form-control form-control-sm" id="harga_max" name="harga_max" value="{{ request('harga_max') }}">
+                                    <label for="harga_range" class="form-label small">Rentang Harga</label>
+                                    <select class="form-select form-select-sm" id="harga_range" name="harga_range">
+                                        <option value="">Semua Harga</option>
+                                        <option value="0-10000" {{ request('harga_range') == '0-10000' ? 'selected' : '' }}>Rp 0 - 100.00</option>
+                                        <option value="10000-25000" {{ request('harga_range') == '10000-25000' ? 'selected' : '' }}>Rp 10.000 - 25.000</option>
+                                        <option value="25000-50000" {{ request('harga_range') == '25000-50000' ? 'selected' : '' }}>Rp 25.000 - 50.000</option>
+                                        <option value="50000-75000" {{ request('harga_range') == '50000-75000' ? 'selected' : '' }}>Rp 50.000 - 75.000</option>
+                                        <option value="75000-100000" {{ request('harga_range') == '75000-100000' ? 'selected' : '' }}>Rp 75.000 - 100.000</option>
+                                        <option value="100000-200000" {{ request('harga_range') == '100000-200000' ? 'selected' : '' }}>> Rp 100.000</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
