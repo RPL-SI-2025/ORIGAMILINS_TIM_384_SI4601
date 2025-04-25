@@ -15,7 +15,7 @@ class ProductFactory extends Factory
             'nama' => $this->faker->word,
             'deskripsi' => $this->faker->paragraph,
             'harga' => $this->faker->randomFloat(2, 10000, 1000000),
-            'kategori' => $this->faker->randomElement(['Dekorasi', 'Aksesoris', 'Lainnya']),
+            'kategori' => $this->faker->randomElement(['Dekorasi', 'Merchandise']),
             'gambar' => $this->faker->imageUrl(),
             'created_at' => now(),
             'updated_at' => now(),
