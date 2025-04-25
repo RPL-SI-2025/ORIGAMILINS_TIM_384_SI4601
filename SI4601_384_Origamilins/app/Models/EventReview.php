@@ -38,5 +38,7 @@ class EventReview extends Model
             'Disetujui' => 'Disetujui',
             'Ditolak' => 'Ditolak'
         ];
+
+        
     }
 } 
