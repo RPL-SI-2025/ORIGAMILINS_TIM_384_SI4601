@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase; //dihapus adick2 
 
     protected $admin;
     protected $user;

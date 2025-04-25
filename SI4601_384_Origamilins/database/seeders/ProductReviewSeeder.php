@@ -20,7 +20,6 @@ class ProductReviewSeeder extends Seeder
         }
 
         foreach ($produks as $produk) {
-            // Buat 3-5 review untuk setiap produk
             $reviewCount = rand(3, 5);
             
             for ($i = 0; $i < $reviewCount; $i++) {

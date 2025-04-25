@@ -58,7 +58,6 @@
                             <th>Role</th>
                             <th>Status</th>
                             <th>Tanggal Registrasi</th>
-                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="userTableBody">
