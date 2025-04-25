@@ -165,6 +165,12 @@
                         <a href="{{ route('admin.event.index') }}" class="list-group-item {{ request()->routeIs('admin.event.*') ? 'active' : '' }}">
                             <i class="fas fa-calendar me-2"></i> Manajemen Event
                         </a>
+                        <a href="{{ route('admin.pesananproduk.index') }}" class="list-group-item {{ request()->routeIs('admin.pesananproduk.*') ? 'active' : '' }}">
+                            <i class="fas fa-shopping-cart me-2"></i> Pesanan Produk
+                        </a>
+                        <a href="{{ route('admin.pesananevent.index') }}" class="list-group-item {{ request()->routeIs('admin.pesananevent.*') ? 'active' : '' }}">
+                            <i class="fas fa-ticket-alt me-2"></i> Pesanan Event
+                        </a>
                         <a href="{{ route('admin.artikel.index') }}" class="list-group-item {{ request()->routeIs('admin.artikel.*') ? 'active' : '' }}">
                             <i class="fas fa-newspaper me-2"></i> Manajemen Artikel
                         </a>

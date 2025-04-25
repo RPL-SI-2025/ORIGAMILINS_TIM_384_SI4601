@@ -14,10 +14,37 @@ class PesananEventController extends Controller
         $this->middleware(['auth', 'admin'])->except(['index']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $pesanan = PesananEvent::latest()->get();
-        return view('admin.pesananevent.index', compact('pesanan'));
+        $query = PesananEvent::query();
+
+        // Search with partial word matching
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nama_pemesan', 'like', "%{$search}%")
+                  ->orWhere('nama_event', 'like', "%{$search}%")
+                  ->orWhere('id_pesanan_event', 'like', "%{$search}%")
+                  ->orWhere('status', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by status
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by date range
+        if ($request->has('date_start') && $request->date_start != '') {
+            $query->whereDate('created_at', '>=', $request->date_start);
+        }
+        if ($request->has('date_end') && $request->date_end != '') {
+            $query->whereDate('created_at', '<=', $request->date_end);
+        }
+
+        $pesanan = $query->orderBy('id_pesanan_event', 'asc')->get();
+        $statusOptions = PesananEvent::getStatusOptions();
+        return view('admin.pesananevent.index', compact('pesanan', 'statusOptions'));
     }
 
     public function edit($id_pesanan_event)
@@ -36,7 +63,7 @@ class PesananEventController extends Controller
     {
         try {
             $request->validate([
-                'status' => 'required|in:Menunggu,Dikonfirmasi,Selesai,Dibatalkan'
+                'status' => 'required|in:Menunggu,Belum Berjalan,Sedang Berjalan,Selesai,Dibatalkan'
             ]);
 
             $pesanan = PesananEvent::findOrFail($id_pesanan_event);

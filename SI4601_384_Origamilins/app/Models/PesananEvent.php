@@ -30,7 +30,8 @@ class PesananEvent extends Model
     {
         return [
             'Menunggu' => 'Menunggu',
-            'Dikonfirmasi' => 'Dikonfirmasi',
+            'Belum Berjalan' => 'Belum Berjalan',
+            'Sedang Berjalan' => 'Sedang Berjalan',
             'Selesai' => 'Selesai',
             'Dibatalkan' => 'Dibatalkan'
         ];

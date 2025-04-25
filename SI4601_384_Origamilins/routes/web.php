@@ -117,9 +117,19 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
     Route::put('/artikel/{id_artikel}', [ArtikelController::class, 'update'])->name('admin.artikel.update');
     Route::delete('/artikel/{id_artikel}', [ArtikelController::class, 'destroy'])->name('admin.artikel.destroy');
 
-    // Manajemen Pesanan
-    Route::get('/pesanan/{id_pesanan}/edit', [PesananController::class, 'edit'])->name('admin.pesanan.edit');
-    Route::put('/pesanan/{id_pesanan}', [PesananController::class, 'update'])->name('admin.pesanan.update');
+    // Manajemen Pesanan Produk
+    Route::prefix('pesanan-produk')->name('admin.pesananproduk.')->group(function () {
+        Route::get('/', [PesananController::class, 'index'])->name('index');
+        Route::get('/{id_pesanan}/edit', [PesananController::class, 'edit'])->name('edit');
+        Route::put('/{id_pesanan}', [PesananController::class, 'update'])->name('update');
+    });
+
+    // Manajemen Pesanan Event
+    Route::prefix('pesanan-event')->name('admin.pesananevent.')->group(function () {
+        Route::get('/', [PesananEventController::class, 'index'])->name('index');
+        Route::get('/{id_pesanan_event}/edit', [PesananEventController::class, 'edit'])->name('edit');
+        Route::put('/{id_pesanan_event}', [PesananEventController::class, 'update'])->name('update');
+    });
 
     // Product Review Routes
     Route::prefix('product-reviews')->name('admin.product-reviews.')->group(function () {

@@ -14,10 +14,43 @@ class PesananController extends Controller
         $this->middleware(['auth', 'admin'])->except(['index']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $pesanan = Pesanan::latest()->get();
-        return view('admin.pesananproduk.index', compact('pesanan'));
+        $query = Pesanan::query();
+
+        // Search with partial word matching
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nama_pemesan', 'like', "%{$search}%")
+                  ->orWhere('nama_produk', 'like', "%{$search}%")
+                  ->orWhere('id_pesanan', 'like', "%{$search}%")
+                  ->orWhere('ekspedisi', 'like', "%{$search}%")
+                  ->orWhere('status', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by status
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by expedition
+        if ($request->has('ekspedisi') && $request->ekspedisi != '') {
+            $query->where('ekspedisi', $request->ekspedisi);
+        }
+
+        // Filter by date range
+        if ($request->has('date_start') && $request->date_start != '') {
+            $query->whereDate('created_at', '>=', $request->date_start);
+        }
+        if ($request->has('date_end') && $request->date_end != '') {
+            $query->whereDate('created_at', '<=', $request->date_end);
+        }
+
+        $pesanan = $query->orderBy('id_pesanan', 'asc')->get();
+        $ekspedisiOptions = Pesanan::getEkspedisiOptions();
+        return view('admin.pesananproduk.index', compact('pesanan', 'ekspedisiOptions'));
     }
 
     public function edit($id_pesanan)
@@ -25,7 +58,8 @@ class PesananController extends Controller
         try {
             $pesanan = Pesanan::findOrFail($id_pesanan);
             $statusOptions = Pesanan::getStatusOptions();
-            return view('admin.pesananproduk.edit', compact('pesanan', 'statusOptions'));
+            $ekspedisiOptions = Pesanan::getEkspedisiOptions();
+            return view('admin.pesananproduk.edit', compact('pesanan', 'statusOptions', 'ekspedisiOptions'));
         } catch (\Exception $e) {
             return redirect()->route('admin.pesananproduk.index')
                 ->with('error', 'Pesanan produk tidak ditemukan');
@@ -36,19 +70,21 @@ class PesananController extends Controller
     {
         try {
             $request->validate([
-                'status' => 'required|in:Menunggu,Dikonfirmasi,Selesai,Dibatalkan'
+                'status' => 'required|in:Menunggu,Dikonfirmasi,Selesai,Dibatalkan',
+                'ekspedisi' => 'required|in:' . implode(',', array_keys(Pesanan::getEkspedisiOptions()))
             ]);
 
             $pesanan = Pesanan::findOrFail($id_pesanan);
             $pesanan->update([
-                'status' => $request->status
+                'status' => $request->status,
+                'ekspedisi' => $request->ekspedisi
             ]);
 
             return redirect()->route('admin.pesananproduk.index')
-                ->with('success', 'Status pesanan produk berhasil diperbarui!');
+                ->with('success', 'Status dan ekspedisi pesanan produk berhasil diperbarui!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Gagal memperbarui status pesanan produk: ' . $e->getMessage());
+                ->with('error', 'Gagal memperbarui pesanan produk: ' . $e->getMessage());
         }
     }
-} 
+}

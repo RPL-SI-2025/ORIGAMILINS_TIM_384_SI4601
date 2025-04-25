@@ -11,22 +11,22 @@ class EventController extends Controller
     {
         $events = Event::query();
 
-        // Filter by name
+        // Filter by name with partial word matching
         if (request()->has('nama_event') && request('nama_event') != '') {
             $events->where('nama_event', 'like', '%' . request('nama_event') . '%');
         }
 
-        // Filter by price range
-        if (request()->has('harga_min') && request('harga_min') != '') {
-            $events->where('harga', '>=', request('harga_min'));
-        }
-        if (request()->has('harga_max') && request('harga_max') != '') {
-            $events->where('harga', '<=', request('harga_max'));
-        }
-
-        // Filter by location
+        // Filter by location with partial word matching
         if (request()->has('lokasi') && request('lokasi') != '') {
             $events->where('lokasi', 'like', '%' . request('lokasi') . '%');
+        }
+
+        // Filter by price range
+        if (request()->has('harga_range') && request('harga_range') != '') {
+            $range = explode('-', request('harga_range'));
+            if (count($range) == 2) {
+                $events->whereBetween('harga', [$range[0], $range[1]]);
+            }
         }
 
         // Filter by date range

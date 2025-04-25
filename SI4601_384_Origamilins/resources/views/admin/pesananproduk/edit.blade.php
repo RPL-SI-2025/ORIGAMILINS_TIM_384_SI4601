@@ -1,79 +1,92 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Status Pesanan Produk') }}
-        </h2>
-    </x-slot>
+@extends('admin.layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    @if(session('error'))
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                            <span class="block sm:inline">{{ session('error') }}</span>
+@section('content')
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Edit Pesanan #{{ $pesanan->id_pesanan }}</h2>
+        <a href="{{ route('admin.pesananproduk.index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i> Kembali
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form action="{{ route('admin.pesananproduk.update', $pesanan->id_pesanan) }}" method="POST">
+                @csrf
+                @method('PUT')
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">ID Pesanan</label>
+                            <input type="text" class="form-control" value="{{ $pesanan->id_pesanan }}" readonly>
                         </div>
-                    @endif
-
-                    <form method="POST" action="{{ route('admin.pesananproduk.update', $pesanan->id_pesanan) }}">
-                        @csrf
-                        @method('PUT')
-
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="nama_pemesan">
-                                Nama Pemesan
-                            </label>
-                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                   id="nama_pemesan"
-                                   type="text"
-                                   value="{{ $pesanan->nama_pemesan }}"
-                                   disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Tanggal Pesanan</label>
+                            <input type="text" class="form-control" value="{{ $pesanan->created_at->format('d/m/Y H:i') }}" readonly>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="nama_produk">
-                                Nama Produk
-                            </label>
-                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                   id="nama_produk"
-                                   type="text"
-                                   value="{{ $pesanan->nama_produk }}"
-                                   disabled>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Nama Pemesan</label>
+                            <input type="text" class="form-control" value="{{ $pesanan->nama_pemesan }}" readonly>
                         </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Nama Produk</label>
+                            <input type="text" class="form-control" value="{{ $pesanan->nama_produk }}" readonly>
+                        </div>
+                    </div>
+                </div>
 
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="status">
-                                Status Pesanan
-                            </label>
-                            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('status') border-red-500 @enderror"
-                                    id="status"
-                                    name="status"
-                                    required>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="ekspedisi" class="form-label">Ekspedisi</label>
+                            <select class="form-select @error('ekspedisi') is-invalid @enderror" id="ekspedisi" name="ekspedisi">
+                                <option value="">Pilih Ekspedisi</option>
+                                @foreach(['JNE', 'J&T', 'SiCepat', 'Pos Indonesia', 'TIKI'] as $ekspedisi)
+                                    <option value="{{ $ekspedisi }}" {{ $pesanan->ekspedisi == $ekspedisi ? 'selected' : '' }}>
+                                        {{ $ekspedisi }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('ekspedisi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status Pesanan</label>
+                            <select class="form-select @error('status') is-invalid @enderror" id="status" name="status">
                                 <option value="">Pilih Status</option>
                                 @foreach($statusOptions as $value => $label)
-                                    <option value="{{ $value }}" {{ $pesanan->status === $value ? 'selected' : '' }}>
+                                    <option value="{{ $value }}" {{ $pesanan->status == $value ? 'selected' : '' }}>
                                         {{ $label }}
                                     </option>
                                 @endforeach
                             </select>
                             @error('status')
-                                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
-                        <div class="flex items-center justify-between">
-                            <a href="{{ route('admin.pesananproduk.index') }}" 
-                               class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                Kembali
-                            </a>
-                            <button type="submit" 
-                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                Simpan Perubahan
-                            </button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i> Simpan Perubahan
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-</x-app-layout> 
+</div>
+@endsection 
