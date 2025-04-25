@@ -73,9 +73,9 @@ use Illuminate\Support\Facades\Storage;
                             <th>No</th>
                             <th>Gambar</th>
                             <th>Nama Produk</th>
-                            <th>Harga</th>
+                            <th>Harga Dasar</th>
                             <th>Kategori</th>
-                            <th>Stok</th>
+                            <th>Ukuran</th>
                             <th>Deskripsi</th>
                             <th>Aksi</th>
                         </tr>
