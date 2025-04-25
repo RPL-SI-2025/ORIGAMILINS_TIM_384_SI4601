@@ -30,6 +30,24 @@
             background-color: #ffffff;
             padding-top: 2rem;
             box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            width: 280px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            border-radius: 0 20px 20px 0;
+            margin-right: 15px;
+        }
+        
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .admin-sidebar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .admin-sidebar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
         .admin-sidebar .list-group {
             padding: 0 15px;
@@ -38,16 +56,34 @@
             color: #6c757d;
             text-decoration: none;
             padding: 0.8rem 1rem;
-            display: block;
+            display: flex !important;
+            align-items: center;
             transition: all 0.3s ease;
             border-radius: 8px;
             margin-bottom: 5px;
             border: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .admin-sidebar a:hover {
-            background-color: #f8f9fa;
-            color: #0835d8;
-            transform: translateX(5px);
+        .admin-sidebar a i {
+            width: 24px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .admin-sidebar a span {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .admin-sidebar .list-group-item.active,
+        .admin-sidebar .list-group-item.active:hover {
+            background-color: #0835d8;
+            color: #ffffff;
+            border-color: #0835d8;
+        }
+        .admin-sidebar .list-group-item.active i {
+            color: #ffffff;
         }
         .admin-content {
             padding: 2rem;
@@ -61,12 +97,6 @@
             padding: 1rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             margin-bottom: 20px;
-        }
-        .admin-sidebar .list-group-item.active {
-            background-color: #0835d8;
-            color: #ffffff;
-            border-color: #0835d8;
-            transform: translateX(5px);
         }
         .btn-outline-danger {
             border-color: #dc3545;
@@ -119,6 +149,44 @@
             font-weight: 600;
             font-size: 1.5rem;
         }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                position: fixed;
+                left: -280px;
+                z-index: 1040;
+                width: 240px;
+                transition: all 0.3s ease;
+            }
+            .admin-sidebar.show {
+                left: 0;
+            }
+            .admin-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            #sidebarToggle {
+                display: block;
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .admin-sidebar {
+                width: 240px;
+            }
+        }
+        
+        /* Toggle button */
+        #sidebarToggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6c757d;
+            padding: 0.5rem;
+            cursor: pointer;
+        }
     </style>
 
     <!-- TinyMCE -->
@@ -146,6 +214,9 @@
                                 <i class="fas fa-sign-out-alt"></i> Logout
                             </a>
                         @endauth
+                        <button id="sidebarToggle" class="d-md-none">
+                            <i class="fas fa-bars"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -154,7 +225,7 @@
         <div class="container-fluid">
             <div class="row">
                 <!-- Sidebar -->
-                <div class="col-md-3 col-lg-2 admin-sidebar">
+                <div class="col-auto p-0 admin-sidebar">
                     <div class="list-group">
                         <a href="{{ route('admin.dashboard') }}" class="list-group-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                             <i class="fas fa-tachometer-alt me-2"></i> Dashboard
@@ -162,14 +233,20 @@
                         <a href="{{ route('admin.produk.index') }}" class="list-group-item {{ request()->routeIs('admin.produk.*') ? 'active' : '' }}">
                             <i class="fas fa-box me-2"></i> Manajemen Produk
                         </a>
-                        <a href="{{ route('admin.event.index') }}" class="list-group-item {{ request()->routeIs('admin.event.*') ? 'active' : '' }}">
-                            <i class="fas fa-calendar me-2"></i> Manajemen Event
-                        </a>
                         <a href="{{ route('admin.pesananproduk.index') }}" class="list-group-item {{ request()->routeIs('admin.pesananproduk.*') ? 'active' : '' }}">
                             <i class="fas fa-shopping-cart me-2"></i> Pesanan Produk
                         </a>
+                        <a href="{{ route('admin.product-reviews.index') }}" class="list-group-item {{ request()->routeIs('admin.product-reviews.*') ? 'active' : '' }}">
+                            <i class="fas fa-star me-2"></i> Ulasan Produk
+                        </a>
                         <a href="{{ route('admin.pesananevent.index') }}" class="list-group-item {{ request()->routeIs('admin.pesananevent.*') ? 'active' : '' }}">
                             <i class="fas fa-ticket-alt me-2"></i> Pesanan Event
+                        </a>
+                        <a href="{{ route('admin.event.index') }}" class="list-group-item {{ request()->routeIs('admin.event.*') ? 'active' : '' }}">
+                            <i class="fas fa-calendar me-2"></i> Manajemen Event
+                        </a>
+                        <a href="{{ route('admin.event-reviews.index') }}" class="list-group-item {{ request()->routeIs('admin.event-reviews.*') ? 'active' : '' }}">
+                            <i class="fas fa-star me-2"></i> Ulasan Event
                         </a>
                         <a href="{{ route('admin.artikel.index') }}" class="list-group-item {{ request()->routeIs('admin.artikel.*') ? 'active' : '' }}">
                             <i class="fas fa-newspaper me-2"></i> Manajemen Artikel
@@ -177,17 +254,11 @@
                         <a href="{{ route('admin.users.index') }}" class="list-group-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                             <i class="fas fa-users me-2"></i> Manajemen User
                         </a>
-                        <a href="{{ route('admin.event-reviews.index') }}" class="list-group-item {{ request()->routeIs('admin.event-reviews.*') ? 'active' : '' }}">
-                            <i class="fas fa-star me-2"></i> Ulasan Event
-                        </a>
-                        <a href="{{ route('admin.product-reviews.index') }}" class="list-group-item {{ request()->routeIs('admin.product-reviews.*') ? 'active' : '' }}">
-                            <i class="fas fa-star me-2"></i> Ulasan Produk
-                        </a>
                     </div>
                 </div>
 
                 <!-- Main Content -->
-                <div class="col-md-9 col-lg-10">
+                <div class="col ps-md-4">
                     <div class="admin-content">
                         @yield('content')
                     </div>
@@ -217,6 +288,27 @@
                 }
             });
         }
+
+        // Toggle sidebar
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.admin-sidebar');
+
+            // Toggle sidebar when button is clicked
+            sidebarToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                sidebar.classList.toggle('show');
+            });
+
+            // Close sidebar when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!sidebar.contains(e.target) && 
+                    !sidebarToggle.contains(e.target) && 
+                    sidebar.classList.contains('show')) {
+                    sidebar.classList.remove('show');
+                }
+            });
+        });
     </script>
 
     @stack('scripts')
