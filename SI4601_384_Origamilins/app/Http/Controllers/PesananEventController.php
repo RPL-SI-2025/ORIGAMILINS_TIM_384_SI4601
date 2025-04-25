@@ -4,18 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\PesananEvent;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class PesananEventController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'admin'])->except(['index']);
+        // Hapus middleware dari constructor
     }
 
     public function index(Request $request)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return redirect('/login');
+        }
+
         $query = PesananEvent::query();
 
         // Search with partial word matching
@@ -49,6 +52,10 @@ class PesananEventController extends Controller
 
     public function edit($id_pesanan_event)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return redirect('/login');
+        }
+
         try {
             $pesanan = PesananEvent::findOrFail($id_pesanan_event);
             $statusOptions = PesananEvent::getStatusOptions();
@@ -61,6 +68,10 @@ class PesananEventController extends Controller
 
     public function update(Request $request, $id_pesanan_event)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return redirect('/login');
+        }
+
         try {
             $request->validate([
                 'status' => 'required|in:Menunggu,Belum Berjalan,Sedang Berjalan,Selesai,Dibatalkan'
