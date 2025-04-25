@@ -75,7 +75,7 @@
                             <th>Produk</th>
                             <th>Ekspedisi</th>
                             <th>Status</th>
-                            <th>Tanggal</th>
+                            <th>Tanggal Pesan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
