@@ -22,15 +22,6 @@
             </div>
         </td>
         <td>{{ $user->created_at->format('d M Y H:i') }}</td>
-        <td>
-            <div class="btn-group">
-                <button type="button" class="btn btn-info btn-sm" 
-                        onclick="viewUserDetails({{ $user->id }})" 
-                        title="Lihat Detail">
-                    <i class="fas fa-eye"></i>
-                </button>
-            </div>
-        </td>
     </tr>
     @endforeach
 @endif 

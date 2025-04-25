@@ -38,16 +38,12 @@
             border-radius: 0 20px 20px 0;
             margin-right: 15px;
         }
-        
-        /* Hide scrollbar for Chrome, Safari and Opera */
         .admin-sidebar::-webkit-scrollbar {
             display: none;
         }
-        
-        /* Hide scrollbar for IE, Edge and Firefox */
         .admin-sidebar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;  
+            scrollbar-width: none; 
         }
         .admin-sidebar .list-group {
             padding: 0 15px;
@@ -233,6 +229,9 @@
                         <a href="{{ route('admin.produk.index') }}" class="list-group-item {{ request()->routeIs('admin.produk.*') ? 'active' : '' }}">
                             <i class="fas fa-box me-2"></i> Manajemen Produk
                         </a>
+                        <a href="{{ route('admin.event.index') }}" class="list-group-item {{ request()->routeIs('admin.event.*') ? 'active' : '' }}">
+                            <i class="fas fa-calendar me-2"></i> Manajemen Event
+                        </a>
                         <a href="{{ route('admin.pesananproduk.index') }}" class="list-group-item {{ request()->routeIs('admin.pesananproduk.*') ? 'active' : '' }}">
                             <i class="fas fa-shopping-cart me-2"></i> Pesanan Produk
                         </a>
@@ -242,9 +241,6 @@
                         <a href="{{ route('admin.pesananevent.index') }}" class="list-group-item {{ request()->routeIs('admin.pesananevent.*') ? 'active' : '' }}">
                             <i class="fas fa-ticket-alt me-2"></i> Pesanan Event
                         </a>
-                        <a href="{{ route('admin.event.index') }}" class="list-group-item {{ request()->routeIs('admin.event.*') ? 'active' : '' }}">
-                            <i class="fas fa-calendar me-2"></i> Manajemen Event
-                        </a>
                         <a href="{{ route('admin.event-reviews.index') }}" class="list-group-item {{ request()->routeIs('admin.event-reviews.*') ? 'active' : '' }}">
                             <i class="fas fa-star me-2"></i> Ulasan Event
                         </a>
@@ -252,7 +248,10 @@
                             <i class="fas fa-newspaper me-2"></i> Manajemen Artikel
                         </a>
                         <a href="{{ route('admin.users.index') }}" class="list-group-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                            <i class="fas fa-users me-2"></i> Manajemen User
+                            <i class="fas fa-users me-2"></i> Data User
+                        </a>
+                        <a href="{{ route('admin.users.index') }}" class="list-group-item {{ request()->routeIs('admin.pengrajin.*') ? 'active' : '' }}">
+                            <i class="fas fa-users me-2"></i> Data Pengrajin
                         </a>
                     </div>
                 </div>

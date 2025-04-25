@@ -3,19 +3,19 @@
 @section('content')
 <div class="container-fluid px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Daftar User</h2>
+        <h2 class="mb-0">Daftar Pengrajin</h2>
     </div>
 
     <!-- Filter Section -->
     <div class="card mb-4">
         <div class="card-header">
-            <h5 class="mb-0">Filter User</h5>
+            <h5 class="mb-0">Filter Pengrajin</h5>
         </div>
         <div class="card-body">
             <form id="filterForm" class="row g-3">
                 <div class="col-md-4 mb-3">
-                    <label for="nama" class="form-label">Nama User</label>
-                    <input type="text" class="form-control" id="nama" name="nama" value="{{ request('nama') }}" placeholder="Cari nama user...">
+                    <label for="nama" class="form-label">Nama Pengrajin</label>
+                    <input type="text" class="form-control" id="nama" name="nama" value="{{ request('nama') }}" placeholder="Cari nama pengrajin...">
                 </div>
                 
                 <div class="col-md-4 mb-3">
@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label for="status" class="form-label">Status Akun</label>
+                    <label for="status" class="form-label">Status Kegiatan</label>
                     <select class="form-select" id="status" name="status">
                         <option value="">Semua Status</option>
                         <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Aktif</option>
@@ -60,8 +60,8 @@
                             <th>Tanggal Registrasi</th>
                         </tr>
                     </thead>
-                    <tbody id="userTableBody">
-                        @include('admin.users._user_table', ['users' => $users])
+                    <tbody id="pengrajinTableBody">
+                        @include('admin.pengrajin._user_table', ['pengrajin' => $pengrajin])
                     </tbody>
                 </table>
             </div>
@@ -74,7 +74,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const filterForm = document.getElementById('filterForm');
     const resetFilter = document.getElementById('resetFilter');
-    const userTableBody = document.getElementById('userTableBody');
+    const pengrajinTableBody = document.getElementById('pengrajinTableBody');
     let debounceTimer;
 
     // Function to update filters in URL without reloading page
@@ -90,8 +90,8 @@ document.addEventListener('DOMContentLoaded', function() {
         window.history.pushState({}, '', newURL);
     }
 
-    // Function to fetch filtered users
-    function fetchFilteredUsers() {
+    // Function to fetch filtered pengrajin
+    function fetchFilteredPengrajin() {
         const formData = new FormData(filterForm);
         const params = new URLSearchParams();
         
@@ -99,21 +99,21 @@ document.addEventListener('DOMContentLoaded', function() {
             if (value) params.append(key, value);
         }
 
-        fetch(`{{ route('admin.users.index') }}?${params.toString()}`, {
+        fetch(`{{ route('admin.pengrajin.index') }}?${params.toString()}`, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         })
         .then(response => response.json())
         .then(data => {
-            userTableBody.innerHTML = data.html;
+            pengrajinTableBody.innerHTML = data.html;
         })
         .catch(error => console.error('Error:', error));
     }
 
-    // Toggle user status
-    window.toggleUserStatus = function(userId) {
-        fetch(`{{ url('admin/users') }}/${userId}/toggle-status`, {
+    // Toggle pengrajin status
+    window.togglePengrajinStatus = function(pengrajinId) {
+        fetch(`{{ url('admin/pengrajin') }}/${pengrajinId}/toggle-status`, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                fetchFilteredUsers();
+                fetchFilteredPengrajin();
             }
         })
         .catch(error => console.error('Error:', error));
@@ -133,19 +133,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Debounced function to prevent too many requests
     window.debouncedFetch = function() {
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(fetchFilteredUsers, 300);
+        debounceTimer = setTimeout(fetchFilteredPengrajin, 300);
     }
 
     // Reset filter button
     resetFilter.addEventListener('click', function() {
         filterForm.reset();
-        fetchFilteredUsers();
+        fetchFilteredPengrajin();
         updateURL();
     });
 
     // Initial fetch if there are URL parameters
     if (window.location.search) {
-        fetchFilteredUsers();
+        fetchFilteredPengrajin();
     }
 });
 </script>
