@@ -111,12 +111,6 @@
                             </span>
                         </td>
                         <td>
-<<<<<<< Updated upstream
-                            <span class="badge {{ $event->kuota_terisi >= $event->kuota ? 'bg-danger' : 'bg-success' }}">
-                                {{ $event->kuota_terisi }}/{{ $event->kuota }}
-                            </span>
-                        </td>
-                        <td>
                             @if($event->tanggal_pelaksanaan < now())
                                 <span class="badge bg-secondary">Selesai</span>
                             @else
@@ -125,43 +119,20 @@
                                 @else
                                     <span class="badge bg-success">Tersedia</span>
                                 @endif
-=======
-                            @php
-                                $today = \Carbon\Carbon::now();
-                                $eventDate = \Carbon\Carbon::parse($event->tanggal_pelaksanaan);
-                            @endphp
-                            
-                            @if($eventDate < $today)
-                                <span class="badge bg-secondary">Sudah Terlaksana</span>
-                            @else
-                                <span class="badge bg-info">Segera</span>
->>>>>>> Stashed changes
                             @endif
                         </td>
                         <td>
                             <div class="btn-group" role="group">
-<<<<<<< Updated upstream
                                 <a href="{{ route('admin.event.show', $event->id) }}" class="btn btn-info btn-sm">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{{ route('admin.event.edit', $event->id) }}" class="btn btn-warning btn-sm">
-=======
-                                <a href="{{ route('admin.event.show', $event->id) }}" class="btn btn-info btn-sm" title="Lihat Detail">
-                                    <i class="fas fa-eye"></i>
-                                </a>
                                 <a href="{{ route('admin.event.edit', $event->id) }}" class="btn btn-warning btn-sm" title="Edit">
->>>>>>> Stashed changes
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form action="{{ route('admin.event.destroy', $event->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-<<<<<<< Updated upstream
                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus event ini?')">
-=======
-                                    <button type="submit" class="btn btn-danger btn-sm" title="Hapus"
-                                            onclick="return confirm('Apakah Anda yakin ingin menghapus event ini?')">
->>>>>>> Stashed changes
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
