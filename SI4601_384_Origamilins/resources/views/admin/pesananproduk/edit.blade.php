@@ -3,11 +3,17 @@
 @section('content')
 <div class="container-fluid px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Edit Pesanan #{{ $pesanan->id_pesanan }}</h2>
+        <h2 class="mb-0">Edit Pesanan Produk</h2>
         <a href="{{ route('admin.pesananproduk.index') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-2"></i> Kembali
+            <i class="fas fa-arrow-left"></i> Kembali
         </a>
     </div>
+
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <div class="card">
         <div class="card-body">
@@ -50,10 +56,9 @@
                         <div class="mb-3">
                             <label for="ekspedisi" class="form-label">Ekspedisi</label>
                             <select class="form-select @error('ekspedisi') is-invalid @enderror" id="ekspedisi" name="ekspedisi">
-                                <option value="">Pilih Ekspedisi</option>
-                                @foreach(['JNE', 'J&T', 'SiCepat', 'Pos Indonesia', 'TIKI'] as $ekspedisi)
-                                    <option value="{{ $ekspedisi }}" {{ $pesanan->ekspedisi == $ekspedisi ? 'selected' : '' }}>
-                                        {{ $ekspedisi }}
+                                @foreach($ekspedisiOptions as $value => $label)
+                                    <option value="{{ $value }}" {{ $pesanan->ekspedisi == $value ? 'selected' : '' }}>
+                                        {{ $label }}
                                     </option>
                                 @endforeach
                             </select>
@@ -66,7 +71,6 @@
                         <div class="mb-3">
                             <label for="status" class="form-label">Status Pesanan</label>
                             <select class="form-select @error('status') is-invalid @enderror" id="status" name="status">
-                                <option value="">Pilih Status</option>
                                 @foreach($statusOptions as $value => $label)
                                     <option value="{{ $value }}" {{ $pesanan->status == $value ? 'selected' : '' }}>
                                         {{ $label }}
@@ -82,7 +86,7 @@
 
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i> Simpan Perubahan
+                        <i class="fas fa-save"></i> Simpan Perubahan
                     </button>
                 </div>
             </form>

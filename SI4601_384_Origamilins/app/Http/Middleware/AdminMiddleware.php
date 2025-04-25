@@ -17,10 +17,16 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->role === 'admin') {
-            return $next($request);
+        // Periksa apakah user sudah login
+        if (!Auth::check()) {
+            return redirect('/login');
         }
 
-        return redirect('/')->with('error', 'Unauthorized access. Admin privileges required.');
+        // Periksa apakah user adalah admin
+        if (Auth::user()->role !== 'admin') {
+            return redirect('/')->with('error', 'Unauthorized access');
+        }
+
+        return $next($request);
     }
 }

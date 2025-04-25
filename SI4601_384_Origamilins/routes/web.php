@@ -37,11 +37,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pesananproduk', [PesananController::class, 'index'])->name('admin.pesananproduk.index');
     Route::get('/pesananproduk/{id_pesanan}/edit', [PesananController::class, 'edit'])->name('admin.pesananproduk.edit');
     Route::put('/pesananproduk/{id_pesanan}', [PesananController::class, 'update'])->name('admin.pesananproduk.update');
-
-    // Pesanan Event
-    Route::get('/pesananevent', [PesananEventController::class, 'index'])->name('admin.pesananevent.index');
-    Route::get('/pesananevent/{id_pesanan_event}/edit', [PesananEventController::class, 'edit'])->name('admin.pesananevent.edit');
-    Route::put('/pesananevent/{id_pesanan_event}', [PesananEventController::class, 'update'])->name('admin.pesananevent.update');
 });
 
 // Admin Route Sementara
@@ -163,4 +158,13 @@ Route::get('/debug-login', function () {
             'role' => $user->role
         ]
     ];
+});
+
+// Manajemen Pesanan Event (dalam grup admin)
+Route::group(['prefix' => 'admin', 'middleware' => ['web', 'auth']], function () {
+    Route::prefix('pesanan-event')->name('admin.pesananevent.')->group(function () {
+        Route::get('/', [PesananEventController::class, 'index'])->name('index');
+        Route::get('/{id_pesanan_event}/edit', [PesananEventController::class, 'edit'])->name('edit');
+        Route::put('/{id_pesanan_event}', [PesananEventController::class, 'update'])->name('update');
+    });
 });

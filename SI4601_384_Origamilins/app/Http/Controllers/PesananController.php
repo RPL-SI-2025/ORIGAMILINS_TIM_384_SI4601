@@ -4,58 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Models\Pesanan;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class PesananController extends Controller
 {
-    public function __construct()
+    public function index()
     {
-        $this->middleware(['auth', 'admin'])->except(['index']);
-    }
-
-    public function index(Request $request)
-    {
-        $query = Pesanan::query();
-
-        // Search with partial word matching
-        if ($request->has('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('nama_pemesan', 'like', "%{$search}%")
-                  ->orWhere('nama_produk', 'like', "%{$search}%")
-                  ->orWhere('id_pesanan', 'like', "%{$search}%")
-                  ->orWhere('ekspedisi', 'like', "%{$search}%")
-                  ->orWhere('status', 'like', "%{$search}%");
-            });
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return redirect('/login');
         }
 
-        // Filter by status
-        if ($request->has('status') && $request->status != '') {
-            $query->where('status', $request->status);
-        }
+        $pesanan = Pesanan::orderBy('created_at', 'desc')->get();
+        
+        // Status options untuk dropdown
+        $statusOptions = [
+            'Menunggu' => 'Menunggu',
+            'Dikonfirmasi' => 'Dikonfirmasi',
+            'Selesai' => 'Selesai',
+            'Dibatalkan' => 'Dibatalkan'
+        ];
+        
+        // Ekspedisi options untuk dropdown
+        $ekspedisiOptions = [
+            'JNE' => 'JNE',
+            'J&T' => 'J&T',
+            'SiCepat' => 'SiCepat',
+            'Pos Indonesia' => 'Pos Indonesia',
+            'TIKI' => 'TIKI'
+        ];
 
-        // Filter by expedition
-        if ($request->has('ekspedisi') && $request->ekspedisi != '') {
-            $query->where('ekspedisi', $request->ekspedisi);
-        }
-
-        // Filter by date range
-        if ($request->has('date_start') && $request->date_start != '') {
-            $query->whereDate('created_at', '>=', $request->date_start);
-        }
-        if ($request->has('date_end') && $request->date_end != '') {
-            $query->whereDate('created_at', '<=', $request->date_end);
-        }
-
-        $pesanan = $query->orderBy('id_pesanan', 'asc')->get();
-        $ekspedisiOptions = Pesanan::getEkspedisiOptions();
-        return view('admin.pesananproduk.index', compact('pesanan', 'ekspedisiOptions'));
+        return view('admin.pesananproduk.index', compact('pesanan', 'statusOptions', 'ekspedisiOptions'));
     }
 
     public function edit($id_pesanan)
     {
         try {
+            if (!Auth::check() || Auth::user()->role !== 'admin') {
+                return redirect('/login');
+            }
+
             $pesanan = Pesanan::findOrFail($id_pesanan);
             $statusOptions = Pesanan::getStatusOptions();
             $ekspedisiOptions = Pesanan::getEkspedisiOptions();
@@ -69,9 +56,13 @@ class PesananController extends Controller
     public function update(Request $request, $id_pesanan)
     {
         try {
+            if (!Auth::check() || Auth::user()->role !== 'admin') {
+                return redirect('/login');
+            }
+
             $request->validate([
                 'status' => 'required|in:Menunggu,Dikonfirmasi,Selesai,Dibatalkan',
-                'ekspedisi' => 'required|in:' . implode(',', array_keys(Pesanan::getEkspedisiOptions()))
+                'ekspedisi' => 'required|in:JNE,J&T,SiCepat,Pos Indonesia,TIKI'
             ]);
 
             $pesanan = Pesanan::findOrFail($id_pesanan);
