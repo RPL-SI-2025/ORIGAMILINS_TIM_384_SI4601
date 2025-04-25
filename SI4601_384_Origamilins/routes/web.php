@@ -87,7 +87,7 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
 
     // Manajemen Event Reviews
     Route::get('/event-reviews', [EventReviewController::class, 'index'])->name('admin.event-reviews.index');
-    Route::get('/event-reviews/{event}', [EventReviewController::class, 'show'])->name('admin.event-reviews.show');
+    Route::get('/event-reviews/{review}', [EventReviewController::class, 'show'])->name('admin.event-reviews.show');
     Route::get('/event-reviews/{event}/get-reviews', [EventReviewController::class, 'getReviews'])->name('admin.event-reviews.get-reviews');
 
     // Manajemen Produk
@@ -138,6 +138,14 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
         Route::post('/{review}/approve', [ProductReviewController::class, 'approve'])->name('approve');
         Route::post('/{review}/reject', [ProductReviewController::class, 'reject'])->name('reject');
     });
+});
+
+// Event Review Routes
+Route::prefix('admin/event-reviews')->name('admin.event-reviews.')->middleware(['auth', AdminMiddleware::class])->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\EventReviewController::class, 'index'])->name('index');
+    Route::get('/{review}', [App\Http\Controllers\Admin\EventReviewController::class, 'show'])->name('show');
+    Route::patch('/{review}/approve', [App\Http\Controllers\Admin\EventReviewController::class, 'approve'])->name('approve');
+    Route::patch('/{review}/reject', [App\Http\Controllers\Admin\EventReviewController::class, 'reject'])->name('reject');
 });
 
 // Debug Login Info
