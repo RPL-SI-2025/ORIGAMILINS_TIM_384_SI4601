@@ -248,7 +248,10 @@
                             <i class="fas fa-newspaper me-2"></i> Manajemen Artikel
                         </a>
                         <a href="{{ route('admin.users.index') }}" class="list-group-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                            <i class="fas fa-users me-2"></i> Manajemen User
+                            <i class="fas fa-users me-2"></i> Data User
+                        </a>
+                        <a href="{{ route('admin.users.index') }}" class="list-group-item {{ request()->routeIs('admin.pengrajin.*') ? 'active' : '' }}">
+                            <i class="fas fa-users me-2"></i> Data Pengrajin
                         </a>
                     </div>
                 </div>

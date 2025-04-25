@@ -1,17 +1,18 @@
 <?php
 
-use App\Http\Controllers\Produk_Controller;
-use App\Http\Controllers\EventController;
+use App\Http\Controllers\Admin\Produk_Controller;
+use App\Http\Controllers\Admin\EventController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\ArtikelController;
-use App\Http\Controllers\UserManagementController;
-use App\Http\Controllers\EventReviewController;
-use App\Http\Controllers\PesananController;
-use App\Http\Controllers\PesananEventController;
-use App\Http\Controllers\ProductReviewController;
+use App\Http\Controllers\Admin\ArtikelController;
+use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\PengrajinManagementController;
+use App\Http\Controllers\Admin\EventReviewController;
+use App\Http\Controllers\Admin\PesananController;
+use App\Http\Controllers\Admin\PesananEventController;
+use App\Http\Controllers\Admin\ProductReviewController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -80,6 +81,10 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
     Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users.index');
     Route::post('/users/{user}/toggle-status', [UserManagementController::class, 'toggleStatus'])->name('admin.users.toggle-status');
 
+    // Manajemen Pengrajin
+    Route::get('/pengrajin', [PengrajinManagementController::class, 'index'])->name('admin.pengrajin.index');
+    Route::post('/pengrajin/{pengrajin}/toggle-status', [PengrajinManagementController::class, 'toggleStatus'])->name('admin.pengrajin.toggle-status');
+
     // Manajemen Event Reviews
     Route::get('/event-reviews', [EventReviewController::class, 'index'])->name('admin.event-reviews.index');
     Route::get('/event-reviews/{review}', [EventReviewController::class, 'show'])->name('admin.event-reviews.show');
@@ -137,10 +142,10 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
 
 // Event Review Routes
 Route::prefix('admin/event-reviews')->name('admin.event-reviews.')->middleware(['auth', AdminMiddleware::class])->group(function () {
-    Route::get('/', [App\Http\Controllers\Admin\EventReviewController::class, 'index'])->name('index');
-    Route::get('/{review}', [App\Http\Controllers\Admin\EventReviewController::class, 'show'])->name('show');
-    Route::patch('/{review}/approve', [App\Http\Controllers\Admin\EventReviewController::class, 'approve'])->name('approve');
-    Route::patch('/{review}/reject', [App\Http\Controllers\Admin\EventReviewController::class, 'reject'])->name('reject');
+    Route::get('/', [EventReviewController::class, 'index'])->name('index');
+    Route::get('/{review}', [EventReviewController::class, 'show'])->name('show');
+    Route::patch('/{review}/approve', [EventReviewController::class, 'approve'])->name('approve');
+    Route::patch('/{review}/reject', [EventReviewController::class, 'reject'])->name('reject');
 });
 
 // Debug Login Info
