@@ -84,6 +84,39 @@
                     </div>
                 </div>
 
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="pengrajin_id" class="form-label">Assign ke Pengrajin</label>
+                            <select class="form-select @error('pengrajin_id') is-invalid @enderror" id="pengrajin_id" name="pengrajin_id">
+                                <option value="">-- Pilih Pengrajin --</option>
+                                @foreach($pengrajinList as $pengrajin)
+                                    <option value="{{ $pengrajin->id }}" {{ $pesanan->pengrajin_id == $pengrajin->id ? 'selected' : '' }}>
+                                        {{ $pengrajin->nama }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('pengrajin_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                @if($pesanan->status == 'Siap Dikirim')
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="nomor_resi" class="form-label">Nomor Resi Pengiriman</label>
+                            <input type="text" class="form-control @error('nomor_resi') is-invalid @enderror" id="nomor_resi" name="nomor_resi" value="{{ old('nomor_resi', $pesanan->nomor_resi) }}" required>
+                            @error('nomor_resi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                @endif
+
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save"></i> Simpan Perubahan
