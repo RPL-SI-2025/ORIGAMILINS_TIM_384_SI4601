@@ -4,79 +4,95 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pesanan;
+use App\Models\Pengrajin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PesananController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
-            return redirect('/login');
-        }
+        $status = $request->get('status');
+        $search = $request->get('search');
 
-        $pesanan = Pesanan::orderBy('created_at', 'desc')->get();
+        $query = Pesanan::with(['user', 'produk', 'pengrajin'])
+            ->when($search, function ($q) use ($search) {
+                return $q->whereHas('user', function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })->orWhereHas('produk', function ($query) use ($search) {
+                    $query->where('nama_produk', 'like', "%{$search}%");
+                });
+            })
+            ->status($status)
+            ->latest();
+
+        $pesanan = $query->paginate(10);
         
-        // Status options untuk dropdown
-        $statusOptions = [
-            'Menunggu' => 'Menunggu',
-            'Dikonfirmasi' => 'Dikonfirmasi',
-            'Selesai' => 'Selesai',
-            'Dibatalkan' => 'Dibatalkan'
-        ];
-        
-        // Ekspedisi options untuk dropdown
-        $ekspedisiOptions = [
-            'JNE' => 'JNE',
-            'J&T' => 'J&T',
-            'SiCepat' => 'SiCepat',
-            'Pos Indonesia' => 'Pos Indonesia',
-            'TIKI' => 'TIKI'
+        // Count for each status
+        $counts = [
+            'total' => Pesanan::count(),
+            'rencana' => Pesanan::where('status', 'Rencana')->count(),
+            'dalam_proses' => Pesanan::where('status', 'Dalam Proses')->count(),
+            'siap_dikirim' => Pesanan::where('status', 'Siap Dikirim')->count(),
+            'dikirim' => Pesanan::where('status', 'Dikirim')->count(),
+            'selesai' => Pesanan::where('status', 'Selesai')->count()
         ];
 
-        return view('admin.pesananproduk.index', compact('pesanan', 'statusOptions', 'ekspedisiOptions'));
+        return view('admin.pesananproduk.index', compact('pesanan', 'status', 'counts', 'search'));
     }
 
-    public function edit($id_pesanan)
+    public function edit($id)
     {
-        try {
-            if (!Auth::check() || Auth::user()->role !== 'admin') {
-                return redirect('/login');
-            }
+        $pesanan = Pesanan::with(['user', 'produk', 'pengrajin'])->findOrFail($id);
+        $pengrajinList = Pengrajin::where('is_active', true)->get();
+        $statusOptions = Pesanan::getStatusOptions();
+        $ekspedisiOptions = Pesanan::getEkspedisiOptions();
 
-            $pesanan = Pesanan::findOrFail($id_pesanan);
-            $statusOptions = Pesanan::getStatusOptions();
-            $ekspedisiOptions = Pesanan::getEkspedisiOptions();
-            return view('admin.pesananproduk.edit', compact('pesanan', 'statusOptions', 'ekspedisiOptions'));
-        } catch (\Exception $e) {
-            return redirect()->route('admin.pesananproduk.index')
-                ->with('error', 'Pesanan produk tidak ditemukan');
-        }
+        return view('admin.pesananproduk.edit', compact('pesanan', 'pengrajinList', 'statusOptions', 'ekspedisiOptions'));
     }
 
-    public function update(Request $request, $id_pesanan)
+    public function update(Request $request, $id)
     {
-        try {
-            if (!Auth::check() || Auth::user()->role !== 'admin') {
-                return redirect('/login');
-            }
+        $pesanan = Pesanan::findOrFail($id);
+        
+        $request->validate([
+            'status' => 'required|in:' . implode(',', array_keys(Pesanan::getStatusOptions())),
+            'pengrajin_id' => 'nullable|exists:pengrajin,id',
+            'nomor_resi' => 'required_if:status,Dikirim'
+        ]);
 
-            $request->validate([
-                'status' => 'required|in:Menunggu,Dikonfirmasi,Selesai,Dibatalkan',
-                'ekspedisi' => 'required|in:JNE,J&T,SiCepat,Pos Indonesia,TIKI'
-            ]);
-
-            $pesanan = Pesanan::findOrFail($id_pesanan);
-            $pesanan->update([
-                'status' => $request->status,
-                'ekspedisi' => $request->ekspedisi
-            ]);
-
-            return redirect()->route('admin.pesananproduk.index')
-                ->with('success', 'Status dan ekspedisi pesanan produk berhasil diperbarui!');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Gagal memperbarui pesanan produk: ' . $e->getMessage());
+        // Jika status berubah ke "Dalam Proses", pastikan ada pengrajin yang ditugaskan
+        if ($request->status === 'Dalam Proses' && empty($request->pengrajin_id)) {
+            return back()->with('error', 'Pilih pengrajin terlebih dahulu sebelum mengubah status ke Dalam Proses');
         }
+
+        // Jika status berubah ke "Dikirim", pastikan ada nomor resi
+        if ($request->status === 'Dikirim' && empty($request->nomor_resi)) {
+            return back()->with('error', 'Masukkan nomor resi terlebih dahulu sebelum mengubah status ke Dikirim');
+        }
+
+        $pesanan->update([
+            'status' => $request->status,
+            'pengrajin_id' => $request->pengrajin_id,
+            'nomor_resi' => $request->nomor_resi,
+            'ekspedisi' => $request->ekspedisi
+        ]);
+
+        // Update timestamps berdasarkan status
+        if ($request->status === 'Dalam Proses') {
+            $pesanan->markAsInProgress();
+        } elseif ($request->status === 'Selesai') {
+            $pesanan->markAsCompleted();
+        }
+
+        return redirect()
+            ->route('admin.pesananproduk.index')
+            ->with('success', 'Pesanan berhasil diperbarui');
+    }
+
+    public function show($id)
+    {
+        $pesanan = Pesanan::with(['user', 'produk', 'pengrajin'])->findOrFail($id);
+        return view('admin.pesananproduk.show', compact('pesanan'));
     }
 }
