@@ -250,7 +250,7 @@
                         <a href="{{ route('admin.users.index') }}" class="list-group-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                             <i class="fas fa-users me-2"></i> Data User
                         </a>
-                        <a href="{{ route('admin.users.index') }}" class="list-group-item {{ request()->routeIs('admin.pengrajin.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.pengrajin.index') }}" class="list-group-item {{ request()->routeIs('admin.pengrajin.*') ? 'active' : '' }}">
                             <i class="fas fa-users me-2"></i> Data Pengrajin
                         </a>
                     </div>

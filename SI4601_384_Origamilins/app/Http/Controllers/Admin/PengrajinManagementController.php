@@ -50,4 +50,14 @@ class PengrajinManagementController extends Controller
         'new_status' => $pengrajin->is_active
     ]);
 }
+    public function showDetails(Pengrajin $pengrajin)
+    {
+        $completedOrders = $pengrajin->completedOrders; // Ambil pesanan yang telah diselesaikan
+
+        $html = view('admin.pengrajin._details', compact('completedOrders'))->render();
+
+        return response()->json([
+            'html' => $html,
+        ]);
+    }
 } 
