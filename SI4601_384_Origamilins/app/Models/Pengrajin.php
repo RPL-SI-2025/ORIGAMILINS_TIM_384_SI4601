@@ -30,4 +30,15 @@ class Pengrajin extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+        /**
+     * Relasi ke pesanan yang telah diselesaikan.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function completedOrders()
+    {
+        return $this->hasMany(Pesanan::class, 'id_pesanan', 'id')
+                    ->where('status', 'Selesai'); // Hanya pesanan status "Selesai"
+    }
 }

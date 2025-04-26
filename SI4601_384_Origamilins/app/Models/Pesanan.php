@@ -47,4 +47,13 @@ class Pesanan extends Model
             'TIKI' => 'TIKI'
         ];
     }
+        /**
+     * Relasi ke pengrajin.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function pengrajin()
+    {
+        return $this->belongsTo(Pengrajin::class, 'pengrajin_id', 'id'); // Pastikan foreign key sesuai
+    }
 } 
