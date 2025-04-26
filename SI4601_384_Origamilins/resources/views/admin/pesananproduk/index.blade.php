@@ -72,7 +72,7 @@
                         <tr>
                             <th>ID Pesanan</th>
                             <th>Nama Pemesan</th>
-                            <th>Produk</th>
+                            <th>Nama Produk</th>
                             <th>Ekspedisi</th>
                             <th>Status</th>
                             <th>Tanggal</th>

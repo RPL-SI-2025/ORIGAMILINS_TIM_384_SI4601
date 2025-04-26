@@ -82,8 +82,11 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
     Route::post('/users/{user}/toggle-status', [UserManagementController::class, 'toggleStatus'])->name('admin.users.toggle-status');
 
     // Manajemen Pengrajin
-    Route::get('/pengrajin', [PengrajinManagementController::class, 'index'])->name('admin.pengrajin.index');
-    Route::post('/pengrajin/{pengrajin}/toggle-status', [PengrajinManagementController::class, 'toggleStatus'])->name('admin.pengrajin.toggle-status');
+    Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(function () {
+        Route::get('/pengrajin', [PengrajinManagementController::class, 'index'])->name('admin.pengrajin.index');
+        Route::post('/pengrajin/{pengrajin}/toggle-status', [PengrajinManagementController::class, 'toggleStatus'])->name('admin.pengrajin.toggle-status');
+        Route::get('/admin/pengrajin/{pengrajin}/details', [PengrajinManagementController::class, 'showDetails'])->name('admin.pengrajin.details');
+    });
 
     // Manajemen Event Reviews
     Route::get('/event-reviews', [EventReviewController::class, 'index'])->name('admin.event-reviews.index');

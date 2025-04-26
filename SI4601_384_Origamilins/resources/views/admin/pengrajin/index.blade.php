@@ -46,27 +46,22 @@
         </div>
     @endif
 
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nama</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Tanggal Registrasi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="pengrajinTableBody">
-                        @include('admin.pengrajin._user_table', ['pengrajin' => $pengrajin])
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nama</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Pesanan Terselesaikan</th> 
+                <th>Detail</th>
+            </tr>
+        </thead>
+        <tbody id="pengrajinTableBody">
+            @include('admin.pengrajin._user_table', ['pengrajin' => $pengrajin])
+        </tbody>
+    </table>
 </div>
 
 @push('scripts')
@@ -98,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
         for (const [key, value] of formData.entries()) {
             if (value) params.append(key, value);
         }
-
         fetch(`{{ route('admin.pengrajin.index') }}?${params.toString()}`, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
@@ -108,8 +102,16 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             pengrajinTableBody.innerHTML = data.html;
         })
-        .catch(error => console.error('Error:', error));
-    }
+        .catch(error => {
+            console.error('Error:', error); // Log the error for debugging
+            Swal.fire({
+                title: 'Error!',
+                text: 'Terjadi kesalahan saat memuat data.',
+                icon: 'error',
+                timer: 2000,
+                showConfirmButton: false
+            }); // Show a user-friendly error message
+        });
 
     // Toggle pengrajin status
     window.togglePengrajinStatus = function(pengrajinId) {
@@ -147,6 +149,36 @@ document.addEventListener('DOMContentLoaded', function() {
     if (window.location.search) {
         fetchFilteredPengrajin();
     }
+
+    function showPengrajinDetails(pengrajinId) {
+    fetch(`/admin/pengrajin/${pengrajinId}/details`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        Swal.fire({
+            title: `Detail Pesanan`,
+            html: data.html,
+            icon: 'info',
+            width: '600px',
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            title: 'Error!',
+            text: 'Gagal memuat detail pesanan.',
+            icon: 'error',
+        });
+    });
+}
 });
 </script>
 @endpush
