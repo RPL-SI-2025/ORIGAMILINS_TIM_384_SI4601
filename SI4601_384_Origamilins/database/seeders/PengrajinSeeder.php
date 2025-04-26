@@ -17,22 +17,22 @@ class PengrajinSeeder extends Seeder
         // Create sample pengrajin data
         $pengrajinData = [
             [
-                'name' => 'Budi Santoso',
+                'nama' => 'Budi Santoso',
                 'email' => 'budi@gmail.com',
                 'is_active' => true,
             ],
             [
-                'name' => 'Siti Rahayu',
+                'nama' => 'Siti Rahayu', 
                 'email' => 'siti@gmail.com',
                 'is_active' => true,
             ],
             [
-                'name' => 'Dewi Wulandari',
+                'nama' => 'Dewi Wulandari', 
                 'email' => 'dewi@gmail.com',
                 'is_active' => true,
             ],
             [
-                'name' => 'Jamilah',
+                'nama' => 'Jamilah', 
                 'email' => 'jamilah@gmail.com',
                 'is_active' => true,
             ],
@@ -45,7 +45,7 @@ class PengrajinSeeder extends Seeder
             if (!$existingPengrajin) {
                 // Create pengrajin record
                 Pengrajin::create([
-                    'name' => $data['name'],
+                    'nama' => $data['nama'],
                     'email' => $data['email'],
                     'is_active' => $data['is_active'],
                 ]);
