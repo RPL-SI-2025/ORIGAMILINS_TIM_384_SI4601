@@ -24,7 +24,7 @@ class PesananController extends Controller
                 });
             })
             ->status($status)
-            ->latest();
+            ->orderBy('id_pesanan', 'asc');
 
         $pesanan = $query->paginate(10);
         
@@ -61,6 +61,11 @@ class PesananController extends Controller
             'nomor_resi' => 'required_if:status,Dikirim'
         ]);
 
+        // Tambahan logika otomatis
+        if ($pesanan->status === 'Rencana' && $request->pengrajin_id) {
+            $request->merge(['status' => 'Dalam Proses']);
+        }
+
         // Jika status berubah ke "Dalam Proses", pastikan ada pengrajin yang ditugaskan
         if ($request->status === 'Dalam Proses' && empty($request->pengrajin_id)) {
             return back()->with('error', 'Pilih pengrajin terlebih dahulu sebelum mengubah status ke Dalam Proses');
@@ -94,5 +99,24 @@ class PesananController extends Controller
     {
         $pesanan = Pesanan::with(['user', 'produk', 'pengrajin'])->findOrFail($id);
         return view('admin.pesananproduk.show', compact('pesanan'));
+    }
+
+    public function confirmSelesai($id)
+    {
+        $pesanan = Pesanan::findOrFail($id);
+        if ($pesanan->status === 'Dalam Proses') {
+            $pesanan->update(['status' => 'Siap Dikirim']);
+            // Bisa tambahkan logika lain jika perlu
+        }
+        return response()->json(['success' => true]);
+    }
+
+    public function markSiapDikirim($id)
+    {
+        $pesanan = Pesanan::findOrFail($id);
+        if ($pesanan->status === 'Dalam Proses') {
+            $pesanan->update(['status' => 'Siap Dikirim']);
+        }
+        return response()->json(['success' => true]);
     }
 }

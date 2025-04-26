@@ -67,7 +67,18 @@
                             <th>Total</th>
                             <th>Pengrajin</th>
                             <th>Status</th>
-                            <th>Aksi</th>
+                            @if(request('status') !== 'Dikirim')
+                                <th>
+                                    @if(request('status') === 'Dalam Proses')
+                                        Konfirmasi
+                                    @else
+                                        Aksi
+                                    @endif
+                                </th>
+                            @endif
+                            @if(request('status') === 'Dikirim')
+                                <th>Resi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -97,18 +108,42 @@
                                         </small>
                                     @endif
                                 </td>
-                                <td>
+                                @if(request('status') !== 'Dikirim')
+                                <td class="text-center">
                                     <div class="btn-group">
-                                        <a href="{{ route('admin.pesananproduk.show', $order->id_pesanan) }}" 
-                                           class="btn btn-sm btn-info">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="{{ route('admin.pesananproduk.edit', $order->id_pesanan) }}" 
-                                           class="btn btn-sm btn-warning">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
+                                        @if(request('status') === 'Dalam Proses' && $order->status === 'Dalam Proses')
+                                            <button class="btn btn-sm btn-success" onclick="confirmSelesai({{ $order->id_pesanan }})">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        @elseif(request('status') === 'Rencana' && $order->status === 'Rencana')
+                                            <a href="{{ route('admin.pesananproduk.edit', $order->id_pesanan) }}" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @elseif(request('status') === 'Siap Dikirim' && $order->status === 'Siap Dikirim')
+                                            <a href="{{ route('admin.pesananproduk.edit', $order->id_pesanan) }}" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @elseif(request('status') === 'Selesai' && $order->status === 'Selesai')
+                                            <a href="{{ route('admin.pesananproduk.show', $order->id_pesanan) }}" class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        @elseif(request('status') === 'Dikirim' && $order->status === 'Dikirim')
+                                            <!-- Tidak ada tombol, kolom resi akan ditampilkan di kolom terpisah -->
+                                        @else
+                                            <!-- Tab Semua: tampilkan edit dan detail -->
+                                            <a href="{{ route('admin.pesananproduk.show', $order->id_pesanan) }}" class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{{ route('admin.pesananproduk.edit', $order->id_pesanan) }}" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @endif
                                     </div>
                                 </td>
+                                @endif
+                                @if(request('status') === 'Dikirim')
+                                    <td>{{ $order->nomor_resi }}</td>
+                                @endif
                             </tr>
                         @empty
                             <tr>
@@ -150,4 +185,34 @@
     vertical-align: middle;
 }
 </style>
-@endsection 
+@endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function confirmSelesai(id) {
+    Swal.fire({
+        title: 'Konfirmasi',
+        text: 'Apakah Anda yakin pesanan ini sudah selesai dikerjakan oleh pengrajin?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/admin/pesanan-produk/${id}/mark-siap-dikirim`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    location.reload();
+                }
+            });
+        }
+    });
+}
+</script>
+@endpush 

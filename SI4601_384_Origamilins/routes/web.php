@@ -131,6 +131,7 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
         Route::get('/{id_pesanan}/edit', [PesananController::class, 'edit'])->name('edit');
         Route::put('/{id_pesanan}', [PesananController::class, 'update'])->name('update');
         Route::get('/{id_pesanan}', [PesananController::class, 'show'])->name('show');
+        Route::post('/{id}/mark-siap-dikirim', [PesananController::class, 'markSiapDikirim'])->name('markSiapDikirim');
     });
 
     // Manajemen Pesanan Event
