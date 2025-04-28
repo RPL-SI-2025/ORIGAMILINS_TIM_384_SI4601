@@ -2,119 +2,217 @@
 
 @section('content')
 <div class="container-fluid px-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Manajemen Pesanan Produk</h2>
-    </div>
-
-    <!-- Filter Section -->
+    <h1 class="mt-4">Manajemen Pesanan</h1>
+    
     <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">Filter Pesanan</h5>
-        </div>
         <div class="card-body">
-            <form action="{{ route('admin.pesananproduk.index') }}" method="GET" class="row g-3">
-                <div class="col-md-3">
-                    <label for="search" class="form-label">Cari Pesanan</label>
-                    <input type="text" class="form-control" id="search" name="search" 
-                           value="{{ request('search') }}" placeholder="Cari nama pemesan, produk, atau ID pesanan...">
-                </div>
-                
-                <div class="col-md-3">
-                    <label for="status" class="form-label">Status</label>
-                    <select class="form-select" id="status" name="status">
-                        <option value="">Semua Status</option>
-                        <option value="Menunggu" {{ request('status') == 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
-                        <option value="Dikonfirmasi" {{ request('status') == 'Dikonfirmasi' ? 'selected' : '' }}>Dikonfirmasi</option>
-                        <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
-                        <option value="Dibatalkan" {{ request('status') == 'Dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
-                    </select>
-                </div>
-
-                <div class="col-md-3">
-                    <label for="ekspedisi" class="form-label">Ekspedisi</label>
-                    <select class="form-select" id="ekspedisi" name="ekspedisi">
-                        <option value="">Semua Ekspedisi</option>
-                        <option value="JNE" {{ request('ekspedisi') == 'JNE' ? 'selected' : '' }}>JNE</option>
-                        <option value="J&T" {{ request('ekspedisi') == 'J&T' ? 'selected' : '' }}>J&T</option>
-                        <option value="SiCepat" {{ request('ekspedisi') == 'SiCepat' ? 'selected' : '' }}>SiCepat</option>
-                        <option value="Pos Indonesia" {{ request('ekspedisi') == 'Pos Indonesia' ? 'selected' : '' }}>Pos Indonesia</option>
-                        <option value="TIKI" {{ request('ekspedisi') == 'TIKI' ? 'selected' : '' }}>TIKI</option>
-                    </select>
-                </div>
-
-                <div class="col-md-3">
-                    <label class="form-label">&nbsp;</label>
-                    <button type="submit" class="btn btn-primary d-block w-100">
-                        <i class="fas fa-search me-2"></i> Cari
+            <!-- Search Form -->
+            <form action="{{ route('admin.pesananproduk.index') }}" method="GET" class="mb-4">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Cari pesanan..." value="{{ request('search') }}">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search"></i> Cari
                     </button>
                 </div>
             </form>
-        </div>
-    </div>
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+            <!-- Status Tabs -->
+            <ul class="nav nav-tabs mb-4">
+                <li class="nav-item">
+                    <a class="nav-link {{ !request('status') ? 'active' : '' }}" href="{{ route('admin.pesananproduk.index') }}">
+                        Semua <span class="badge bg-secondary">{{ $counts['total'] }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request('status') === 'Rencana' ? 'active' : '' }}" 
+                       href="{{ route('admin.pesananproduk.index', ['status' => 'Rencana']) }}">
+                        Rencana <span class="badge bg-warning">{{ $counts['rencana'] }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request('status') === 'Dalam Proses' ? 'active' : '' }}"
+                       href="{{ route('admin.pesananproduk.index', ['status' => 'Dalam Proses']) }}">
+                        Dalam Proses <span class="badge bg-info">{{ $counts['dalam_proses'] }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request('status') === 'Siap Dikirim' ? 'active' : '' }}"
+                       href="{{ route('admin.pesananproduk.index', ['status' => 'Siap Dikirim']) }}">
+                        Siap Dikirim <span class="badge bg-primary">{{ $counts['siap_dikirim'] }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request('status') === 'Dikirim' ? 'active' : '' }}"
+                       href="{{ route('admin.pesananproduk.index', ['status' => 'Dikirim']) }}">
+                        Dikirim <span class="badge bg-purple">{{ $counts['dikirim'] }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request('status') === 'Selesai' ? 'active' : '' }}"
+                       href="{{ route('admin.pesananproduk.index', ['status' => 'Selesai']) }}">
+                        Selesai <span class="badge bg-success">{{ $counts['selesai'] }}</span>
+                    </a>
+                </li>
+            </ul>
 
-    @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
-
-    <div class="card">
-        <div class="card-body">
+            <!-- Pesanan Table -->
             <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
                         <tr>
                             <th>ID Pesanan</th>
+                            <th>Tanggal</th>
                             <th>Nama Pemesan</th>
                             <th>Produk</th>
-                            <th>Ekspedisi</th>
+                            <th>Total</th>
+                            <th>Pengrajin</th>
                             <th>Status</th>
-                            <th>Tanggal Pesan</th>
-                            <th>Aksi</th>
+                            @if(request('status') !== 'Dikirim')
+                                <th>
+                                    @if(request('status') === 'Dalam Proses')
+                                        Konfirmasi
+                                    @else
+                                        Aksi
+                                    @endif
+                                </th>
+                            @endif
+                            @if(request('status') === 'Dikirim')
+                                <th>Resi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($pesanan as $item)
+                        @forelse($pesanan as $order)
                             <tr>
-                                <td>{{ $item->id_pesanan }}</td>
-                                <td>{{ $item->nama_pemesan }}</td>
-                                <td>{{ $item->nama_produk }}</td>
-                                <td>{{ $item->ekspedisi ?: '-' }}</td>
+                                <td>{{ $order->id_pesanan }}</td>
+                                <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
+                                <td>{{ $order->user->name }}</td>
                                 <td>
-                                    <span class="badge 
-                                        @if($item->status === 'Menunggu') bg-warning
-                                        @elseif($item->status === 'Dikonfirmasi') bg-info
-                                        @elseif($item->status === 'Selesai') bg-success
-                                        @else bg-danger
-                                        @endif">
-                                        {{ $item->status }}
-                                    </span>
+                                    {{ $order->produk->nama_produk }}<br>
+                                    <small class="text-muted">{{ $order->jumlah }} unit</small>
                                 </td>
-                                <td>{{ $item->created_at->format('d/m/Y H:i') }}</td>
+                                <td>Rp {{ number_format($order->total_harga, 0, ',', '.') }}</td>
                                 <td>
+                                    @if($order->pengrajin)
+                                        <span class="badge bg-info">{{ $order->pengrajin->nama }}</span>
+                                    @else
+                                        <span class="badge bg-secondary">Belum ditugaskan</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <span class="badge {{ $order->status_badge }}">{{ $order->status }}</span>
+                                    @if($order->status === 'Dikirim')
+                                        <br>
+                                        <small class="text-muted">
+                                            {{ $order->ekspedisi }} - {{ $order->nomor_resi }}
+                                        </small>
+                                    @endif
+                                </td>
+                                @if(request('status') !== 'Dikirim')
+                                <td class="text-center">
                                     <div class="btn-group">
-                                        <a href="{{ route('admin.pesananproduk.edit', $item->id_pesanan) }}" 
-                                           class="btn btn-sm btn-warning">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </a>
+                                        @if(request('status') === 'Dalam Proses' && $order->status === 'Dalam Proses')
+                                            <button class="btn btn-sm btn-success" onclick="confirmSelesai({{ $order->id_pesanan }})">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        @elseif(request('status') === 'Rencana' && $order->status === 'Rencana')
+                                            <a href="{{ route('admin.pesananproduk.edit', $order->id_pesanan) }}" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @elseif(request('status') === 'Siap Dikirim' && $order->status === 'Siap Dikirim')
+                                            <a href="{{ route('admin.pesananproduk.edit', $order->id_pesanan) }}" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @elseif(request('status') === 'Selesai' && $order->status === 'Selesai')
+                                            <a href="{{ route('admin.pesananproduk.show', $order->id_pesanan) }}" class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        @elseif(request('status') === 'Dikirim' && $order->status === 'Dikirim')
+                                            <!-- Tidak ada tombol, kolom resi akan ditampilkan di kolom terpisah -->
+                                        @else
+                                            <!-- Tab Semua: tampilkan edit dan detail -->
+                                            <a href="{{ route('admin.pesananproduk.show', $order->id_pesanan) }}" class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{{ route('admin.pesananproduk.edit', $order->id_pesanan) }}" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @endif
                                     </div>
                                 </td>
+                                @endif
+                                @if(request('status') === 'Dikirim')
+                                    <td>{{ $order->nomor_resi }}</td>
+                                @endif
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center">Tidak ada data pesanan</td>
+                                <td colspan="8" class="text-center">Tidak ada pesanan</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center">
+                {{ $pesanan->appends(request()->query())->links() }}
+            </div>
         </div>
     </div>
 </div>
-@endsection 
+
+<style>
+.badge {
+    font-size: 0.875rem;
+    padding: 0.5em 1em;
+}
+
+.bg-purple {
+    background-color: #6f42c1;
+}
+
+.nav-tabs .nav-link {
+    color: #6c757d;
+}
+
+.nav-tabs .nav-link.active {
+    color: #495057;
+    font-weight: 500;
+}
+
+.table td {
+    vertical-align: middle;
+}
+</style>
+@endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function confirmSelesai(id) {
+    Swal.fire({
+        title: 'Konfirmasi',
+        text: 'Apakah Anda yakin pesanan ini sudah selesai dikerjakan oleh pengrajin?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/admin/pesanan-produk/${id}/mark-siap-dikirim`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    location.reload();
+                }
+            });
+        }
+    });
+}
+</script>
+@endpush 

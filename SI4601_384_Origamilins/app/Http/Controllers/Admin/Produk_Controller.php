@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -82,15 +83,39 @@ class Produk_Controller extends Controller
     {
         $produkData = $request->validate([
             'nama' => 'required|string|max:255',
-            'harga' => 'required|numeric|min:0',
+            'harga_dasar' => 'required|numeric|min:0',
             'kategori' => 'required|string|max:100',
+            'ukuran' => 'required|array',
+            'ukuran.*' => 'required|string',
             'deskripsi' => 'required|string',
-            'stok' => 'required|integer|min:0',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Konversi harga dari format dengan titik menjadi angka biasa
-        $produkData['harga'] = (float) str_replace('.', '', $request->harga);
+        // Konversi harga dasar dari format dengan titik menjadi angka biasa
+        $produkData['harga_dasar'] = (float) str_replace('.', '', $request->harga_dasar);
+        
+        // Konversi array ukuran menjadi string yang dipisahkan koma
+        $produkData['ukuran'] = implode(',', $request->ukuran);
+
+        // Hitung harga berdasarkan ukuran
+        $ukuranTerpilih = $request->ukuran;
+        $hargaDasar = $produkData['harga_dasar'];
+        $hargaTotal = 0;
+
+        foreach ($ukuranTerpilih as $ukuran) {
+            if ($request->kategori === 'Merchandise') {
+                // Untuk Merchandise, harga bertambah 50% untuk setiap peningkatan ukuran
+                $ukuranCm = (int) explode(' x ', $ukuran)[0];
+                $multiplier = $ukuranCm / 5; // 5 cm adalah ukuran terkecil
+                $hargaTotal += $hargaDasar * $multiplier;
+            } else {
+                // Untuk Dekorasi, harga bertambah 100% untuk setiap meter
+                $ukuranMeter = (int) explode(' ', $ukuran)[0];
+                $hargaTotal += $hargaDasar * $ukuranMeter;
+            }
+        }
+
+        $produkData['harga'] = $hargaTotal;
 
         if ($request->hasFile('gambar')) {
             $file = $request->file('gambar');
@@ -123,15 +148,39 @@ class Produk_Controller extends Controller
     {
         $produkData = $request->validate([
             'nama' => 'required|string|max:255',
-            'harga' => 'required|numeric|min:0',
+            'harga_dasar' => 'required|numeric|min:0',
             'kategori' => 'required|string|max:100',
+            'ukuran' => 'required|array',
+            'ukuran.*' => 'required|string',
             'deskripsi' => 'required|string',
-            'stok' => 'required|integer|min:0',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Konversi harga dari format dengan titik menjadi angka biasa
-        $produkData['harga'] = (float) str_replace('.', '', $request->harga);
+        // Konversi harga dasar dari format dengan titik menjadi angka biasa
+        $produkData['harga_dasar'] = (float) str_replace('.', '', $request->harga_dasar);
+        
+        // Konversi array ukuran menjadi string yang dipisahkan koma
+        $produkData['ukuran'] = implode(',', $request->ukuran);
+
+        // Hitung harga berdasarkan ukuran
+        $ukuranTerpilih = $request->ukuran;
+        $hargaDasar = $produkData['harga_dasar'];
+        $hargaTotal = 0;
+
+        foreach ($ukuranTerpilih as $ukuran) {
+            if ($request->kategori === 'Merchandise') {
+                // Untuk Merchandise, harga bertambah 50% untuk setiap peningkatan ukuran
+                $ukuranCm = (int) explode(' x ', $ukuran)[0];
+                $multiplier = $ukuranCm / 5; // 5 cm adalah ukuran terkecil
+                $hargaTotal += $hargaDasar * $multiplier;
+            } else {
+                // Untuk Dekorasi, harga bertambah 100% untuk setiap meter
+                $ukuranMeter = (int) explode(' ', $ukuran)[0];
+                $hargaTotal += $hargaDasar * $ukuranMeter;
+            }
+        }
+
+        $produkData['harga'] = $hargaTotal;
 
         if ($request->hasFile('gambar')) {
             // Hapus gambar lama jika ada

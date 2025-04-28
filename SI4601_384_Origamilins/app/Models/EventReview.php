@@ -14,6 +14,11 @@ class EventReview extends Model
         'user_id',
         'rating',
         'komentar',
+        'status'
+    ];
+
+    protected $attributes = [
+        'status' => 'Menunggu'
     ];
 
     public function event()
@@ -24,5 +29,16 @@ class EventReview extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public static function getStatusOptions()
+    {
+        return [
+            'Menunggu' => 'Menunggu',
+            'Disetujui' => 'Disetujui',
+            'Ditolak' => 'Ditolak'
+        ];
+
+        
     }
 } 

@@ -36,19 +36,34 @@
                             <td>{{ $product->nama }}</td>
                         </tr>
                         <tr>
+                            <th>Harga Dasar</th>
+                            <td>Rp {{ number_format($product->harga_dasar, 0, ',', '.') }}</td>
+                        </tr>
+                        <tr>
                             <th>Kategori</th>
                             <td>{{ $product->kategori }}</td>
                         </tr>
                         <tr>
-                            <th>Harga</th>
-                            <td>Rp {{ number_format($product->harga, 0, ',', '.') }}</td>
-                        </tr>
-                        <tr>
-                            <th>Stok</th>
+                            <th>Ukuran</th>
                             <td>
-                                <span class="badge {{ $product->stok > 0 ? 'bg-success' : 'bg-danger' }}">
-                                    {{ $product->stok }}
-                                </span>
+                                @php
+                                    $ukuranArray = $product->ukuran ? explode(',', $product->ukuran) : [];
+                                    $ukuranList = [];
+                                    if($product->kategori == 'Merchandise') {
+                                        $ukuranList = ['5 x 5 cm', '10 x 10 cm', '15 x 15 cm', '20 x 20 cm'];
+                                    } else {
+                                        $ukuranList = ['1 meter', '2 meter', '3 meter', '4 meter', '5 meter'];
+                                    }
+                                @endphp
+                                @if(!empty($ukuranArray))
+                                    @foreach($ukuranList as $ukuran)
+                                        @if(in_array($ukuran, $ukuranArray))
+                                            <span class="badge bg-info me-1">{{ $ukuran }}</span>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    <span class="text-muted">Tidak ada ukuran tersedia</span>
+                                @endif
                             </td>
                         </tr>
                         <tr>

@@ -51,7 +51,7 @@ use Illuminate\Support\Facades\Storage;
                 </div>
 
                 <div class="col-12">
-                    <button type="button" class="btn btn-primary" onclick="debouncedFetch()">Cari</button>
+                    <button type="submit" class="btn btn-primary">Cari</button>
                     <button type="button" id="resetFilter" class="btn btn-secondary">Reset</button>
                 </div>
             </form>
@@ -73,61 +73,25 @@ use Illuminate\Support\Facades\Storage;
                             <th>No</th>
                             <th>Gambar</th>
                             <th>Nama Produk</th>
-                            <th>Harga</th>
+                            <th>Harga Dasar</th>
                             <th>Kategori</th>
-                            <th>Stok</th>
+                            <th>Ukuran</th>
                             <th>Deskripsi</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="productTableBody">
-                        @foreach($products as $key => $product)
-                        <tr>
-                            <td>{{ $products->firstItem() + $key }}</td>
-                            <td>
-                                @if($product->gambar)
-                                    @if(filter_var($product->gambar, FILTER_VALIDATE_URL))
-                                        <img src="{{ $product->gambar }}" alt="{{ $product->nama }}" class="img-thumbnail" style="max-width: 100px;">
-                                    @else
-                                        <img src="{{ asset('storage/' . $product->gambar) }}" alt="{{ $product->nama }}" class="img-thumbnail" style="max-width: 100px;">
-                                    @endif
-                                @else
-                                    <span class="text-muted">No Image</span>
-                                @endif
-                            </td>
-                            <td>{{ $product->nama }}</td>
-                            <td>Rp {{ number_format($product->harga, 0, ',', '.') }}</td>
-                            <td>{{ $product->kategori }}</td>
-                            <td>
-                                <span class="badge {{ $product->stok > 0 ? 'bg-success' : 'bg-danger' }}">
-                                    {{ $product->stok }}
-                                </span>
-                            </td>
-                            <td>{{ $product->deskripsi }}</td>
-                            <td>
-                                <div class="btn-group">
-                                    <a href="{{ route('admin.produk.show', $product->id) }}" class="btn btn-info btn-sm me-2">
-                                        <i class="fas fa-eye"></i> View
-                                    </a>
-                                    <a href="{{ route('admin.produk.edit', $product->id) }}" class="btn btn-warning btn-sm me-2">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                    <form action="{{ route('admin.produk.destroy', $product->id) }}" method="POST" class="d-inline" id="delete-form-{{ $product->id }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('delete-form-{{ $product->id }}')">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
+                        @include('admin.produk._product_table')
                     </tbody>
                 </table>
-                {{-- Pagination --}}
-                <div class="d-flex justify-content-end mt-3">
-                    {{ $products->withQueryString()->links() }}
+                
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <div>
+                        Menampilkan {{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }} dari {{ $products->total() ?? 0 }} produk
+                    </div>
+                    <div>
+                        {{ $products->withQueryString()->links() }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -139,56 +103,32 @@ use Illuminate\Support\Facades\Storage;
 document.addEventListener('DOMContentLoaded', function() {
     const filterForm = document.getElementById('filterForm');
     const resetFilter = document.getElementById('resetFilter');
-    const productTableBody = document.getElementById('productTableBody');
-    let debounceTimer;
+    const tableContainer = document.querySelector('.table-responsive');
 
-    function updateURL() {
+    // Handle form submission
+    filterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
         const formData = new FormData(filterForm);
-        const params = new URLSearchParams();
-
-        for (const [key, value] of formData.entries()) {
-            if (value) params.append(key, value);
-        }
-
-        const newURL = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
-        window.history.pushState({}, '', newURL);
-    }
-
-    function fetchFilteredProducts() {
-        const formData = new FormData(filterForm);
-        const params = new URLSearchParams();
-
-        for (const [key, value] of formData.entries()) {
-            if (value) params.append(key, value);
-        }
-
-        fetch(`{{ route('admin.produk.index') }}?${params.toString()}`, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(response => response.json())
-        .then(data => {
-            productTableBody.innerHTML = data.html;
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    window.debouncedFetch = function() {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            updateURL();
-            fetchFilteredProducts();
-        }, 300);
-    }
-
-    resetFilter.addEventListener('click', function() {
-        filterForm.reset();
-        fetchFilteredProducts();
-        updateURL();
+        const params = new URLSearchParams(formData);
+        window.location.href = `{{ route('admin.produk.index') }}?${params.toString()}`;
     });
 
-    if (window.location.search) {
-        fetchFilteredProducts();
-    }
+    // Handle reset button
+    resetFilter.addEventListener('click', function() {
+        filterForm.reset();
+        window.location.href = "{{ route('admin.produk.index') }}";
+    });
+
+    // Handle pagination links
+    tableContainer.addEventListener('click', function(e) {
+        const target = e.target;
+        if (target.tagName === 'A' && target.closest('.pagination')) {
+            e.preventDefault();
+            const url = new URL(target.href);
+            const params = new URLSearchParams(url.search);
+            window.location.href = `{{ route('admin.produk.index') }}?${params.toString()}`;
+        }
+    });
 });
 </script>
 @endpush
