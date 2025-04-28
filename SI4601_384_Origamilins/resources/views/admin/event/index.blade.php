@@ -27,31 +27,31 @@
                             <div class="col-md-3">
                                 <div class="mb-2">
                                     <label for="nama_event" class="form-label small">Nama Event</label>
-                                    <input type="text" class="form-control form-control-sm" id="nama_event" name="nama_event" value="{{ request('nama_event') }}" placeholder="Cari nama event...">
+                                    <input type="text" class="form-control" id="nama_event" name="nama_event" value="{{ request('nama_event') }}" placeholder="Cari nama event...">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="mb-2">
                                     <label for="lokasi" class="form-label small">Lokasi</label>
-                                    <input type="text" class="form-control form-control-sm" id="lokasi" name="lokasi" value="{{ request('lokasi') }}" placeholder="Cari lokasi...">
+                                    <input type="text" class="form-control" id="lokasi" name="lokasi" value="{{ request('lokasi') }}" placeholder="Cari lokasi...">
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-2">
                                     <label for="tanggal_awal" class="form-label small">Tanggal Awal</label>
-                                    <input type="date" class="form-control form-control-sm" id="tanggal_awal" name="tanggal_awal" value="{{ request('tanggal_awal') }}">
+                                    <input type="date" class="form-control" id="tanggal_awal" name="tanggal_awal" value="{{ request('tanggal_awal') }}">
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-2">
                                     <label for="tanggal_akhir" class="form-label small">Tanggal Akhir</label>
-                                    <input type="date" class="form-control form-control-sm" id="tanggal_akhir" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}">
+                                    <input type="date" class="form-control" id="tanggal_akhir" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}">
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-2">
                                     <label for="harga_range" class="form-label small">Rentang Harga</label>
-                                    <select class="form-select form-select-sm" id="harga_range" name="harga_range">
+                                    <select class="form-select" id="harga_range" name="harga_range">
                                         <option value="">Semua Harga</option>
                                         <option value="0-10000" {{ request('harga_range') == '0-10000' ? 'selected' : '' }}>Rp 0 - 100.00</option>
                                         <option value="10000-25000" {{ request('harga_range') == '10000-25000' ? 'selected' : '' }}>Rp 10.000 - 25.000</option>
@@ -63,9 +63,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between mt-2">
-                            <button type="submit" class="btn btn-primary btn-sm">Cari</button>
-                            <a href="{{ route('admin.event.index') }}" class="btn btn-secondary btn-sm">Reset</a>
+                        <div class="d-flex gap-2 mt-2">
+                            <button type="submit" class="btn btn-primary">Cari</button>
+                            <a href="{{ route('admin.event.index') }}" class="btn btn-secondary">Reset</a>
                         </div>
                     </form>
                 </div>
