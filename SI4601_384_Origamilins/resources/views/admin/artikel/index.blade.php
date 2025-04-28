@@ -37,9 +37,7 @@
                             <td>
                                 @if($artikel->gambar)
                                 <div class="artikel-image-container">
-                                    <img src="{{ asset($artikel->gambar) }}" 
-                                         alt="Gambar Artikel" 
-                                         class="artikel-thumbnail">
+                                    <img src="{{ asset('storage/' . $artikel->gambar) }}" alt="Gambar Artikel" class="artikel-thumbnail">
                                 </div>
                                 @else
                                 <span class="text-muted">Tidak ada gambar</span>
