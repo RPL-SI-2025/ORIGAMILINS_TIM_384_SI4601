@@ -12,42 +12,15 @@ class EventTest extends DuskTestCase
 {
     use DatabaseMigrations;
 
-    public function setUp(): void
+    /** @test */
+    public function test_admin_can_create_event()
     {
-        parent::setUp();
+        $admin = User::factory()->admin()->create();
 
-        // Run migrations
-        $this->artisan('migrate:fresh');
-        
-        // Run seeders
-        $this->artisan('db:seed', ['--class' => 'DatabaseSeeder']);
-        
-        // Create admin user
-        User::create([
-            'name' => 'Admin Test',
-            'email' => 'admin@gmail.com',
-            'password' => bcrypt('password'),
-            'role' => 'admin'
-        ]);
-    }
-
-    /**
-     * Test creating a new event.
-     */
-    public function test_admin_can_create_event(): void
-    {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/login')
-                   ->type('email', 'admin@gmail.com')
-                   ->type('password', 'password')
-                   ->press('LOG IN')
-                   ->assertPathIs('/dashboard')
-                   
-                   // Navigate to event creation page
+        $this->browse(function (Browser $browser) use ($admin) {
+            $browser->loginAs($admin)
                    ->visit('/admin/event/create')
                    ->assertSee('Tambah Event')
-                   
-                   // Fill in the event form
                    ->type('nama_event', 'Cerita Hari Ini - Mengulik Inovasi Barang Bekas')
                    ->type('deskripsi', 'Event ini akan menghadirkan sesi bincang santai bersama para inovator muda')
                    ->type('tanggal_pelaksanaan', '2025-04-30')
@@ -55,96 +28,77 @@ class EventTest extends DuskTestCase
                    ->type('harga', '19992')
                    ->type('kuota', '48')
                    ->attach('poster', public_path('uploads/artikel3.jpg'))
-                   
-                   // Submit the form
                    ->press('Simpan Event')
-                   
-                   // Assert success
-                   ->assertPathIs('/admin/event')
-                   ->assertSee('Event berhasil ditambahkan!');
+                   ->waitForLocation('/admin/event')
+                   ->assertSee('Event berhasil ditambahkan!')
+                   ->screenshot('admin-create-event');
         });
     }
 
-    /**
-     * Test viewing event details.
-     */
-    public function test_admin_can_view_event_details(): void
+    /** @test */
+    public function test_admin_can_view_event_details()
     {
-        $event = Event::where('nama_event', 'Melipat Kertas, Merangkai Cerita')->first();
+        $admin = User::factory()->admin()->create();
+        $event = Event::factory()->create();
 
-        $this->browse(function (Browser $browser) use ($event) {
-            $browser->visit('/login')
-                   ->type('email', 'admin@gmail.com')
-                   ->type('password', 'password')
-                   ->press('LOG IN')
-                   
-                   // Visit event details page
+        $this->browse(function (Browser $browser) use ($admin, $event) {
+            $browser->loginAs($admin)
                    ->visit("/admin/event/{$event->id}")
                    ->assertSee('Detail Event')
-                   ->assertSee('Melipat Kertas, Merangkai Cerita')
-                   ->assertSee('SMK 1 Cimahi')
-                   ->assertSee('Rp 20.000')
-                   ->assertPresent('img[alt="Poster ' . $event->nama_event . '"]');
+                   ->assertSee($event->nama_event)
+                   ->assertSee($event->lokasi)
+                   ->assertSee('Rp ' . number_format($event->harga, 0, ',', '.'))
+                   ->assertPresent('img[alt="Poster ' . $event->nama_event . '"]')
+                   ->screenshot('admin-view-event');
         });
     }
 
-    /**
-     * Test editing an event.
-     */
-    public function test_admin_can_edit_event(): void
+    /** @test */
+    public function test_admin_can_edit_event()
     {
-        $event = Event::where('nama_event', 'Melipat Kertas, Merangkai Cerita')->first();
+        $admin = User::factory()->admin()->create();
+        $event = Event::factory()->create();
 
-        $this->browse(function (Browser $browser) use ($event) {
-            $browser->visit('/login')
-                   ->type('email', 'admin@gmail.com')
-                   ->type('password', 'password')
-                   ->press('LOG IN')
-                   
-                   // Visit edit page
+        $this->browse(function (Browser $browser) use ($admin, $event) {
+            $browser->loginAs($admin)
                    ->visit("/admin/event/{$event->id}/edit")
                    ->assertSee('Edit Event')
-                   
-                   // Update form fields with realistic data
-                   ->type('nama_event', 'Workshop Origami: Melipat Kertas, Merangkai Cerita')
+                   ->assertInputValue('nama_event', $event->nama_event)
+                   ->assertInputValue('deskripsi', $event->deskripsi)
+                   ->assertInputValue('tanggal_pelaksanaan', $event->tanggal_pelaksanaan->format('Y-m-d'))
+                   ->assertInputValue('lokasi', $event->lokasi)
+                   ->assertInputValue('harga', $event->harga)
+                   ->assertInputValue('kuota', $event->kuota)
+                   ->type('nama_event', 'Workshop Origami: ' . $event->nama_event)
                    ->type('deskripsi', 'Workshop origami yang mengajak peserta untuk belajar seni melipat kertas sambil mendengarkan cerita inspiratif.')
-                   ->type('lokasi', 'Aula SMK 1 Cimahi')
+                   ->type('lokasi', 'Aula ' . $event->lokasi)
                    ->type('harga', '25000')
                    ->type('kuota', '120')
-                   
-                   // Submit the form
                    ->press('Update Event')
-                   
-                   // Assert success
-                   ->assertPathIs('/admin/event')
+                   ->waitForLocation('/admin/event')
                    ->assertSee('Event berhasil diperbarui!')
-                   ->assertSee('Workshop Origami');
+                   ->assertSee('Workshop Origami')
+                   ->screenshot('admin-edit-event');
         });
     }
 
-    /**
-     * Test validation errors when creating event.
-     */
-    public function test_event_creation_validation(): void
+    /** @test */
+    public function test_event_creation_validation()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/login')
-                   ->type('email', 'admin@gmail.com')
-                   ->type('password', 'password')
-                   ->press('LOG IN')
-                   
-                   // Try to submit empty form
+        $admin = User::factory()->admin()->create();
+
+        $this->browse(function (Browser $browser) use ($admin) {
+            $browser->loginAs($admin)
                    ->visit('/admin/event/create')
                    ->press('Simpan Event')
-                   
-                   // Assert validation errors
                    ->assertSee('nama event harus diisi')
                    ->assertSee('deskripsi harus diisi')
                    ->assertSee('tanggal pelaksanaan harus diisi')
                    ->assertSee('lokasi harus diisi')
                    ->assertSee('harga harus diisi')
                    ->assertSee('kuota harus diisi')
-                   ->assertSee('poster harus diisi');
+                   ->assertSee('poster harus diisi')
+                   ->screenshot('event-validation');
         });
     }
 }
