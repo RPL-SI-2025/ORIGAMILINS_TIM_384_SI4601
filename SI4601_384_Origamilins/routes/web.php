@@ -19,9 +19,6 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// Produk Publik
-Route::get('/produk', [Produk_Controller::class, 'index'])->name('produk.melihat_produk');
-
 // Event Publik
 Route::get('/event', [EventController::class, 'index'])->name('event.melihat_event');
 
