@@ -12,11 +12,12 @@ class ProdukFactory extends Factory
     public function definition()
     {
         return [
-            'nama' => $this->faker->word,
+            'nama_produk' => $this->faker->word,
+            'harga_dasar' => $this->faker->numberBetween(50000, 500000),
+            'kategori' => $this->faker->randomElement(['Merchandise', 'Dekorasi']),
+            'ukuran' => '5 x 5,10 x 10,15 x 15',
             'deskripsi' => $this->faker->paragraph,
-            'harga' => $this->faker->randomFloat(2, 10000, 1000000),
-            'kategori' => $this->faker->randomElement(['Dekorasi', 'Merchandise']),
-            'ukuran' => '5 x 5 cm,10 x 10 cm,15 x 15 cm,20 x 20 cm',
+            'harga' => $this->faker->numberBetween(100000, 1000000),
             'gambar' => $this->faker->imageUrl(),
             'created_at' => now(),
             'updated_at' => now(),

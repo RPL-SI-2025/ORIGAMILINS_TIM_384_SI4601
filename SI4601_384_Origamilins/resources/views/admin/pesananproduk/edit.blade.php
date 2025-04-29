@@ -40,13 +40,13 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label">Nama Pemesan</label>
-                            <input type="text" class="form-control" value="{{ $pesanan->nama_pemesan }}" readonly>
+                            <input type="text" class="form-control" value="{{ $pesanan->user->name }}" readonly>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label">Nama Produk</label>
-                            <input type="text" class="form-control" value="{{ $pesanan->nama_produk }}" readonly>
+                            <input type="text" class="form-control" name="nama_produk" value="{{ $pesanan->produk->nama_produk }}">
                         </div>
                     </div>
                 </div>

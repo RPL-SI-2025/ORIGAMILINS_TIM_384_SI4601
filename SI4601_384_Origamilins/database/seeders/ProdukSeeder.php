@@ -21,6 +21,7 @@ class ProdukSeeder extends Seeder
             [
                 'gambar' => 'https://origami.me/wp-content/uploads/2024/07/easy-origami-swan-1.jpg',
                 'nama' => 'Burung Angsa',
+                'nama_produk' => 'Burung Angsa',
                 'harga' => 15000,
                 'kategori' => 'Merchandise',
                 'ukuran' => '10 x 10 cm,15 x 15 cm',
@@ -31,6 +32,7 @@ class ProdukSeeder extends Seeder
             [
                 'gambar' => 'https://1.bp.blogspot.com/-D_8Oyp_dOkM/X9KhDiWpOwI/AAAAAAABZEk/Pr-zS8m7XlQIiGsoRABV2Br-vVKQA2DFQCLcBGAsYHQ/s0/_5xh0nuwzd.jpg',
                 'nama' => 'Bunga Kertas',
+                'nama_produk' => 'Bunga Kertas',
                 'harga' => 250000,
                 'kategori' => 'Dekorasi',
                 'ukuran' => '1 meter, 2 meter',
@@ -41,6 +43,7 @@ class ProdukSeeder extends Seeder
             [
                 'gambar' => 'https://deavita.fr/wp-content/uploads/2014/06/grues-origami-chambre-bebe-originale.jpg',
                 'nama' => 'Tirai Burung Angsa',
+                'nama_produk' => 'Tirai Burung Angsa',
                 'harga' => 80000,
                 'kategori' => 'Merchandise',
                 'ukuran' => '5 x 5 cm,10 x 10 cm,15 x 15 cm',
@@ -51,6 +54,7 @@ class ProdukSeeder extends Seeder
             [
                 'gambar' => 'https://th.bing.com/th/id/OIP.ISf7vyG9JMjraG2VFh5EkQHaHa?w=480&h=480&rs=1&pid=ImgDetMain',
                 'nama' => 'Bunga Tulip',
+                'nama_produk' => 'Bunga Tulip',
                 'harga' => 15000,
                 'kategori' => 'Merchandise',
                 'ukuran' => '5 x 5 cm,10 x 10 cm',

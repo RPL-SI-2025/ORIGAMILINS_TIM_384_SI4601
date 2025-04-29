@@ -22,13 +22,13 @@ class Produk extends Model
      * @var array<string>
      */
     protected $fillable = [
-        'nama',
-        'harga',
+        'nama_produk',
         'harga_dasar',
         'kategori',
         'ukuran',
-        'gambar',
-        'deskripsi'
+        'deskripsi',
+        'harga',
+        'gambar'
     ];
 
     /**

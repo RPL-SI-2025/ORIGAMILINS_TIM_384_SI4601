@@ -30,8 +30,9 @@ Route::get('/logout', function () {
 
 // User Profile (butuh login)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/profilpengguna', [UserProfileController::class, 'create'])->name('profile.create');
-    Route::post('/profilpengguna', [UserProfileController::class, 'store'])->name('profile.store');
+    Route::get('/profilpengguna', [UserProfileController::class, 'create'])->name('profilpengguna.create');
+    Route::post('/profilpengguna', [UserProfileController::class, 'store'])->name('profilpengguna.store');
+    Route::put('/profilpengguna', [UserProfileController::class, 'update'])->name('profilpengguna.update');
 
     // Dashboard
     Route::get('/dashboard', function () {
@@ -163,3 +164,12 @@ Route::get('/debug-login', function () {
         ]
     ];
 });
+
+Route::get('/profilpengguna', function () {
+    return view('profilpengguna');
+})->name('profile.show');
+
+Route::put('/profilpengguna', function () {
+    // Logic untuk update profil akan ditambahkan nanti
+    return redirect()->back();
+})->name('profile.update');

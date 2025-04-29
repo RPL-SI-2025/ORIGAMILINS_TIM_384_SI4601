@@ -58,24 +58,18 @@ class PesananController extends Controller
         $request->validate([
             'status' => 'required|in:' . implode(',', array_keys(Pesanan::getStatusOptions())),
             'pengrajin_id' => 'nullable|exists:pengrajin,id',
-            'nomor_resi' => 'required_if:status,Dikirim'
+            'nomor_resi' => 'required_if:status,Dikirim',
+            'nama_produk' => 'required|string|max:255'
         ]);
 
-        // Tambahan logika otomatis
-        if ($pesanan->status === 'Rencana' && $request->pengrajin_id) {
-            $request->merge(['status' => 'Dalam Proses']);
+        // Update produk
+        if ($pesanan->produk) {
+            $pesanan->produk->update([
+                'nama_produk' => $request->nama_produk
+            ]);
         }
 
-        // Jika status berubah ke "Dalam Proses", pastikan ada pengrajin yang ditugaskan
-        if ($request->status === 'Dalam Proses' && empty($request->pengrajin_id)) {
-            return back()->with('error', 'Pilih pengrajin terlebih dahulu sebelum mengubah status ke Dalam Proses');
-        }
-
-        // Jika status berubah ke "Dikirim", pastikan ada nomor resi
-        if ($request->status === 'Dikirim' && empty($request->nomor_resi)) {
-            return back()->with('error', 'Masukkan nomor resi terlebih dahulu sebelum mengubah status ke Dikirim');
-        }
-
+        // Update pesanan
         $pesanan->update([
             'status' => $request->status,
             'pengrajin_id' => $request->pengrajin_id,

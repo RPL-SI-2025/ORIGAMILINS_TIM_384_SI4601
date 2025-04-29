@@ -1,52 +1,87 @@
-<x-app-layout>
-    <div class="flex items-center justify-center min-h-screen bg-gray-100">
-        <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md relative">
-            <h2 class="text-xl font-semibold text-center mb-6">Profil Pengguna</h2>
+@extends('layouts.app')
 
-            <form method="POST" action="{{ route('profile.store') }}" enctype="multipart/form-data">
-                @csrf
+@section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Profil Pengguna</div>
 
-                <!-- Foto Profil -->
-                <div class="mb-4">
-                    <label class="block font-medium mb-1">Photo Profil</label>
-                    <input type="file" name="foto" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-                        file:rounded-full file:border-0 file:text-sm file:font-semibold
-                        file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100">
-                    <small class="text-gray-500 text-sm mt-1">Ukuran Max: 512 Kb, Tipe: png, jpg, jpeg</small>
+                <div class="card-body">
+                    <form method="POST" action="{{ route('profilpengguna.store') }}" enctype="multipart/form-data">
+                        @csrf
+
+                        <div class="form-group row mb-3">
+                            <label for="foto" class="col-md-4 col-form-label text-md-right">Foto Profil</label>
+                            <div class="col-md-6">
+                                <input type="file" class="form-control @error('foto') is-invalid @enderror" name="foto" id="foto">
+                                @error('foto')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            <label for="nama_lengkap" class="col-md-4 col-form-label text-md-right">Nama Lengkap</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control @error('nama_lengkap') is-invalid @enderror" name="nama_lengkap" value="{{ old('nama_lengkap') }}" required>
+                                @error('nama_lengkap')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            <label for="nama_panggilan" class="col-md-4 col-form-label text-md-right">Nama Panggilan</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control @error('nama_panggilan') is-invalid @enderror" name="nama_panggilan" value="{{ old('nama_panggilan') }}" required>
+                                @error('nama_panggilan')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            <label for="no_hp" class="col-md-4 col-form-label text-md-right">Nomor HP</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control @error('no_hp') is-invalid @enderror" name="no_hp" value="{{ old('no_hp') }}" required>
+                                @error('no_hp')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
+                            <div class="col-md-6">
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ auth()->user()->email }}" required readonly>
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-0">
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    Simpan
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-
-                <!-- Nama Lengkap -->
-                <div class="mb-4">
-                    <label class="block font-medium mb-1">Nama Lengkap</label>
-                    <input type="text" name="nama_lengkap" class="w-full border border-gray-300 rounded-lg shadow-sm px-3 py-2 bg-blue-50" required>
-                </div>
-
-                <!-- Nama Panggilan -->
-                <div class="mb-4">
-                    <label class="block font-medium mb-1">Nama Panggilan</label>
-                    <input type="text" name="nama_panggilan" class="w-full border border-gray-300 rounded-lg shadow-sm px-3 py-2 bg-blue-50" required>
-                </div>
-
-                <!-- Nomor Handphone -->
-                <div class="mb-4">
-                    <label class="block font-medium mb-1">Nomor Handphone</label>
-                    <input type="text" name="no_hp" class="w-full border border-gray-300 rounded-lg shadow-sm px-3 py-2 bg-blue-50" required>
-                </div>
-
-                <!-- Email -->
-                <div class="mb-6">
-                    <label class="block font-medium mb-1">Email</label>
-                    <input type="email" name="email" class="w-full bg-gray-100 border border-gray-300 rounded-lg shadow-sm px-3 py-2" value="{{ auth()->user()->email }}" readonly>
-                </div>
-
-                <!-- Tombol Aksi -->
-                <div class="flex justify-end items-center gap-4 mt-6">
-                    <a href="{{ route('dashboard') }}" class="text-sm text-gray-600 hover:underline">Batal</a>
-                    <button type="submit" style="background-color: black; color: white; padding: 8px 16px; border-radius: 6px;">
-                        Simpan
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
-</x-app-layout>
+</div>
+@endsection

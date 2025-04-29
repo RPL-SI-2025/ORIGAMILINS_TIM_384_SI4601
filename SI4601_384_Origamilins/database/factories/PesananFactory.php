@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Pesanan;
+use App\Models\User;
+use App\Models\Produk;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PesananFactory extends Factory
@@ -12,11 +14,17 @@ class PesananFactory extends Factory
     public function definition()
     {
         return [
-            'nama_pemesan' => $this->faker->name,
-            'nama_produk' => $this->faker->word,
-            'status' => $this->faker->randomElement(['Diproses', 'Dikirim', 'Selesai', 'Dibatalkan']),
+            'user_id' => User::factory(),
+            'produk_id' => Produk::factory(),
+            'jumlah' => $this->faker->numberBetween(1, 5),
+            'total_harga' => $this->faker->randomFloat(2, 10000, 1000000),
+            'status' => 'Rencana',
+            'ekspedisi' => $this->faker->randomElement(['JNE', 'J&T', 'SiCepat', 'Pos Indonesia']),
+            'alamat_pengiriman' => $this->faker->address,
+            'nomor_telepon' => $this->faker->phoneNumber,
+            'tanggal_pesanan' => now(),
             'created_at' => now(),
-            'updated_at' => now(),
+            'updated_at' => now()
         ];
     }
 
