@@ -6,7 +6,13 @@
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             <h2 class="text-2xl font-bold mb-6">Profil Pengguna</h2>
             
-            <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-6">
+            @if (session('success'))
+                <div class="mb-4 px-4 py-2 bg-green-100 border border-green-400 text-green-700 rounded">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('profilpengguna.update') }}" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @method('PUT')
                 
@@ -14,53 +20,80 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Photo Profil</label>
                     <div class="mt-1 flex items-center space-x-4">
-                        <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center">
-                            <svg class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
+                        <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                            @if($user->profile_photo_path)
+                                <img src="{{ Storage::url($user->profile_photo_path) }}" alt="Profile" class="w-full h-full object-cover">
+                            @else
+                                <svg class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            @endif
                         </div>
-                        <button type="button" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                            Pilih File
-                        </button>
-                        <span class="text-sm text-gray-500">Tidak ada file yang dipilih</span>
+                        <label class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer">
+                            <span>Pilih File</span>
+                            <input type="file" name="profile_photo" class="hidden" onchange="updateFileName(this)">
+                        </label>
+                        <span id="selectedFileName" class="text-sm text-gray-500">Tidak ada file yang dipilih</span>
                     </div>
                     <p class="mt-1 text-sm text-gray-500">Ukuran Max: 512 Kb, Tipe: png, jpg, jpeg</p>
+                    @error('profile_photo')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Nama Lengkap -->
                 <div>
-                    <label for="nama_lengkap" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-                    <input type="text" name="nama_lengkap" id="nama_lengkap" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                    <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    @error('name')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Nama Panggilan -->
                 <div>
-                    <label for="nama_panggilan" class="block text-sm font-medium text-gray-700">Nama Panggilan</label>
-                    <input type="text" name="nama_panggilan" id="nama_panggilan" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <label for="nickname" class="block text-sm font-medium text-gray-700">Nama Panggilan</label>
+                    <input type="text" name="nickname" id="nickname" value="{{ old('nickname', $user->nickname) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    @error('nickname')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Nomor Handphone -->
                 <div>
-                    <label for="nomor_handphone" class="block text-sm font-medium text-gray-700">Nomor Handphone</label>
-                    <input type="tel" name="nomor_handphone" id="nomor_handphone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Nomor Handphone</label>
+                    <input type="tel" name="phone" id="phone" value="{{ old('phone', $user->phone) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    @error('phone')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Email -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" name="email" id="email" value="admin@gmail.com" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" readonly>
+                    <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    @error('email')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="flex justify-between">
                     <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                         Simpan Perubahan
                     </button>
-                    <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                    <a href="{{ route('dashboard') }}" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
                         Batal
-                    </button>
+                    </a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+function updateFileName(input) {
+    const fileName = input.files[0]?.name || 'Tidak ada file yang dipilih';
+    document.getElementById('selectedFileName').textContent = fileName;
+}
+</script>
 @endsection 

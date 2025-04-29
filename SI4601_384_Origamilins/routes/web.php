@@ -165,11 +165,11 @@ Route::get('/debug-login', function () {
     ];
 });
 
-Route::get('/profilpengguna', function () {
-    return view('profilpengguna');
-})->name('profile.show');
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
-Route::put('/profilpengguna', function () {
-    // Logic untuk update profil akan ditambahkan nanti
-    return redirect()->back();
-})->name('profile.update');
+    Route::get('/profilpengguna', [App\Http\Controllers\UserProfileController::class, 'show'])->name('profilpengguna');
+    Route::put('/profilpengguna', [App\Http\Controllers\UserProfileController::class, 'update'])->name('profilpengguna.update');
+});
