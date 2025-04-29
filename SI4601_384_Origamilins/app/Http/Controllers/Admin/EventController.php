@@ -12,6 +12,13 @@ class EventController extends Controller
     {
         $events = Event::query();
 
+        // Update status for all events
+        Event::chunk(100, function($events) {
+            foreach($events as $event) {
+                $event->updateStatusBasedOnDate();
+            }
+        });
+
         // Filter by name with partial word matching
         if (request()->has('nama_event') && request('nama_event') != '') {
             $events->where('nama_event', 'like', '%' . request('nama_event') . '%');
@@ -38,6 +45,11 @@ class EventController extends Controller
             $events->where('tanggal_pelaksanaan', '<=', request('tanggal_akhir'));
         }
 
+        // Filter by status
+        if (request()->has('status') && request('status') != '') {
+            $events->where('status', request('status'));
+        }
+
         $events = $events->latest()->get();
 
         return view('admin.event.index', compact('events'));
@@ -56,10 +68,13 @@ class EventController extends Controller
             'tanggal_pelaksanaan' => 'required|date',
             'harga' => 'required|numeric|min:0',
             'lokasi' => 'required|string|max:255',
-            'poster' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            'poster' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'kuota' => 'required|integer|min:1'
         ]);
 
         $data = $request->all();
+        $data['status'] = 'tersedia';
+        $data['kuota_terisi'] = 0;
 
         if ($request->hasFile('poster')) {
             $image = $request->file('poster');
