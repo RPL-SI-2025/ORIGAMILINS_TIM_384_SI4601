@@ -109,6 +109,7 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
 
     // Manajemen Pengrajin
     Route::prefix('pengrajin')->name('admin.pengrajin.')->group(function () {
+        Route::resource('pengrajin', PengrajinManagementController::class);
         Route::get('/', [PengrajinManagementController::class, 'index'])->name('index');
         Route::post('/{pengrajin}/toggle-status', [PengrajinManagementController::class, 'toggleStatus'])->name('toggle-status');
         Route::get('/{pengrajin}/details', [PengrajinManagementController::class, 'showDetails'])->name('details');
