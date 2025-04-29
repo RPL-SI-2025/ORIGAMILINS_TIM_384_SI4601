@@ -17,7 +17,10 @@ abstract class DuskTestCase extends BaseTestCase
     public static function prepare(): void
     {
         if (! static::runningInSail()) {
-            static::startChromeDriver();
+            static::startChromeDriver([
+                '--port=9515',
+                '--whitelisted-ips=""'
+            ]);
         }
     }
 
@@ -28,9 +31,9 @@ abstract class DuskTestCase extends BaseTestCase
     {
         $options = (new ChromeOptions)->addArguments([
             '--disable-gpu',
-            '--headless',
-            '--no-sandbox',
+            '--headless=new',
             '--window-size=1920,1080',
+            '--no-sandbox',
             '--disable-dev-shm-usage',
             '--ignore-certificate-errors',
         ]);
