@@ -9,6 +9,13 @@
         </a>
     </div>
 
+    @if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
+
     <div class="card mb-4">
         <div class="card-body">
             <form action="{{ route('admin.artikel.store') }}" method="POST" enctype="multipart/form-data">
@@ -17,6 +24,7 @@
                     <label for="judul" class="form-label">Judul Artikel</label>
                     <input type="text" class="form-control @error('judul') is-invalid @enderror" 
                            id="judul" name="judul" value="{{ old('judul') }}" required>
+                    <div class="form-text">Judul hanya boleh berisi huruf, spasi, dan tanda hubung (-)</div>
                     @error('judul')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -25,18 +33,22 @@
                 <div class="mb-3">
                     <label for="tanggal_publikasi" class="form-label">Tanggal Publikasi</label>
                     <input type="date" class="form-control @error('tanggal_publikasi') is-invalid @enderror" 
-                           id="tanggal_publikasi" name="tanggal_publikasi" value="{{ old('tanggal_publikasi') }}" required>
+                           id="tanggal_publikasi" name="tanggal_publikasi" 
+                           value="{{ old('tanggal_publikasi', date('Y-m-d')) }}" 
+                           max="{{ date('Y-m-d') }}" required>
+                    <div class="form-text">Tanggal publikasi tidak boleh lebih dari hari ini</div>
                     @error('tanggal_publikasi')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="mb-3">
-                    <label for="editor" class="form-label">Isi Artikel</label>
+                    <label for="isi" class="form-label">Isi Artikel</label>
                     <div class="editor-container">
                         <textarea class="form-control @error('isi') is-invalid @enderror" 
-                                id="editor" name="isi" style="display: none;">{{ old('isi') }}</textarea>
+                                id="editor" name="isi">{{ old('isi') }}</textarea>
                     </div>
+                    <div class="form-text">Isi artikel minimal 50 karakter</div>
                     @error('isi')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -52,7 +64,7 @@
                     @enderror
                 </div>
 
-                <div id="image-preview" class="mb-3 d-flex flex-wrap gap-2"></div>
+                <div id="image-preview" class="mb-3"></div>
 
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Simpan Artikel
@@ -68,7 +80,6 @@
     max-height: 300px;
     object-fit: contain;
     border-radius: 8px;
-    margin-top: 10px;
 }
 
 .editor-container {
@@ -137,7 +148,7 @@
 </style>
 
 @push('scripts')
-<script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/super-build/ckeditor.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     ClassicEditor
@@ -145,49 +156,44 @@ document.addEventListener('DOMContentLoaded', function() {
             toolbar: {
                 items: [
                     'heading', '|',
-                    'bold', 'italic', 'underline', 'strikethrough', '|',
-                    'fontSize', 'fontColor', 'fontBackgroundColor', '|',
-                    'alignment', '|',
-                    'bulletedList', 'numberedList', '|',
+                    'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                    'bulletedList', 'numberedList', 'todoList', '|',
                     'outdent', 'indent', '|',
-                    'link', 'blockQuote', 'insertTable', '|',
+                    'alignment', '|',
+                    'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', '|',
                     'undo', 'redo'
                 ],
                 shouldNotGroupWhenFull: true
             },
             language: 'id',
-            table: {
-                contentToolbar: [
-                    'tableColumn',
-                    'tableRow',
-                    'mergeTableCells',
-                    'tableCellProperties',
-                    'tableProperties'
+            image: {
+                toolbar: [
+                    'imageTextAlternative',
+                    'imageStyle:inline',
+                    'imageStyle:block',
+                    'imageStyle:side'
                 ]
             }
         })
-        .then(editor => {
-            console.log('Editor initialized');
-        })
         .catch(error => {
-            console.error('Editor failed to initialize:', error);
+            console.error(error);
         });
-});
 
-document.getElementById('gambar').addEventListener('change', function(event) {
-    const preview = document.getElementById('image-preview');
-    preview.innerHTML = '';
-    
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            preview.innerHTML = `
-                <img src="${e.target.result}" class="preview-image" alt="Preview">
-            `;
+    document.getElementById('gambar').addEventListener('change', function(event) {
+        const preview = document.getElementById('image-preview');
+        preview.innerHTML = '';
+        
+        if (event.target.files && event.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'preview-image';
+                preview.appendChild(img);
+            }
+            reader.readAsDataURL(event.target.files[0]);
         }
-        reader.readAsDataURL(file);
-    }
+    });
 });
 </script>
 @endpush

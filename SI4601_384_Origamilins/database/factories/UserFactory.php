@@ -19,13 +19,11 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'two_factor_secret' => null,
-            'two_factor_recovery_codes' => null,
+            'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
             'current_team_id' => null,
-            'role' => 'user', // Tambahkan role default
+            'role' => 'user',
         ];
     }
 
@@ -53,7 +51,6 @@ class UserFactory extends Factory
             'ownedTeams'
         );
     }
-    
     public function admin(): static
     {
         return $this->state(fn (array $attributes) => [
