@@ -70,7 +70,7 @@
                             <th>Nama Pemesan</th>
                             <th>Event</th>
                             <th>Status</th>
-                            <th>Tanggal</th>
+                            <th>Tanggal Pesan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
