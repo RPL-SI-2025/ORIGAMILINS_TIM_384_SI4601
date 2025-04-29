@@ -50,15 +50,11 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-2">
-                                    <label for="harga_range" class="form-label small">Rentang Harga</label>
-                                    <select class="form-select form-select-sm" id="harga_range" name="harga_range">
-                                        <option value="">Semua Harga</option>
-                                        <option value="0-10000" {{ request('harga_range') == '0-10000' ? 'selected' : '' }}>Rp 0 - 100.00</option>
-                                        <option value="10000-25000" {{ request('harga_range') == '10000-25000' ? 'selected' : '' }}>Rp 10.000 - 25.000</option>
-                                        <option value="25000-50000" {{ request('harga_range') == '25000-50000' ? 'selected' : '' }}>Rp 25.000 - 50.000</option>
-                                        <option value="50000-75000" {{ request('harga_range') == '50000-75000' ? 'selected' : '' }}>Rp 50.000 - 75.000</option>
-                                        <option value="75000-100000" {{ request('harga_range') == '75000-100000' ? 'selected' : '' }}>Rp 75.000 - 100.000</option>
-                                        <option value="100000-200000" {{ request('harga_range') == '100000-200000' ? 'selected' : '' }}>> Rp 100.000</option>
+                                    <label for="status" class="form-label small">Status</label>
+                                    <select class="form-select form-select-sm" id="status" name="status">
+                                        <option value="">Semua Status</option>
+                                        <option value="tersedia" {{ request('status') == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
+                                        <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
                                     </select>
                                 </div>
                             </div>
@@ -95,8 +91,11 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>
                             @if($event->poster)
-                            <img src="{{ Storage::url($event->poster) }}" alt="Poster {{ $event->nama_event }}" 
-                                 class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                                @if(filter_var($event->poster, FILTER_VALIDATE_URL))
+                                    <img src="{{ $event->poster }}" alt="Poster {{ $event->nama_event }}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                                @else
+                                    <img src="{{ asset($event->poster) }}" alt="Poster {{ $event->nama_event }}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                                @endif
                             @else
                             <div class="no-image-placeholder">
                                 <i class="fas fa-image text-muted"></i>
@@ -113,15 +112,9 @@
                             </span>
                         </td>
                         <td>
-                            @if($event->tanggal_pelaksanaan < now())
-                                <span class="badge bg-secondary">Selesai</span>
-                            @else
-                                @if($event->kuota_terisi >= $event->kuota)
-                                    <span class="badge bg-danger">Full</span>
-                                @else
-                                    <span class="badge bg-success">Tersedia</span>
-                                @endif
-                            @endif
+                            <span class="badge {{ $event->status === 'tersedia' ? 'bg-success' : 'bg-secondary' }}">
+                                {{ $event->getStatusLabel() }}
+                            </span>
                         </td>
                         <td>
                             <div class="btn-group" role="group">

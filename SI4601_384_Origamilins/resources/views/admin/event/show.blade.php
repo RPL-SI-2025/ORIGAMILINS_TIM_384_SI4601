@@ -75,7 +75,7 @@
                         </div>
                         <div class="card-body">
                             @if($event->poster)
-                                <img src="{{ Storage::url($event->poster) }}" alt="Poster {{ $event->nama_event }}" 
+                                <img src="{{ asset($event->poster) }}" alt="Poster {{ $event->nama_event }}" 
                                      class="img-fluid rounded">
                             @else
                                 <div class="alert alert-info mb-0">
