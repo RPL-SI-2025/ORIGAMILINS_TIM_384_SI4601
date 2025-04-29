@@ -132,11 +132,11 @@
                                         @else
                                             <!-- Tab Semua: tampilkan edit dan detail -->
                                             <a href="{{ route('admin.pesananproduk.show', $order->id_pesanan) }}" class="btn btn-sm btn-info">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
+                                            <i class="fas fa-eye"></i>
+                                        </a>
                                             <a href="{{ route('admin.pesananproduk.edit', $order->id_pesanan) }}" class="btn btn-sm btn-warning">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
+                                            <i class="fas fa-edit"></i>
+                                        </a>
                                         @endif
                                     </div>
                                 </td>
@@ -185,7 +185,7 @@
     vertical-align: middle;
 }
 </style>
-@endsection
+@endsection 
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
