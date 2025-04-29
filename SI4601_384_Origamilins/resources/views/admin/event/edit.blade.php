@@ -112,7 +112,7 @@
                     <div id="current-poster" class="mt-2 {{ !$event->poster ? 'd-none' : '' }}">
                         <label class="form-label">Poster Saat Ini</label>
                         @if($event->poster)
-                            <img src="{{ Storage::url($event->poster) }}" alt="Current Poster" 
+                            <img src="{{ asset($event->poster) }}" alt="Current Poster" 
                                  class="d-block img-thumbnail" style="max-height: 200px;">
                         @endif
                     </div>

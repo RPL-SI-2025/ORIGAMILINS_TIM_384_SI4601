@@ -49,7 +49,11 @@
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <div class="mb-2">
+                                    <label for="status" class="form-label small">Status</label>
+                                    <select class="form-select form-select-sm" id="status" name="status">
+                                        <option value="">Semua Status</option>
+                                        <option value="tersedia" {{ request('status') == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
+                                        <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
                                     <label for="harga_range" class="form-label small">Rentang Harga</label>
                                     <select class="form-select" id="harga_range" name="harga_range">
                                         <option value="">Semua Harga</option>
@@ -95,8 +99,11 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>
                             @if($event->poster)
-                            <img src="{{ Storage::url($event->poster) }}" alt="Poster {{ $event->nama_event }}" 
-                                 class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                                @if(filter_var($event->poster, FILTER_VALIDATE_URL))
+                                    <img src="{{ $event->poster }}" alt="Poster {{ $event->nama_event }}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                                @else
+                                    <img src="{{ asset($event->poster) }}" alt="Poster {{ $event->nama_event }}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                                @endif
                             @else
                             <div class="no-image-placeholder">
                                 <i class="fas fa-image text-muted"></i>
@@ -113,15 +120,9 @@
                             </span>
                         </td>
                         <td>
-                            @if($event->tanggal_pelaksanaan < now())
-                                <span class="badge bg-secondary">Selesai</span>
-                            @else
-                                @if($event->kuota_terisi >= $event->kuota)
-                                    <span class="badge bg-danger">Full</span>
-                                @else
-                                    <span class="badge bg-success">Tersedia</span>
-                                @endif
-                            @endif
+                            <span class="badge {{ $event->status === 'tersedia' ? 'bg-success' : 'bg-secondary' }}">
+                                {{ $event->getStatusLabel() }}
+                            </span>
                         </td>
                         <td>
                             <div class="btn-group" role="group">
