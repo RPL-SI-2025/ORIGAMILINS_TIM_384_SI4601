@@ -30,10 +30,9 @@ Route::get('/logout', function () {
 
 // User Profile (butuh login)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/profilpengguna', [UserProfileController::class, 'create'])->name('profilpengguna.create');
-    Route::post('/profilpengguna', [UserProfileController::class, 'store'])->name('profilpengguna.store');
+    Route::get('/profilpengguna', [UserProfileController::class, 'show'])->name('profilpengguna');
     Route::put('/profilpengguna', [UserProfileController::class, 'update'])->name('profilpengguna.update');
-
+    
     // Dashboard
     Route::get('/dashboard', function () {
         if (Auth::user()->role === 'admin') {
@@ -163,13 +162,4 @@ Route::get('/debug-login', function () {
             'role' => $user->role
         ]
     ];
-});
-
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-
-    Route::get('/profilpengguna', [App\Http\Controllers\UserProfileController::class, 'show'])->name('profilpengguna');
-    Route::put('/profilpengguna', [App\Http\Controllers\UserProfileController::class, 'update'])->name('profilpengguna.update');
 });

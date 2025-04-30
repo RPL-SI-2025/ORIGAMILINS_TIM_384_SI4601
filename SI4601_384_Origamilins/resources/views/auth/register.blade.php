@@ -1,4 +1,6 @@
-<x-guest-layout>
+@extends('layouts.guest')
+
+@section('content')
     <div class="flex flex-row min-h-screen">
         <!-- Left side with background image -->
         <div class="hidden md:block md:w-1/2">
@@ -100,7 +102,7 @@
                 <div class="relative flex items-center justify-center my-6">
                     <div class="absolute w-full border-t border-gray-300"></div>
                     <div class="relative bg-white px-4 text-sm text-gray-500">atau</div>
-                </div>>
+                </div>
 
                 <div class="text-center">
                     <p class="text-sm text-gray-600">
@@ -134,4 +136,4 @@
             }
         }
     </script>
-</x-guest-layout>
+@endsection

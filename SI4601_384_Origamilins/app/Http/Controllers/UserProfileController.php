@@ -10,11 +10,6 @@ use Illuminate\Validation\Rule;
 
 class UserProfileController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function show()
     {
         $user = Auth::user();
@@ -24,7 +19,7 @@ class UserProfileController extends Controller
             $profile = new UserProfile();
             $profile->user_id = $user->id;
             $profile->nama_lengkap = $user->name;
-            $profile->nama_panggilan = explode(' ', $user->name)[0]; // Mengambil kata pertama dari nama lengkap
+            $profile->nama_panggilan = explode(' ', $user->name)[0];
             $profile->email = $user->email;
             $profile->no_hp = '-';
             $profile->save();

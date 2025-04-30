@@ -1,4 +1,6 @@
-<x-guest-layout>
+@extends('layouts.guest')
+
+@section('content')
     <div class="flex flex-row min-h-screen">
         <!-- Left side with background image -->
         <div class="hidden md:block md:w-1/2">
@@ -12,6 +14,21 @@
                     <h1 class="text-3xl font-bold text-gray-800">Masuk</h1>
                     <p class="text-gray-500 mt-2">Silakan masuk untuk melanjutkan akun Anda.</p>
                 </div>
+
+                <!-- Validation Errors -->
+                @if ($errors->any())
+                    <div class="mb-4">
+                        <div class="text-red-600">
+                            {{ __('Whoops! Something went wrong.') }}
+                        </div>
+
+                        <ul class="mt-3 list-disc list-inside text-sm text-red-600">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
@@ -96,4 +113,4 @@
             }
         }
     </script>
-</x-guest-layout>
+@endsection
