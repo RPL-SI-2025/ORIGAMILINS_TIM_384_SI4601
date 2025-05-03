@@ -7,12 +7,10 @@
             <h2 class="text-2xl font-bold mb-6">Profil Pengguna</h2>
             
             @if (session('success'))
-                <div class="mb-4 px-4 py-2 bg-green-100 border border-green-400 text-green-700 rounded">
-                    {{ session('success') }}
-                </div>
+                <div class="alert alert-success" id="success-message">{{ session('success') }}</div>
             @endif
 
-            <form method="POST" action="{{ route('profilpengguna.update') }}" enctype="multipart/form-data" class="space-y-6">
+            <form method="POST" action="{{ route('profilpengguna.update', $user->id) }}" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @method('PUT')
                 
@@ -44,16 +42,16 @@
                 <!-- Nama Lengkap -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-                    <input type="text" name="name" id="name" value="{{ $user->nama_lengkap }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <input type="text" name="name" id="name" value="{{ old('name', $user->nama_lengkap) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     @error('name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600" dusk="error-name">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Nama Panggilan -->
                 <div>
                     <label for="nickname" class="block text-sm font-medium text-gray-700">Nama Panggilan</label>
-                    <input type="text" name="nickname" id="nickname" value="{{ $user->nama_panggilan }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <input type="text" name="nickname" id="nickname" value="{{ old('nickname', $user->nama_panggilan) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     @error('nickname')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -62,7 +60,7 @@
                 <!-- Nomor Handphone -->
                 <div>
                     <label for="phone" class="block text-sm font-medium text-gray-700">Nomor Handphone</label>
-                    <input type="tel" name="phone" id="phone" value="{{ $user->no_hp }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <input type="tel" name="phone" id="phone" value="{{ old('phone', $user->no_hp) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     @error('phone')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -71,7 +69,7 @@
                 <!-- Email -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" name="email" id="email" value="{{ $user->email }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     @error('email')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror

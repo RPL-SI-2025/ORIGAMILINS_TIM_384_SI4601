@@ -23,15 +23,19 @@ Route::get('/', function () {
 Route::get('/event', [EventController::class, 'index'])->name('event.melihat_event');
 
 // Authentication
-Route::get('/logout', function () {
+Route::post('/logout', function () {
     Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
     return redirect('/');
 })->name('logout');
 
 // User Profile (butuh login)
 Route::middleware(['auth'])->group(function () {
     Route::get('/profilpengguna', [UserProfileController::class, 'show'])->name('profilpengguna');
-    Route::put('/profilpengguna', [UserProfileController::class, 'update'])->name('profilpengguna.update');
+    Route::get('/profilpengguna/create', [UserProfileController::class, 'create'])->name('profilpengguna.create');
+    Route::post('/profilpengguna', [UserProfileController::class, 'store'])->name('profilpengguna.store');
+    Route::put('/profilpengguna/{user}', [UserProfileController::class, 'update'])->name('profilpengguna.update');
     
     // Dashboard
     Route::get('/dashboard', function () {

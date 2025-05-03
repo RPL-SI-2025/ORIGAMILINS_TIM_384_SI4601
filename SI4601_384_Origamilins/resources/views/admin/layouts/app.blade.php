@@ -206,9 +206,12 @@
                     <div>
                         @auth
                             <span class="me-3 text-muted">{{ Auth::user()->name }}</span>
-                            <a href="{{ route('logout') }}" class="btn btn-outline-danger btn-sm">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </a>
+                            <form method="POST" action="{{ route('logout') }}" style="display:inline">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
                         @endauth
                         <button id="sidebarToggle" class="d-md-none">
                             <i class="fas fa-bars"></i>

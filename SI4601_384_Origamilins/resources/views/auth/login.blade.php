@@ -1,19 +1,17 @@
 @extends('layouts.guest')
 
 @section('content')
+
     <div class="flex flex-row min-h-screen">
         <!-- Left side with background image -->
         <div class="hidden md:block md:w-1/2">
             <img src="{{ asset('storage/Rectangle 4.png') }}" class="w-full h-full object-cover" alt="Background Image">
+
+    <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+        <div class="mb-4 text-center">
+            <h2 class="text-2xl font-bold text-gray-800">Login</h2>
+
         </div>
-        
-        <!-- Right side with login form -->
-        <div class="w-full md:w-1/2 flex items-center justify-center px-6">
-            <div class="w-full max-w-md py-12">
-                <div class="text-center mb-6">
-                    <h1 class="text-3xl font-bold text-gray-800">Masuk</h1>
-                    <p class="text-gray-500 mt-2">Silakan masuk untuk melanjutkan akun Anda.</p>
-                </div>
 
                 <!-- Validation Errors -->
                 @if ($errors->any())
@@ -33,63 +31,15 @@
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
 
-                    <div class="mb-4">
-                        <x-input id="email" 
-                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg" 
-                            type="email" 
-                            name="email" 
-                            placeholder="Email"
-                            :value="old('email')" 
-                            required autofocus 
-                            autocomplete="username" />
-                    </div>
+        <x-validation-errors class="mb-4" />
 
-                    <div class="mb-4">
-                        <div class="relative">
-                            <x-input id="password" 
-                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg" 
-                                type="password" 
-                                name="password" 
-                                placeholder="Kata Sandi"
-                                required 
-                                autocomplete="current-password" />
-                            <button type="button" onclick="togglePasswordVisibility('password')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 password-toggle-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
 
-                    <div class="mb-6">
-                        <label for="remember_me" class="flex items-center">
-                            <x-checkbox id="remember_me" name="remember" class="rounded text-cyan-500" />
-                            <span class="ms-2 text-sm text-gray-600">Izinkan tetap masuk</span>
-                        </label>
-                    </div>
-
-                    <div class="mb-6">
-                        <button type="submit" class="w-full bg-cyan-500 text-white font-medium py-3 px-4 rounded-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
-                            Masuk
-                        </button>
-                    </div>
-                </form>
-
-                <div class="relative flex items-center justify-center my-6">
-                    <div class="absolute w-full border-t border-gray-300"></div>
-                    <div class="relative bg-white px-4 text-sm text-gray-500">atau</div>
-                </div>
-
-                <div class="text-center">
-                    <p class="text-sm text-gray-600">
-                        Need an account? 
-                        <a href="{{ route('register') }}" class="text-cyan-500 hover:underline">Create one</a>
-                    </p>
-                </div>
+        @if (session('status'))
+            <div class="mb-4 font-medium text-sm text-green-600">
+                {{ session('status') }}
             </div>
-        </div>
-    </div>
+        @endif
+
 
     <script>
         function togglePasswordVisibility(inputId) {
@@ -113,4 +63,39 @@
             }
         }
     </script>
+
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+
+            <div>
+                <x-label for="email" value="{{ __('Email') }}" />
+                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            </div>
+
+            <div class="mt-4">
+                <x-label for="password" value="{{ __('Password') }}" />
+                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
+            </div>
+
+            <div class="block mt-4">
+                <label for="remember_me" class="flex items-center">
+                    <x-checkbox id="remember_me" name="remember" />
+                    <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                </label>
+            </div>
+
+            <div class="flex items-center justify-end mt-4">
+                @if (Route::has('password.request'))
+                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                        {{ __('Forgot your password?') }}
+                    </a>
+                @endif
+
+                <x-button class="ms-4">
+                    {{ __('Log in') }}
+                </x-button>
+            </div>
+        </form>
+    </div>
+
 @endsection
