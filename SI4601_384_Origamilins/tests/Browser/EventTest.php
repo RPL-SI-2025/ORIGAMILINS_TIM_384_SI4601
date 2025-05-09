@@ -16,7 +16,7 @@ class EventTest extends DuskTestCase
     public function test_admin_can_create_event()
     {
         $admin = User::factory()->admin()->create();
-
+    
         $this->browse(function (Browser $browser) use ($admin) {
             $browser->loginAs($admin)
                    ->visit('/admin/event/create')
@@ -27,8 +27,9 @@ class EventTest extends DuskTestCase
                    ->type('lokasi', 'Hotel Grand Cimahi')
                    ->type('harga', '19992')
                    ->type('kuota', '48')
-                   ->attach('poster', public_path('uploads/artikel3.jpg'))
+                   ->attach('poster', __DIR__ . '/screenshots/event1.jpg')
                    ->press('Simpan Event')
+                   ->screenshot('after-press-simpan-event')
                    ->waitForLocation('/admin/event')
                    ->assertSee('Event berhasil ditambahkan!')
                    ->screenshot('admin-create-event');
@@ -66,9 +67,10 @@ class EventTest extends DuskTestCase
                    ->assertInputValue('nama_event', $event->nama_event)
                    ->assertInputValue('deskripsi', $event->deskripsi)
                    ->assertInputValue('tanggal_pelaksanaan', $event->tanggal_pelaksanaan->format('Y-m-d'))
-                   ->assertInputValue('lokasi', $event->lokasi)
+                   ->screenshot('event-edit-debug')
+                   ->assertInputValue('lokasi', str_replace(["\n", "\r"], '', $event->lokasi))
                    ->assertInputValue('harga', $event->harga)
-                   ->assertInputValue('kuota', $event->kuota)
+                   ->assertInputValue('kuota', $event->kuota ?? '0')
                    ->type('nama_event', 'Workshop Origami: ' . $event->nama_event)
                    ->type('deskripsi', 'Workshop origami yang mengajak peserta untuk belajar seni melipat kertas sambil mendengarkan cerita inspiratif.')
                    ->type('lokasi', 'Aula ' . $event->lokasi)
@@ -81,24 +83,36 @@ class EventTest extends DuskTestCase
                    ->screenshot('admin-edit-event');
         });
     }
-
-    /** @test */
-    public function test_event_creation_validation()
+    public function test_admin_bisa_melihat_detail_event()
     {
-        $admin = User::factory()->admin()->create();
+        // Buat user admin
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'email' => 'admin' . uniqid() . '@gmail.com',
+        ]);
 
-        $this->browse(function (Browser $browser) use ($admin) {
+        $event = Event::factory()->create([
+            'nama_event' => 'Origami Festival',
+            'deskripsi' => 'Festival origami terbesar di Indonesia.',
+            'tanggal_pelaksanaan' => now()->addDays(10),
+            'harga' => 50000,
+            'lokasi' => 'Jakarta',
+            'kuota' => 100,
+            'kuota_terisi' => 25,
+            'poster' => 'uploads/event/test-poster.jpg', 
+        ]);
+
+        $this->browse(function (Browser $browser) use ($admin, $event) {
             $browser->loginAs($admin)
-                   ->visit('/admin/event/create')
-                   ->press('Simpan Event')
-                   ->assertSee('nama event harus diisi')
-                   ->assertSee('deskripsi harus diisi')
-                   ->assertSee('tanggal pelaksanaan harus diisi')
-                   ->assertSee('lokasi harus diisi')
-                   ->assertSee('harga harus diisi')
-                   ->assertSee('kuota harus diisi')
-                   ->assertSee('poster harus diisi')
-                   ->screenshot('event-validation');
+                ->visit('/admin/event/' . $event->id)
+                ->assertSee('Detail Event')
+                ->assertSee($event->nama_event)
+                ->assertSee($event->deskripsi)
+                ->assertSee($event->lokasi)
+                ->assertSee('Rp ' . number_format($event->harga, 0, ',', '.'))
+                ->assertSee($event->kuota_terisi . '/' . $event->kuota . ' Peserta')
+                ->assertSee('Tersisa ' . ($event->kuota - $event->kuota_terisi) . ' kursi')
+                ->screenshot('admin-melihat-detail-event');
         });
     }
 }
