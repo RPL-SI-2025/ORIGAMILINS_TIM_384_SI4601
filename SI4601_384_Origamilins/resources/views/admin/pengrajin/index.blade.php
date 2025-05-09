@@ -66,12 +66,12 @@
                         </span>
                     </td>
                     <td>
-                        <a href="{{ route('admin.pengrajin.pengrajin.edit', $p->id) }}" class="btn btn-warning btn-sm" title="Edit">
+                    <a href="{{ route('admin.pengrajin.pengrajin.edit', $p->id) }}" class="btn btn-warning btn-sm" dusk="edit-pengrajin-{{ $p->id }}">Edit</a>
                             <i class="fas fa-edit"></i>
                         </a>
                         <form action="{{ route('admin.pengrajin.pengrajin.destroy', $p->id) }}" method="POST" style="display:inline;">
                             @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus?')" title="Hapus">
+                             <button type="submit" class="btn btn-danger btn-sm" dusk="hapus-pengrajin-{{ $p->id }}">Hapus</button>
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
