@@ -22,16 +22,23 @@ class ArtikelFactory extends Factory
      */
     public function definition()
     {
-        $judul = $this->faker->sentence(3);
-        
         return [
-            'judul' => $judul,
-            'isi' => $this->faker->paragraphs(3, true), // Minimal 50 karakter
-            'tanggal_publikasi' => $this->faker->dateTimeBetween('-1 month', 'now'),
-            'gambar' => 'uploads/artikel/default.jpg',
-            'created_at' => now(),
-            'updated_at' => now(),
+            'judul' => $this->faker->sentence(6),
+            'isi' => $this->faker->paragraphs(3, true),
+            'tanggal_publikasi' => $this->faker->dateTimeBetween('-1 year', '+1 year'),
+            'gambar' => 'uploads/artikel/test-image.jpg'
         ];
+    }
+
+    public function testContent()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'judul' => 'Test Artikel Origami',
+                'isi' => 'Ini adalah artikel test tentang origami. Origami adalah seni melipat kertas yang berasal dari Jepang. Seni ini telah berkembang selama berabad-abad dan menjadi populer di seluruh dunia.',
+                'gambar' => 'uploads/artikel/test-image.jpg'
+            ];
+        });
     }
 
     /**

@@ -26,13 +26,13 @@ class ArtikelSeeder extends Seeder
             copy($sourcePath, $destinationPath);
         }
 
-        // Artikel::create([
-        //     'judul' => 'Sejarah Origami di Indonesia',
-        //     'isi' => '<p>Origami, seni melipat kertas yang berasal dari Jepang, telah menjadi bagian penting dari budaya Indonesia. Seni ini diperkenalkan ke Indonesia pada awal abad ke-20 dan telah berkembang pesat sejak saat itu.</p>
-        //              <p>Di Indonesia, origami tidak hanya menjadi hobi, tetapi juga digunakan dalam pendidikan dan terapi. Banyak sekolah dasar mengajarkan origami untuk meningkatkan keterampilan motorik halus anak-anak.</p>
-        //              <p>Origami juga menjadi bagian dari industri kreatif Indonesia, dengan banyak pengrajin lokal yang menciptakan karya-karya unik yang menggabungkan teknik origami dengan motif tradisional Indonesia.</p>',
-        //     'tanggal_publikasi' => now(),
-        //     'gambar' => 'artikel1.jpg'
-        // ]);
+        Artikel::create([
+            'judul' => 'Sejarah Origami di Indonesia',
+            'isi' => '<p>Origami, seni melipat kertas yang berasal dari Jepang, telah menjadi bagian penting dari budaya Indonesia. Seni ini diperkenalkan ke Indonesia pada awal abad ke-20 dan telah berkembang pesat sejak saat itu.</p>
+                     <p>Di Indonesia, origami tidak hanya menjadi hobi, tetapi juga digunakan dalam pendidikan dan terapi. Banyak sekolah dasar mengajarkan origami untuk meningkatkan keterampilan motorik halus anak-anak.</p>
+                     <p>Origami juga menjadi bagian dari industri kreatif Indonesia, dengan banyak pengrajin lokal yang menciptakan karya-karya unik yang menggabungkan teknik origami dengan motif tradisional Indonesia.</p>',
+            'tanggal_publikasi' => now(),
+            'gambar' => 'artikel1.jpg'
+        ]);
     }
 }

@@ -13,7 +13,11 @@ use App\Http\Controllers\Admin\EventReviewController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\PesananEventController;
 use App\Http\Controllers\Admin\ProductReviewController;
+<<<<<<< HEAD
 use App\Http\Controllers\Auth\DirectResetPasswordController;
+=======
+use App\Http\Controllers\PaymentsController;
+>>>>>>> origin/main
 
 // Home
 Route::get('/', function () {
@@ -114,6 +118,7 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
 
     // Manajemen Pengrajin
     Route::prefix('pengrajin')->name('admin.pengrajin.')->group(function () {
+        Route::resource('pengrajin', PengrajinManagementController::class);
         Route::get('/', [PengrajinManagementController::class, 'index'])->name('index');
         Route::post('/{pengrajin}/toggle-status', [PengrajinManagementController::class, 'toggleStatus'])->name('toggle-status');
         Route::get('/{pengrajin}/details', [PengrajinManagementController::class, 'showDetails'])->name('details');
@@ -151,6 +156,14 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
         Route::post('/{review}/reject', [ProductReviewController::class, 'reject'])->name('reject');
     });
 });
+
+    // Pembayaran
+    Route::prefix('user/payments')->name('user.payments.')->middleware(['auth'])->group(function () {
+        Route::get('/', [PaymentsController::class, 'index'])->name('index'); // Menampilkan form pembayaran
+        Route::post('/', [PaymentsController::class, 'store'])->name('store'); // Menyimpan data pembayaran
+        Route::get('/{payment}/finish', [PaymentsController::class, 'finish'])->name('finish'); // Redirect setelah pembayaran selesai
+        Route::post('/callback', [PaymentsController::class, 'callback'])->name('callback'); // Callback dari Midtrans
+    });
 
 // Debug Route
 Route::get('/debug-login', function () {

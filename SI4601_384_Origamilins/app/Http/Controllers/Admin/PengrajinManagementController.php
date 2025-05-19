@@ -8,56 +8,63 @@ use Illuminate\Http\Request;
 
 class PengrajinManagementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $query = Pengrajin::query();
-
-        // Filter by name
-        if (request()->has('nama') && request('nama') != '') {
-            $query->where('name', 'like', '%' . request('nama') . '%');
+    
+        if ($request->filled('nama')) {
+            $query->where('nama', 'like', '%' . $request->nama . '%');
         }
-
-        // Filter by email
-        if (request()->has('email') && request('email') != '') {
-            $query->where('email', 'like', '%' . request('email') . '%');
+        if ($request->filled('email')) {
+            $query->where('email', 'like', '%' . $request->email . '%');
         }
-
-        // Filter by status
-        if (request()->has('status') && request('status') != '') {
-            $query->where('is_active', request('status'));
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->status);
         }
-
+    
         $pengrajin = $query->get();
-
-        // Jika request AJAX, return partial view
-        if (request()->ajax()) {
-            return response()->json([
-                'html' => view('admin.pengrajin._user_table', compact('pengrajin'))->render()
-            ]);
-        }
-
+    
         return view('admin.pengrajin.index', compact('pengrajin'));
     }
 
-    public function toggleStatus(Pengrajin $pengrajin)
-{
-    $pengrajin->is_active = !$pengrajin->is_active; 
-    $pengrajin->save();
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Status pengrajin berhasil diubah',
-        'new_status' => $pengrajin->is_active
-    ]);
-}
-    public function showDetails(Pengrajin $pengrajin)
+    public function create()
     {
-        $completedOrders = $pengrajin->completedOrders; // Ambil pesanan yang telah diselesaikan
-
-        $html = view('admin.pengrajin._details', compact('completedOrders'))->render();
-
-        return response()->json([
-            'html' => $html,
-        ]);
+        return view('admin.pengrajin.create');
     }
-} 
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:pengrajin,email',
+            'is_active' => 'required|boolean',
+        ]);
+        Pengrajin::create($validated);
+        return redirect()->route('admin.pengrajin.pengrajin.index')->with('success', 'Pengrajin berhasil ditambahkan!');
+    }
+
+    public function edit($id)
+    {
+        $pengrajin = Pengrajin::findOrFail($id);
+        return view('admin.pengrajin.edit', compact('pengrajin'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $pengrajin = Pengrajin::findOrFail($id);
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:pengrajin,email,' . $pengrajin->id,
+            'is_active' => 'required|boolean',
+        ]);
+        $pengrajin->update($validated);
+        return redirect()->route('admin.pengrajin.pengrajin.index')->with('success', 'Pengrajin berhasil diupdate!');
+    }
+
+    public function destroy($id)
+    {
+        $pengrajin = Pengrajin::findOrFail($id);
+        $pengrajin->delete();
+        return redirect()->route('admin.pengrajin.pengrajin.index')->with('success', 'Pengrajin berhasil dihapus!');
+    }
+}

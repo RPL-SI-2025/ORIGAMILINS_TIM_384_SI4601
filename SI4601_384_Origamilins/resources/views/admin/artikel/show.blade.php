@@ -34,7 +34,7 @@
 
             @if($artikel->gambar)
             <div class="article-image mb-4">
-                <img src="{{ asset($artikel->gambar) }}" class="img-fluid rounded" alt="Artikel Image">
+                <img src="{{ asset($artikel->gambar) }}" class="img-fluid rounded" alt="Gambar Artikel {{ $artikel->judul }}">
             </div>
             @endif
 
