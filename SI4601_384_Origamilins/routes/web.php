@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\PesananEventController;
 use App\Http\Controllers\Admin\ProductReviewController;
 use App\Http\Controllers\PaymentsController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 
 // Home
 Route::get('/', function () {
@@ -65,9 +66,7 @@ Route::get('/test-admin', function () {
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(function () {
     // Dashboard
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     // Manajemen Produk
     Route::prefix('produk')->name('admin.produk.')->group(function () {
