@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\EventReviewController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\PesananEventController;
 use App\Http\Controllers\Admin\ProductReviewController;
+use App\Http\Controllers\Auth\DirectResetPasswordController;
 
 // Home
 Route::get('/', function () {
@@ -167,3 +168,6 @@ Route::get('/debug-login', function () {
         ]
     ];
 });
+
+Route::get('/lupa-password', [DirectResetPasswordController::class, 'showForm'])->name('password.direct');
+Route::post('/lupa-password', [DirectResetPasswordController::class, 'reset'])->name('password.direct.reset');
