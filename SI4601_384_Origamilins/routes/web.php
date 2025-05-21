@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\PesananEventController;
 use App\Http\Controllers\Admin\ProductReviewController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 // Home
 Route::get('/', function () {
@@ -172,3 +173,6 @@ Route::get('/debug-login', function () {
         ]
     ];
 });
+
+Route::get('/reset-password', [ResetPasswordController::class, 'showForm'])->name('reset.password.form');
+Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset.password');
