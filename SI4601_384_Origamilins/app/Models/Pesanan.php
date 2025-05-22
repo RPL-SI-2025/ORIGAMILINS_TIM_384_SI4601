@@ -53,6 +53,11 @@ class Pesanan extends Model
         return $this->belongsTo(Pengrajin::class, 'pengrajin_id', 'id');
     }
 
+    public function pesanan()
+    {
+        return $this->belongsTo(Pesanan::class, 'id_pesanan');
+    }
+
     // Status Options
     public static function getStatusOptions()
     {

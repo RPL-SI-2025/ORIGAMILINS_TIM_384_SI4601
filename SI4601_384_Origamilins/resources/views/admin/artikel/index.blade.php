@@ -37,9 +37,11 @@
                             <td>
                                 @if($artikel->gambar)
                                 <div class="artikel-image-container">
-                                    <img src="{{ asset($artikel->gambar) }}" 
-                                         alt="Gambar Artikel" 
-                                         class="artikel-thumbnail">
+                                    @if(filter_var($artikel->gambar, FILTER_VALIDATE_URL))
+                                        <img src="{{ $artikel->gambar }}" alt="Gambar {{$artikel->judul}}" class="artikel-thumbnail">
+                                    @else
+                                        <img src="{{ asset($artikel->gambar) }}" alt="Gambar {{$artikel->judul}}" class="artikel-thumbnail">
+                                    @endif
                                 </div>
                                 @else
                                 <span class="text-muted">Tidak ada gambar</span>

@@ -24,6 +24,22 @@
                             <p class="mb-1"><strong>Total Harga:</strong> Rp {{ number_format($pesanan->total_harga, 0, ',', '.') }}</p>
                         </div>
                         <div class="col-md-6">
+                            <h6 class="text-muted mb-3">Status Pembayaran</h6>
+                            <p class="mb-1">
+                                <strong>Status:</strong> 
+                                <span class="badge {{ $pesanan->status_pembayaran === 'Paid' ? 'bg-success' : 'bg-danger' }}">
+                                    {{ $pesanan->status_pembayaran === 'Paid' ? 'Lunas' : 'Belum Lunas' }}
+                                </span>
+                            </p>
+                            @if($pesanan->status_pembayaran === 'Paid')
+                                <p class="mb-1"><strong>Tanggal Pembayaran:</strong> {{ $pesanan->tanggal_pembayaran ? $pesanan->tanggal_pembayaran->format('d/m/Y H:i') : '-' }}</p>
+                                <p class="mb-1"><strong>Metode Pembayaran:</strong> {{ $pesanan->metode_pembayaran ?? '-' }}</p>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
                             <h6 class="text-muted mb-3">Status Pesanan</h6>
                             <p class="mb-1">
                                 <strong>Status:</strong> 
@@ -136,6 +152,19 @@
 
 .text-muted {
     color: #6c757d !important;
+}
+
+.badge.bg-success {
+    background-color: #198754 !important;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.badge {
+    font-weight: 500;
+    padding: 0.5em 0.8em;
 }
 </style>
 @endsection 
