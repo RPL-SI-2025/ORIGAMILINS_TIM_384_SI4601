@@ -32,7 +32,7 @@
                 <li class="nav-item">
                     <a class="nav-link {{ request('status') === 'Dalam Proses' ? 'active' : '' }}"
                        href="{{ route('admin.pesananproduk.index', ['status' => 'Dalam Proses']) }}">
-                        Dalam Proses <span class="badge bg-info">{{ $counts['dalam_proses'] }}</span>
+                        Diproses <span class="badge bg-info">{{ $counts['dalam_proses'] }}</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -66,7 +66,8 @@
                             <th>Produk</th>
                             <th>Total</th>
                             <th>Pengrajin</th>
-                            <th>Status</th>
+                            <th>Status Pembayaran</th>
+                            <th>Tahapan</th>
                             @if(request('status') !== 'Dikirim')
                                 <th>
                                     @if(request('status') === 'Dalam Proses')
@@ -100,13 +101,9 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <span class="badge {{ $order->status_badge }}">{{ $order->status }}</span>
-                                    @if($order->status === 'Dikirim')
-                                        <br>
-                                        <small class="text-muted">
-                                            {{ $order->ekspedisi }} - {{ $order->nomor_resi }}
-                                        </small>
-                                    @endif
+                                    <span class="badge {{ $order->status_pembayaran === 'Paid' ? 'bg-success' : 'bg-danger' }}">
+                                        {{ $order->status_pembayaran === 'Paid' ? 'Lunas' : 'Belum Lunas' }}
+                                    </span>
                                 </td>
                                 @if(request('status') !== 'Dikirim')
                                 <td class="text-center">
@@ -115,6 +112,10 @@
                                             <button class="btn btn-sm btn-success" onclick="confirmSelesai({{ $order->id_pesanan }})">
                                                 <i class="fas fa-check"></i>
                                             </button>
+                                            @elseif(request('status') === 'Detail' && $order->status === 'Detail')
+                                            <a href="{{ route('admin.pesananproduk.edit', $order->id_pesanan) }}" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                         @elseif(request('status') === 'Rencana' && $order->status === 'Rencana')
                                             <a href="{{ route('admin.pesananproduk.edit', $order->id_pesanan) }}" class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit"></i>
@@ -128,15 +129,13 @@
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                         @elseif(request('status') === 'Dikirim' && $order->status === 'Dikirim')
-                                            <!-- Tidak ada tombol, kolom resi akan ditampilkan di kolom terpisah -->
                                         @else
-                                            <!-- Tab Semua: tampilkan edit dan detail -->
                                             <a href="{{ route('admin.pesananproduk.show', $order->id_pesanan) }}" class="btn btn-sm btn-info">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
+                                            <i class="fas fa-eye"></i>
+                                        </a>
                                             <a href="{{ route('admin.pesananproduk.edit', $order->id_pesanan) }}" class="btn btn-sm btn-warning">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
+                                            <i class="fas fa-edit"></i>
+                                        </a>
                                         @endif
                                     </div>
                                 </td>
@@ -185,7 +184,7 @@
     vertical-align: middle;
 }
 </style>
-@endsection
+@endsection 
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

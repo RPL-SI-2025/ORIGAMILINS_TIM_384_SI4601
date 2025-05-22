@@ -35,7 +35,7 @@ class PesananController extends Controller
             'dalam_proses' => Pesanan::where('status', 'Dalam Proses')->count(),
             'siap_dikirim' => Pesanan::where('status', 'Siap Dikirim')->count(),
             'dikirim' => Pesanan::where('status', 'Dikirim')->count(),
-            'selesai' => Pesanan::where('status', 'Selesai')->count()
+            'selesai' => Pesanan::where('status', 'Selesai')->count(), // <--- INI WAJIB ADA
         ];
 
         return view('admin.pesananproduk.index', compact('pesanan', 'status', 'counts', 'search'));

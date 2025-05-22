@@ -13,7 +13,7 @@
         @endif
     </td>
     <td>{{ $product->nama }}</td>
-    <td>Rp {{ number_format($product->harga_dasar, 0, ',', '.') }}</td>
+    <td>Rp {{ number_format($product->harga, 0, ',', '.') }}</td>
     <td>{{ $product->kategori }}</td>
     <td>
         @php
@@ -24,12 +24,12 @@
             } else {
                 $ukuranList = ['1 meter', '2 meter', '3 meter', '4 meter', '5 meter'];
             }
-        @endphp
+                    @endphp
         @if(!empty($ukuranArray))
-            @foreach($ukuranList as $ukuran)
-                @if(in_array($ukuran, $ukuranArray))
-                    <span class="badge bg-info me-1">{{ $ukuran }}</span>
-                @endif
+        @foreach($ukuranList as $ukuran)
+            @if(in_array(trim($ukuran), array_map('trim', $ukuranArray)))
+                <span class="badge bg-info me-1">{{ $ukuran }}</span>
+            @endif
             @endforeach
         @else
             <span class="text-muted">-</span>

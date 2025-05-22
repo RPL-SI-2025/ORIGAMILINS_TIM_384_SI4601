@@ -13,14 +13,14 @@ use App\Http\Controllers\Admin\EventReviewController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\PesananEventController;
 use App\Http\Controllers\Admin\ProductReviewController;
+use App\Http\Controllers\PaymentsController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 // Home
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
-
-// Produk Publik
-Route::get('/produk', [Produk_Controller::class, 'index'])->name('produk.melihat_produk');
 
 // Event Publik
 Route::get('/event', [EventController::class, 'index'])->name('event.melihat_event');
@@ -67,9 +67,7 @@ Route::get('/test-admin', function () {
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(function () {
     // Dashboard
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     // Manajemen Produk
     Route::prefix('produk')->name('admin.produk.')->group(function () {
@@ -112,6 +110,7 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
 
     // Manajemen Pengrajin
     Route::prefix('pengrajin')->name('admin.pengrajin.')->group(function () {
+        Route::resource('pengrajin', PengrajinManagementController::class);
         Route::get('/', [PengrajinManagementController::class, 'index'])->name('index');
         Route::post('/{pengrajin}/toggle-status', [PengrajinManagementController::class, 'toggleStatus'])->name('toggle-status');
         Route::get('/{pengrajin}/details', [PengrajinManagementController::class, 'showDetails'])->name('details');
@@ -150,6 +149,14 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
     });
 });
 
+    // Pembayaran
+    Route::prefix('user/payments')->name('user.payments.')->middleware(['auth'])->group(function () {
+        Route::get('/', [PaymentsController::class, 'index'])->name('index'); // Menampilkan form pembayaran
+        Route::post('/', [PaymentsController::class, 'store'])->name('store'); // Menyimpan data pembayaran
+        Route::get('/{payment}/finish', [PaymentsController::class, 'finish'])->name('finish'); // Redirect setelah pembayaran selesai
+        Route::post('/callback', [PaymentsController::class, 'callback'])->name('callback'); // Callback dari Midtrans
+    });
+
 // Debug Route
 Route::get('/debug-login', function () {
     if (!Auth::check()) {
@@ -166,3 +173,6 @@ Route::get('/debug-login', function () {
         ]
     ];
 });
+
+Route::get('/reset-password', [ResetPasswordController::class, 'showForm'])->name('reset.password.form');
+Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset.password');

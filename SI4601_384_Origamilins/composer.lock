@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "85e8b69cd76a90e0caeda459b7fa97c8",
+
+    "content-hash": "7b00bf80090b3bc1102779ba42791f4d",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2381,6 +2382,67 @@
                 }
             ],
             "time": "2025-04-12T22:26:52+00:00"
+        },
+        {
+            "name": "midtrans/midtrans-php",
+            "version": "2.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Midtrans/midtrans-php.git",
+                "reference": "8ed7fc58ff1ababe675da17acf8233f4028eb3be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Midtrans/midtrans-php/zipball/8ed7fc58ff1ababe675da17acf8233f4028eb3be",
+                "reference": "8ed7fc58ff1ababe675da17acf8233f4028eb3be",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-openssl": "*",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.7.*",
+                "psy/psysh": "0.4.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SnapBi\\": "SnapBi/",
+                    "Midtrans\\": "Midtrans/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andri Setiawan",
+                    "email": "andri.setiawan@veritrans.co.id"
+                },
+                {
+                    "name": "Alvin Litani",
+                    "email": "alvin.litani@veritrans.co.id"
+                },
+                {
+                    "name": "Ismail Faruqi",
+                    "email": "ismail.faruqi@veritrans.co.id"
+                },
+                {
+                    "name": "Muhammad Fauzi Masykur",
+                    "email": "muhammad.masykur@gojek.com"
+                }
+            ],
+            "description": "PHP Wrapper for Midtrans Payment API.",
+            "homepage": "https://midtrans.com",
+            "support": {
+                "issues": "https://github.com/Midtrans/midtrans-php/issues",
+                "source": "https://github.com/Midtrans/midtrans-php/tree/v2.6.2"
+            },
+            "time": "2025-03-18T06:30:17+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -8697,6 +8759,57 @@
                 }
             ],
             "time": "2024-10-20T05:08:20+00:00"
+        },
+        {
+            "name": "staudenmeir/dusk-updater",
+            "version": "v1.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/staudenmeir/dusk-updater.git",
+                "reference": "34a5e26ccaf729033c6511f8ebf9e7e1f127fc84"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/staudenmeir/dusk-updater/zipball/34a5e26ccaf729033c6511f8ebf9e7e1f127fc84",
+                "reference": "34a5e26ccaf729033c6511f8ebf9e7e1f127fc84",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3|^8.0",
+                "symfony/process": "^4.2|^5.0|^6.0|^7.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^7.0|^8.0|^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Staudenmeir\\DuskUpdater\\DuskServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Staudenmeir\\DuskUpdater\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonas Staudenmeir",
+                    "email": "mail@jonas-staudenmeir.de"
+                }
+            ],
+            "description": "Updater for Laravel Dusk ChromeDriver binaries",
+            "support": {
+                "issues": "https://github.com/staudenmeir/dusk-updater/issues",
+                "source": "https://github.com/staudenmeir/dusk-updater/tree/v1.5.1"
+            },
+            "time": "2024-08-19T20:14:33+00:00"
         },
         {
             "name": "symfony/yaml",
