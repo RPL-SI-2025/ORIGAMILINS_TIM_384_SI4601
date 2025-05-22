@@ -253,6 +253,12 @@
                         <a href="{{ route('admin.pengrajin.index') }}" class="list-group-item {{ request()->routeIs('admin.pengrajin.*') ? 'active' : '' }}">
                             <i class="fas fa-users me-2"></i> Data Pengrajin
                         </a>
+                        <a href="{{ route('admin.payments.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.payments.*') ? 'active' : '' }}">
+                            <i class="fas fa-history me-2"></i> Riwayat Pembayaran
+                        </a>
+                        <a href="{{ route('admin.refunds.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.refunds.*') ? 'active' : '' }}">
+                            <i class="fas fa-undo me-2"></i> Manajemen Refund
+                        </a>
                     </div>
                 </div>
 

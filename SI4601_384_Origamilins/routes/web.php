@@ -147,6 +147,20 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
         Route::post('/{review}/approve', [ProductReviewController::class, 'approve'])->name('approve');
         Route::post('/{review}/reject', [ProductReviewController::class, 'reject'])->name('reject');
     });
+
+    // Payment History
+    Route::prefix('payments')->name('admin.payments.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\PaymentHistoryController::class, 'index'])->name('index');
+        Route::get('/{payment}', [App\Http\Controllers\Admin\PaymentHistoryController::class, 'show'])->name('show');
+    });
+
+    // Refund Management Routes
+    Route::prefix('refunds')->name('admin.refunds.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\RefundController::class, 'index'])->name('index');
+        Route::get('/{id}', [App\Http\Controllers\Admin\RefundController::class, 'show'])->name('show');
+        Route::post('/{id}/process', [App\Http\Controllers\Admin\RefundController::class, 'processRefund'])->name('process');
+        Route::post('/{id}/reject', [App\Http\Controllers\Admin\RefundController::class, 'rejectRefund'])->name('reject');
+    });
 });
 
     // Pembayaran
