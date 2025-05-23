@@ -41,7 +41,7 @@ Route::middleware(['auth'])->group(function () {
         if (Auth::user()->role === 'admin') {
             return redirect()->route('admin.dashboard');
         }
-        return view('user.dashboard');
+        return redirect()->route('etalase');
     })->name('dashboard');
 
     // Pesanan Produk
@@ -49,6 +49,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pesananproduk/{id_pesanan}/edit', [PesananController::class, 'edit'])->name('pesananproduk.edit');
     Route::put('/pesananproduk/{id_pesanan}', [PesananController::class, 'update'])->name('pesananproduk.update');
     Route::get('/pesananproduk/{id_pesanan}', [PesananController::class, 'show'])->name('pesananproduk.show');
+
+    Route::get('/etalase-produk', function () {
+        $query = \App\Models\Produk::query();
+        if (request()->has('kategori') && request('kategori') != '') {
+            $query->where('kategori', request('kategori'));
+        }
+        if (request()->has('nama') && request('nama') != '') {
+            $query->where('nama', 'like', '%' . request('nama') . '%');
+        }
+        $products = $query->paginate(9);
+        $categories = \App\Models\Produk::distinct()->pluck('kategori');
+        return view('user.etalase', compact('products', 'categories'));
+    })->name('etalase');
 });
 
 // Produk Input Publik
@@ -188,5 +201,11 @@ Route::get('/debug-login', function () {
     ];
 });
 
+Route::get('/produk/{id}', function ($id) {
+    $product = \App\Models\Produk::findOrFail($id);
+    return view('user.produk-detail', compact('product'));
+})->name('user.produk.detail');
+
 Route::get('/reset-password', [ResetPasswordController::class, 'showForm'])->name('reset.password.form');
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset.password');
+
