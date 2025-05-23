@@ -57,6 +57,15 @@
                             Masuk
                         </button>
                     </div>
+
+                    {{-- Link Lupa Password --}}
+                    <div class="mb-6 text-right">
+                        <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                           href="{{ route('reset.password.form') }}">
+                            {{ __('Lupa password?') }}
+                        </a>
+                    </div>
+
                 </form>
 
                 <div class="relative flex items-center justify-center my-6">

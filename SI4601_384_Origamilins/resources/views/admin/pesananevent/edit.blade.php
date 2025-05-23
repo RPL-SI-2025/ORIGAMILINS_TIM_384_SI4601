@@ -9,6 +9,12 @@
         </a>
     </div>
 
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div class="card">
         <div class="card-body">
             <form action="{{ route('admin.pesananevent.update', $pesanan->id_pesanan_event) }}" method="POST">

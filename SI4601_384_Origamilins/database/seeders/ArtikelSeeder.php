@@ -4,56 +4,35 @@ namespace Database\Seeders;
 
 use App\Models\Artikel;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class ArtikelSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        $artikels = [
-            [
-                'judul' => 'Tips Merawat Tanaman Hias Indoor',
-                'isi' => '<p>Merawat tanaman hias indoor membutuhkan perhatian khusus. Berikut beberapa tips penting:</p>
-                        <ul>
-                            <li>Pastikan pencahayaan yang cukup</li>
-                            <li>Atur penyiraman secara teratur</li>
-                            <li>Pilih pot dengan drainase yang baik</li>
-                            <li>Perhatikan kelembaban udara</li>
-                            <li>Lakukan pemupukan secara berkala</li>
-                        </ul>',
-                'tanggal_publikasi' => Carbon::now(),
-                'gambar' => 'uploads/artikel/tanaman_hias.jpg'
-            ],
-            [
-                'judul' => 'Cara Membuat Taman Minimalis',
-                'isi' => '<p>Taman minimalis menjadi solusi untuk rumah dengan lahan terbatas. Berikut langkah-langkahnya:</p>
-                        <ol>
-                            <li>Rencanakan layout dengan baik</li>
-                            <li>Pilih tanaman yang sesuai</li>
-                            <li>Tambahkan elemen dekoratif</li>
-                            <li>Atur pencahayaan taman</li>
-                            <li>Buat sistem drainase yang baik</li>
-                        </ol>',
-                'tanggal_publikasi' => Carbon::now()->subDays(2),
-                'gambar' => 'uploads/artikel/taman_minimalis.jpg'
-            ],
-            [
-                'judul' => 'Panduan Berkebun untuk Pemula',
-                'isi' => '<p>Mulai berkebun tidak sesulit yang dibayangkan. Ikuti panduan dasar berikut:</p>
-                        <ul>
-                            <li>Pilih lokasi yang tepat</li>
-                            <li>Siapkan media tanam berkualitas</li>
-                            <li>Pilih tanaman yang mudah dirawat</li>
-                            <li>Atur jadwal penyiraman</li>
-                            <li>Pantau pertumbuhan secara rutin</li>
-                        </ul>',
-                'tanggal_publikasi' => Carbon::now()->subDays(5),
-                'gambar' => 'uploads/artikel/panduan_berkebun.jpg'
-            ]
-        ];
+        DB::table('artikel')->truncate();
 
-        foreach ($artikels as $artikel) {
-            Artikel::create($artikel);
+        $uploadPath = public_path('uploads/artikel');
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
         }
+
+        $defaultImage = 'origami_indonesia.jpg';
+        $sourcePath = database_path('seeders/images/' . $defaultImage);
+        $destinationPath = public_path('uploads/artikel/' . $defaultImage);
+        
+        if (!file_exists($destinationPath) && file_exists($sourcePath)) {
+            copy($sourcePath, $destinationPath);
+        }
+
+        Artikel::create([
+            'judul' => 'Sejarah Origami di Indonesia',
+            'isi' => '<p>Origami, seni melipat kertas yang berasal dari Jepang, telah menjadi bagian penting dari budaya Indonesia. Seni ini diperkenalkan ke Indonesia pada awal abad ke-20 dan telah berkembang pesat sejak saat itu.</p>
+                     <p>Di Indonesia, origami tidak hanya menjadi hobi, tetapi juga digunakan dalam pendidikan dan terapi. Banyak sekolah dasar mengajarkan origami untuk meningkatkan keterampilan motorik halus anak-anak.</p>
+                     <p>Origami juga menjadi bagian dari industri kreatif Indonesia, dengan banyak pengrajin lokal yang menciptakan karya-karya unik yang menggabungkan teknik origami dengan motif tradisional Indonesia.</p>',
+            'tanggal_publikasi' => now(),
+            'gambar' => 'artikel1.jpg'
+        ]);
     }
-} 
+}

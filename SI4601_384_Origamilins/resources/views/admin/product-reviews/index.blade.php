@@ -72,7 +72,7 @@
                                 <td>{{ $review->created_at->format('d M Y H:i') }}</td>
                                 <td>
                                     <div class="d-flex gap-2">
-                                        <a href="{{ route('admin.product-reviews.show', $review) }}" class="btn btn-sm btn-info">
+                                        <a href="{{ route('admin.product-reviews.show', $review) }}" class="btn btn-sm btn-info" dusk="lihat-detail-button-{{ $review->id }}">
                                             <i class="fas fa-eye"></i> Lihat Detail
                                         </a>
                                         @if($review->status === 'pending')

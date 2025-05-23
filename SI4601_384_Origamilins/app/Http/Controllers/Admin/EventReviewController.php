@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Event;
 use App\Models\EventReview;
 use Illuminate\Http\Request;
 
@@ -11,35 +12,32 @@ class EventReviewController extends Controller
     public function index()
     {
         $reviews = EventReview::with(['event', 'user'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+                            ->orderBy('created_at', 'desc')
+                            ->paginate(10);
         
         return view('admin.event-reviews.index', compact('reviews'));
     }
 
-    public function show(EventReview $review)
+    public function show(Event $event)
     {
-        $review->load(['event', 'user']);
-        return view('admin.event-reviews.show', compact('review'));
+        $reviews = $event->reviews()
+                        ->with('user')
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(15);
+        
+        return view('admin.event-reviews.show', compact('event', 'reviews'));
     }
 
-    public function approve(EventReview $review)
+    public function getReviews(Event $event)
     {
-        try {
-            $review->update(['status' => 'Disetujui']);
-            return redirect()->back()->with('success', 'Ulasan berhasil disetujui');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menyetujui ulasan');
-        }
-    }
-
-    public function reject(EventReview $review)
-    {
-        try {
-            $review->update(['status' => 'Ditolak']);
-            return redirect()->back()->with('success', 'Ulasan berhasil ditolak');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menolak ulasan');
-        }
+        $reviews = $event->reviews()
+                        ->with('user')
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(15);
+        
+        return response()->json([
+            'html' => view('admin.event-reviews._reviews_table', compact('reviews'))->render(),
+            'hasMorePages' => $reviews->hasMorePages()
+        ]);
     }
 } 

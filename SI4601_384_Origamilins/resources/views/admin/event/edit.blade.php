@@ -66,27 +66,14 @@
 
                 <div class="mb-3">
                     <label for="kuota" class="form-label">Kuota Peserta</label>
-<<<<<<< Updated upstream
-                    <input type="number" class="form-control @error('kuota') is-invalid @enderror" id="kuota"
-                        name="kuota" value="{{ old('kuota', $event->kuota) }}" required min="1">
-                    @error('kuota')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-=======
                     <input type="number" class="form-control @error('kuota') is-invalid @enderror" 
                            id="kuota" name="kuota" value="{{ old('kuota', $event->kuota) }}" required min="{{ $event->kuota_terisi }}">
                     @error('kuota')
                         <div class="invalid-feedback">{{ $message }}</div>
->>>>>>> Stashed changes
                     @enderror
                     <div class="form-text">
                         Masukkan jumlah maksimal peserta yang dapat mengikuti event ini
                     </div>
-<<<<<<< Updated upstream
-                    <div class="form-text text-info">
-                        Kuota terisi saat ini: {{ $event->kuota_terisi }} peserta
-=======
                     <div class="mt-2">
                         <div class="progress" style="height: 25px;">
                             <div class="progress-bar {{ $event->kuota_terisi >= $event->kuota ? 'bg-danger' : 'bg-success' }}" 
@@ -108,7 +95,6 @@
                                 @endif
                             @endif
                         </div>
->>>>>>> Stashed changes
                     </div>
                 </div>
 
@@ -126,7 +112,7 @@
                     <div id="current-poster" class="mt-2 {{ !$event->poster ? 'd-none' : '' }}">
                         <label class="form-label">Poster Saat Ini</label>
                         @if($event->poster)
-                            <img src="{{ Storage::url($event->poster) }}" alt="Current Poster" 
+                            <img src="{{ asset($event->poster) }}" alt="Current Poster" 
                                  class="d-block img-thumbnail" style="max-height: 200px;">
                         @endif
                     </div>
@@ -136,10 +122,9 @@
                     </div>
                 </div>
 
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Simpan Perubahan
-                    </button>
+                <div class="mb-3">
+                    <a href="{{ route('admin.event.index') }}" class="btn btn-light me-2">Batal</a>
+                    <button type="submit" class="btn btn-success">Update Event</button>
                 </div>
             </form>
         </div>

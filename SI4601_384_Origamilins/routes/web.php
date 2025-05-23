@@ -1,31 +1,42 @@
 <?php
 
-use App\Http\Controllers\Produk_Controller;
-use App\Http\Controllers\EventController;
+use App\Http\Controllers\Admin\Produk_Controller;
+use App\Http\Controllers\Admin\EventController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\ArtikelController;
-use App\Http\Controllers\UserManagementController;
-use App\Http\Controllers\EventReviewController;
-use App\Http\Controllers\PesananController;
-use App\Http\Controllers\PesananEventController;
-use App\Http\Controllers\ProductReviewController;
+use App\Http\Controllers\Admin\ArtikelController;
+use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\PengrajinManagementController;
+use App\Http\Controllers\Admin\EventReviewController;
+use App\Http\Controllers\Admin\PesananController;
+use App\Http\Controllers\Admin\PesananEventController;
+use App\Http\Controllers\Admin\ProductReviewController;
+use App\Http\Controllers\PaymentsController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
+// Home
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
-// Produk Publik
-Route::get('/produk', [Produk_Controller::class, 'index'])->name('produk.melihat_produk');
+// Event Publik
+Route::get('/event', [EventController::class, 'index'])->name('event.melihat_event');
 
-// Authenticated User Routes
+// Authentication
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect('/');
+})->name('logout');
+
+// User Profile (butuh login)
 Route::middleware(['auth'])->group(function () {
     Route::get('/profilpengguna', [UserProfileController::class, 'create'])->name('profile.create');
     Route::post('/profilpengguna', [UserProfileController::class, 'store'])->name('profile.store');
 
-    // Redirect berdasarkan role
+    // Dashboard
     Route::get('/dashboard', function () {
         if (Auth::user()->role === 'admin') {
             return redirect()->route('admin.dashboard');
@@ -53,18 +64,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('etalase');
 });
 
-// Admin Route Sementara
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/produk', [Produk_Controller::class, 'index'])->name('admin.produk.index');
-});
-
-// Authentication
-Route::get('/logout', function () {
-    Auth::logout();
-    return redirect('/');
-})->name('logout');
-
-// Produk Input
+// Produk Input Publik
 Route::get('/produk/tambah', [Produk_Controller::class, 'create'])->name('produk.tambah_produk');
 Route::post('/produk/store', [Produk_Controller::class, 'store'])->name('produk.store');
 
@@ -73,64 +73,77 @@ Route::get('/test-admin', function () {
     if (!Auth::check()) {
         return redirect()->route('login');
     }
-
     $user = Auth::user();
     return "Logged in as: {$user->name} (Role: {$user->role})";
-})->middleware('auth')->middleware(AdminMiddleware::class);
+})->middleware(['auth', AdminMiddleware::class]);
 
-// Event Publik
-Route::get('/event', [EventController::class, 'index'])->name('event.melihat_event');
-Route::get('/event/tambah', [EventController::class, 'create'])->name('event.tambah_event');
-Route::post('/event/store', [EventController::class, 'store'])->name('event.store');
-
-// Admin Panel Routes
+// Admin Routes
 Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(function () {
     // Dashboard
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-
-    // Manajemen User
-    Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users.index');
-    Route::post('/users/{user}/toggle-status', [UserManagementController::class, 'toggleStatus'])->name('admin.users.toggle-status');
-
-    // Manajemen Event Reviews
-    Route::get('/event-reviews', [EventReviewController::class, 'index'])->name('admin.event-reviews.index');
-    Route::get('/event-reviews/{review}', [EventReviewController::class, 'show'])->name('admin.event-reviews.show');
-    Route::get('/event-reviews/{event}/get-reviews', [EventReviewController::class, 'getReviews'])->name('admin.event-reviews.get-reviews');
+    Route::get('/', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     // Manajemen Produk
-    Route::get('/produk', [Produk_Controller::class, 'index'])->name('admin.produk.index');
-    Route::get('/produk/create', [Produk_Controller::class, 'create'])->name('admin.produk.create');
-    Route::post('/produk', [Produk_Controller::class, 'store'])->name('admin.produk.store');
-    Route::get('/produk/{product}/edit', [Produk_Controller::class, 'edit'])->name('admin.produk.edit');
-    Route::put('/produk/{product}', [Produk_Controller::class, 'update'])->name('admin.produk.update');
-    Route::delete('/produk/{product}', [Produk_Controller::class, 'destroy'])->name('admin.produk.destroy');
-    Route::get('/produk/{product}', [Produk_Controller::class, 'show'])->name('admin.produk.show');
+    Route::prefix('produk')->name('admin.produk.')->group(function () {
+        Route::get('/', [Produk_Controller::class, 'index'])->name('index');
+        Route::get('/create', [Produk_Controller::class, 'create'])->name('create');
+        Route::post('/', [Produk_Controller::class, 'store'])->name('store');
+        Route::get('/{product}', [Produk_Controller::class, 'show'])->name('show');
+        Route::get('/{product}/edit', [Produk_Controller::class, 'edit'])->name('edit');
+        Route::put('/{product}', [Produk_Controller::class, 'update'])->name('update');
+        Route::delete('/{product}', [Produk_Controller::class, 'destroy'])->name('destroy');
+    });
 
     // Manajemen Event
-    Route::get('/event', [EventController::class, 'index'])->name('admin.event.index');
-    Route::get('/event/create', [EventController::class, 'create'])->name('admin.event.create');
-    Route::post('/event', [EventController::class, 'store'])->name('admin.event.store');
-    Route::get('/event/{event}', [EventController::class, 'show'])->name('admin.event.show');
-    Route::get('/event/{event}/edit', [EventController::class, 'edit'])->name('admin.event.edit');
-    Route::put('/event/{event}', [EventController::class, 'update'])->name('admin.event.update');
-    Route::delete('/event/{event}', [EventController::class, 'destroy'])->name('admin.event.destroy');
+    Route::prefix('event')->name('admin.event.')->group(function () {
+        Route::get('/', [EventController::class, 'index'])->name('index');
+        Route::get('/create', [EventController::class, 'create'])->name('create');
+        Route::post('/', [EventController::class, 'store'])->name('store');
+        Route::get('/{event}', [EventController::class, 'show'])->name('show');
+        Route::get('/{event}/edit', [EventController::class, 'edit'])->name('edit');
+        Route::put('/{event}', [EventController::class, 'update'])->name('update');
+        Route::delete('/{event}', [EventController::class, 'destroy'])->name('destroy');
+    });
 
     // Manajemen Artikel
-    Route::get('/artikel', [ArtikelController::class, 'index'])->name('admin.artikel.index');
-    Route::get('/artikel/create', [ArtikelController::class, 'create'])->name('admin.artikel.create');
-    Route::post('/artikel', [ArtikelController::class, 'store'])->name('admin.artikel.store');
-    Route::get('/artikel/{id_artikel}', [ArtikelController::class, 'show'])->name('admin.artikel.show');
-    Route::get('/artikel/{id_artikel}/edit', [ArtikelController::class, 'edit'])->name('admin.artikel.edit');
-    Route::put('/artikel/{id_artikel}', [ArtikelController::class, 'update'])->name('admin.artikel.update');
-    Route::delete('/artikel/{id_artikel}', [ArtikelController::class, 'destroy'])->name('admin.artikel.destroy');
+    Route::prefix('artikel')->name('admin.artikel.')->group(function () {
+        Route::get('/', [ArtikelController::class, 'index'])->name('index');
+        Route::get('/create', [ArtikelController::class, 'create'])->name('create');
+        Route::post('/', [ArtikelController::class, 'store'])->name('store');
+        Route::get('/{id_artikel}', [ArtikelController::class, 'show'])->name('show');
+        Route::get('/{id_artikel}/edit', [ArtikelController::class, 'edit'])->name('edit');
+        Route::put('/{id_artikel}', [ArtikelController::class, 'update'])->name('update');
+        Route::delete('/{id_artikel}', [ArtikelController::class, 'destroy'])->name('destroy');
+    });
+
+    // Manajemen User
+    Route::prefix('users')->name('admin.users.')->group(function () {
+        Route::get('/', [UserManagementController::class, 'index'])->name('index');
+        Route::post('/{user}/toggle-status', [UserManagementController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
+    // Manajemen Pengrajin
+    Route::prefix('pengrajin')->name('admin.pengrajin.')->group(function () {
+        Route::resource('pengrajin', PengrajinManagementController::class);
+        Route::get('/', [PengrajinManagementController::class, 'index'])->name('index');
+        Route::post('/{pengrajin}/toggle-status', [PengrajinManagementController::class, 'toggleStatus'])->name('toggle-status');
+        Route::get('/{pengrajin}/details', [PengrajinManagementController::class, 'showDetails'])->name('details');
+    });
+
+    // Manajemen Event Reviews
+    Route::prefix('event-reviews')->name('admin.event-reviews.')->group(function () {
+        Route::get('/', [EventReviewController::class, 'index'])->name('index');
+        Route::get('/{review}', [EventReviewController::class, 'show'])->name('show');
+        Route::patch('/{review}/approve', [EventReviewController::class, 'approve'])->name('approve');
+        Route::patch('/{review}/reject', [EventReviewController::class, 'reject'])->name('reject');
+    });
 
     // Manajemen Pesanan Produk
     Route::prefix('pesanan-produk')->name('admin.pesananproduk.')->group(function () {
         Route::get('/', [PesananController::class, 'index'])->name('index');
         Route::get('/{id_pesanan}/edit', [PesananController::class, 'edit'])->name('edit');
         Route::put('/{id_pesanan}', [PesananController::class, 'update'])->name('update');
+        Route::get('/{id_pesanan}', [PesananController::class, 'show'])->name('show');
+        Route::post('/{id}/mark-siap-dikirim', [PesananController::class, 'markSiapDikirim'])->name('markSiapDikirim');
     });
 
     // Manajemen Pesanan Event
@@ -140,24 +153,38 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
         Route::put('/{id_pesanan_event}', [PesananEventController::class, 'update'])->name('update');
     });
 
-    // Product Review Routes
+    // Product Reviews
     Route::prefix('product-reviews')->name('admin.product-reviews.')->group(function () {
         Route::get('/', [ProductReviewController::class, 'index'])->name('index');
         Route::get('/{review}', [ProductReviewController::class, 'show'])->name('show');
         Route::post('/{review}/approve', [ProductReviewController::class, 'approve'])->name('approve');
         Route::post('/{review}/reject', [ProductReviewController::class, 'reject'])->name('reject');
     });
+
+    // Payment History
+    Route::prefix('payments')->name('admin.payments.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\PaymentHistoryController::class, 'index'])->name('index');
+        Route::get('/{payment}', [App\Http\Controllers\Admin\PaymentHistoryController::class, 'show'])->name('show');
+    });
+
+    // Refund Management Routes
+    Route::prefix('refunds')->name('admin.refunds.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\RefundController::class, 'index'])->name('index');
+        Route::get('/{id}', [App\Http\Controllers\Admin\RefundController::class, 'show'])->name('show');
+        Route::post('/{id}/process', [App\Http\Controllers\Admin\RefundController::class, 'processRefund'])->name('process');
+        Route::post('/{id}/reject', [App\Http\Controllers\Admin\RefundController::class, 'rejectRefund'])->name('reject');
+    });
 });
 
-// Event Review Routes
-Route::prefix('admin/event-reviews')->name('admin.event-reviews.')->middleware(['auth', AdminMiddleware::class])->group(function () {
-    Route::get('/', [App\Http\Controllers\Admin\EventReviewController::class, 'index'])->name('index');
-    Route::get('/{review}', [App\Http\Controllers\Admin\EventReviewController::class, 'show'])->name('show');
-    Route::patch('/{review}/approve', [App\Http\Controllers\Admin\EventReviewController::class, 'approve'])->name('approve');
-    Route::patch('/{review}/reject', [App\Http\Controllers\Admin\EventReviewController::class, 'reject'])->name('reject');
-});
+    // Pembayaran
+    Route::prefix('user/payments')->name('user.payments.')->middleware(['auth'])->group(function () {
+        Route::get('/', [PaymentsController::class, 'index'])->name('index'); // Menampilkan form pembayaran
+        Route::post('/', [PaymentsController::class, 'store'])->name('store'); // Menyimpan data pembayaran
+        Route::get('/{payment}/finish', [PaymentsController::class, 'finish'])->name('finish'); // Redirect setelah pembayaran selesai
+        Route::post('/callback', [PaymentsController::class, 'callback'])->name('callback'); // Callback dari Midtrans
+    });
 
-// Debug Login Info
+// Debug Route
 Route::get('/debug-login', function () {
     if (!Auth::check()) {
         return 'Status: Not logged in';
@@ -178,3 +205,7 @@ Route::get('/produk/{id}', function ($id) {
     $product = \App\Models\Produk::findOrFail($id);
     return view('user.produk-detail', compact('product'));
 })->name('user.produk.detail');
+
+Route::get('/reset-password', [ResetPasswordController::class, 'showForm'])->name('reset.password.form');
+Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset.password');
+

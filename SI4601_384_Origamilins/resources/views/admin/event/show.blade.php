@@ -40,29 +40,6 @@
                             <td>Rp {{ number_format($event->harga, 0, ',', '.') }}</td>
                         </tr>
                         <tr>
-<<<<<<< Updated upstream
-                            <th>Kuota Peserta</th>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="progress" style="width: 200px; height: 25px;">
-                                        <div class="progress-bar {{ $event->kuota_terisi >= $event->kuota ? 'bg-danger' : 'bg-success' }}" 
-                                             role="progressbar" 
-                                             style="width: {{ ($event->kuota_terisi / $event->kuota) * 100 }}%">
-                                            {{ $event->kuota_terisi }}/{{ $event->kuota }}
-                                        </div>
-                                    </div>
-                                    <span class="ms-3">
-                                        @if($event->tanggal_pelaksanaan < now())
-                                            <span class="badge bg-secondary">Selesai</span>
-                                        @else
-                                            @if($event->kuota_terisi >= $event->kuota)
-                                                <span class="badge bg-danger">Full</span>
-                                            @else
-                                                <span class="badge bg-success">Tersedia</span>
-                                            @endif
-                                        @endif
-                                    </span>
-=======
                             <th>Status Kuota</th>
                             <td>
                                 <div class="mb-2">
@@ -86,7 +63,6 @@
                                             </span>
                                         @endif
                                     @endif
->>>>>>> Stashed changes
                                 </div>
                             </td>
                         </tr>
@@ -99,7 +75,7 @@
                         </div>
                         <div class="card-body">
                             @if($event->poster)
-                                <img src="{{ Storage::url($event->poster) }}" alt="Poster {{ $event->nama_event }}" 
+                                <img src="{{ asset($event->poster) }}" alt="Poster {{ $event->nama_event }}" 
                                      class="img-fluid rounded">
                             @else
                                 <div class="alert alert-info mb-0">

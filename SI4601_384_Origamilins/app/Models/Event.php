@@ -19,7 +19,8 @@ class Event extends Model
         'lokasi',
         'poster',
         'kuota',
-        'kuota_terisi'
+        'kuota_terisi',
+        'status'
     ];
 
     protected $casts = [
@@ -51,5 +52,39 @@ class Event extends Model
     public function getRemainingSeats(): int
     {
         return max(0, $this->kuota - $this->kuota_terisi);
+    }
+
+    /**
+     * Get status label
+     */
+    public function getStatusLabel(): string
+    {
+        return $this->status === 'tersedia' ? 'Tersedia' : 'Selesai';
+    }
+
+    /**
+     * Check if event is available
+     */
+    public function isAvailable(): bool
+    {
+        return $this->status === 'tersedia';
+    }
+
+    /**
+     * Check if event has passed its date
+     */
+    public function hasEventPassed(): bool
+    {
+        return $this->tanggal_pelaksanaan < now();
+    }
+
+    /**
+     * Update status based on event date
+     */
+    public function updateStatusBasedOnDate(): void
+    {
+        if ($this->hasEventPassed() && $this->status === 'tersedia') {
+            $this->update(['status' => 'selesai']);
+        }
     }
 }
