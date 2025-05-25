@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\ProductReviewController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\CartController;
 
 // Home
 Route::get('/', function () {
@@ -60,8 +61,21 @@ Route::middleware(['auth'])->group(function () {
         }
         $products = $query->paginate(9);
         $categories = \App\Models\Produk::distinct()->pluck('kategori');
-        return view('user.etalase', compact('products', 'categories'));
+        $cartCount = 0;
+        if (Auth::check()) {
+            $cart = Auth::user()->getOrCreateCart();
+            $cartCount = $cart->items()->sum('jumlah');
+        }
+        return view('user.etalase', compact('products', 'categories', 'cartCount'));
     })->name('etalase');
+
+    // Cart Routes
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/update-total', [CartController::class, 'updateTotal'])->name('cart.update-total');
+    Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 });
 
 // Produk Input Publik
