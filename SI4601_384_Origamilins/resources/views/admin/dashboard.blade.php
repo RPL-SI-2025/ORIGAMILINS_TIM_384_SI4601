@@ -6,7 +6,7 @@
     <div class="row">
         <!-- Statistik Pesanan -->
         <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card dashboard-stat-card h-100">
+            <div class="card dashboard-stat-card">
                 <div class="card-body stat-card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
@@ -26,8 +26,8 @@
 
         <!-- Statistik Produk -->
         <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card dashboard-stat-card h-100">
-                <div class="card-body">
+            <div class="card dashboard-stat-card">
+                <div class="card-body stat-card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h2 class="fw-bold mb-0">{{ \App\Models\Produk::count() }}</h2>
@@ -46,8 +46,8 @@
 
         <!-- Statistik Event -->
         <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card dashboard-stat-card h-100">
-                <div class="card-body">
+            <div class="card dashboard-stat-card">
+                <div class="card-body stat-card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h2 class="fw-bold mb-0">{{ \App\Models\Event::count() }}</h2>
@@ -66,8 +66,8 @@
 
         <!-- Statistik Artikel -->
         <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card dashboard-stat-card h-100">
-                <div class="card-body">
+            <div class="card dashboard-stat-card">
+                <div class="card-body stat-card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h2 class="fw-bold mb-0">
@@ -79,7 +79,7 @@
                             </a>
                         </div>
                         <div class="icon-circle warning">
-                            <i class="fas fa-newspaper" style="color: #f9bd1e"></i>
+                            <i class="fas fa-newspaper" style="color: #ff8c00"></i>
                         </div>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-2">
-                        <i class="fas fa-chart-line me-2" style="color:#f9bd1e"></i>
+                        <i class="fas fa-chart-line me-2" style="color:#f9bd1e;font-size:1.5rem"></i>
                         <h5 class="mb-0">Penjualan Produk</h5>
                     </div>
                     <div class="btn-group mb-3" role="group">
@@ -151,9 +151,9 @@
             <div class="card h-100">
                 <div class="card-body d-flex flex-column justify-content-between">
                     <div>
-                        <div class="d-flex align-items-center mb-2" style="font-size:1.1rem;">
-                            <i class="fas fa-credit-card me-2" style="color:#f9bd1e"></i>
-                            <span class="fw-bold" style="color:#f9bd1e;">Verifikasi Pembayaran</span>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-credit-card me-2" style="color:#f9bd1e;font-size:1.5rem"></i>
+                            <h5 class="mb-0">Verifikasi Pembayaran</h5>
                         </div>
                         <div class="d-flex align-items-center gap-3 mb-2">
                             <div style="width:110px;height:110px;">
@@ -185,8 +185,8 @@
                 <div class="card-body d-flex flex-column justify-content-between">
                     <div>
                         <div class="d-flex align-items-center mb-2" style="font-size:1.1rem;">
-                            <i class="fas fa-trophy me-2" style="color:#f9bd1e"></i>
-                            <span class="fw-bold" style="color:#f9bd1e;">Produk Terlaris Bulan Ini</span>
+                            <i class="fas fa-trophy me-2" style="color:#f9bd1e;font-size:1.5rem"></i>
+                            <h5 class="mb-0">Produk Terlaris Bulan Ini</h5>
                         </div>
                         <ul class="list-group list-group-flush" style="max-height:110px;overflow-y:auto;min-height:70px;">
                             @forelse($produkTerlaris as $item)
@@ -206,11 +206,11 @@
         <!-- Kalender Event Modern -->
         <div class="col-lg-4 mb-4">
             <div class="card h-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div>
-                        <div class="d-flex align-items-center mb-2" style="font-size:1.1rem;">
+                <div class="card-body">
+                    <div class="d-flex flex-column justify-content-between">
+                        <div class="d-flex align-items-center mb-2">
                             <i class="fas fa-calendar-alt me-2" style="color:#f9bd1e"></i>
-                            <span class="fw-bold" style="color:#f9bd1e;">Kalender Event</span>
+                            <h5 class="mb-0">Kalender Event</h5>
                             <form method="get" class="ms-auto" style="min-width:90px;">
                                 <select name="bulan_event" class="form-select form-select-sm" onchange="this.form.submit()">
                                     @foreach(['01'=>'Jan','02'=>'Feb','03'=>'Mar','04'=>'Apr','05'=>'Mei','06'=>'Jun','07'=>'Jul','08'=>'Agu','09'=>'Sep','10'=>'Okt','11'=>'Nov','12'=>'Des'] as $num=>$bln)
@@ -796,6 +796,12 @@ document.addEventListener('DOMContentLoaded', function() {
     color: #333;
     margin-bottom: 4px;
     margin-left: 8px;
+}
+.stat-card-body {
+    min-height: unset !important;
+    height: auto !important;
+    display: block !important;
+    padding: 1.25rem 1.25rem 1rem 1.25rem !important;
 }
 @media (max-width: 991.98px) {
     .col-lg-4.mb-4 {
