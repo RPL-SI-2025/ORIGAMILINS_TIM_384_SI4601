@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\Produk;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class CartController extends Controller
 {
@@ -23,15 +27,24 @@ class CartController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        // Misalkan kita punya model Cart (atau CartItem) yang menyimpan data keranjang di database.
-        // Contoh: $cart = Cart::where('user_id', $user->id)->with('cartItems.produk')->first();
-        // Jika belum ada, buat keranjang baru (misal: Cart::create(['user_id' => $user->id]);)
-        // Untuk contoh ini, kita asumsikan keranjang disimpan di session (atau di database) dan diambil dari model Cart.
-        // Misalkan $cartItems berisi daftar item (misal: $cart->cartItems) atau diambil dari session.
-        // Jika keranjang kosong (misal: $cartItems->isEmpty()), tampilkan pesan kosong.
-        // Jika ada produk, tampilkan view (misal: view('cart.index', ['cartItems' => $cartItems, 'total' => $cart->total])).
-        // Untuk contoh ini, kita tampilkan pesan kosong saja.
-        return view('cart.index', ['cartItems' => [], 'total' => 0, 'message' => 'Keranjang Anda masih kosong']);
+        $cart = $user->getOrCreateCart();
+        $cartItems = $cart->items()->with('produk')->get();
+        $cartCount = $cartItems->sum('jumlah');
+        
+        if ($cartItems->isEmpty()) {
+            return view('user.cart.index', [
+                'cartItems' => [],
+                'total' => 0,
+                'message' => 'Keranjang Anda masih kosong',
+                'cartCount' => $cartCount
+            ]);
+        }
+
+        return view('user.cart.index', [
+            'cartItems' => $cartItems,
+            'total' => $cart->total,
+            'cartCount' => $cartCount
+        ]);
     }
 
     /**
@@ -43,26 +56,45 @@ class CartController extends Controller
      */
     public function add(Request $request)
     {
-        // Validasi request (misal: produk_id dan jumlah harus ada dan jumlah > 0)
-        $request->validate(['produk_id' => 'required|exists:produks,id', 'jumlah' => 'required|integer|min:1']);
-        $produk_id = $request->input('produk_id');
-        $jumlah = $request->input('jumlah');
-        // Cek apakah user sudah login
+        $request->validate([
+            'produk_id' => 'required|exists:produk,id',
+            'jumlah' => 'required|integer|min:1'
+        ]);
+
         if (!Auth::check()) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
+
         $user = Auth::user();
-        // Misalkan kita punya model Cart (atau CartItem) yang menyimpan data keranjang di database.
-        // Contoh: $cart = Cart::where('user_id', $user->id)->first();
-        // Jika belum ada, buat keranjang baru (misal: Cart::create(['user_id' => $user->id]);)
-        // Misalkan $cartItem = CartItem::where('cart_id', $cart->id)->where('produk_id', $produk_id)->first();
-        // Jika produk sudah ada, update jumlah (misal: $cartItem->update(['jumlah' => $cartItem->jumlah + $jumlah]);)
-        // Jika belum ada, tambahkan produk baru (misal: CartItem::create(['cart_id' => $cart->id, 'produk_id' => $produk_id, 'jumlah' => $jumlah]);)
-        // Untuk contoh ini, kita asumsikan produk ditambahkan ke session (atau di database) dan kita kembalikan pesan sukses.
-        // Misalkan kita cek (misal: if ($cartItem) { ... } else { ... }), lalu kembalikan pesan sesuai.
-        // Misalkan kita kembalikan pesan "Produk berhasil ditambahkan (jumlah diperbarui)" jika produk sudah ada, atau "Produk berhasil ditambahkan ke keranjang" jika baru.
-        // Untuk contoh ini, kita kembalikan pesan "Produk berhasil ditambahkan ke keranjang".
-        return response()->json(['message' => 'Produk berhasil ditambahkan ke keranjang']);
+        $cart = $user->getOrCreateCart();
+        $produk = Produk::findOrFail($request->produk_id);
+        
+        DB::beginTransaction();
+        try {
+            $cartItem = $cart->items()->where('produk_id', $produk->id)->first();
+            
+            if ($cartItem) {
+                $cartItem->jumlah += $request->jumlah;
+                $cartItem->updateSubtotal();
+                $message = 'Produk berhasil ditambahkan (jumlah diperbarui)';
+            } else {
+                $cartItem = $cart->items()->create([
+                    'produk_id' => $produk->id,
+                    'jumlah' => $request->jumlah,
+                    'subtotal' => $produk->harga * $request->jumlah
+                ]);
+                $cart->updateTotal();
+                $message = 'Produk berhasil ditambahkan ke keranjang';
+            }
+            
+            DB::commit();
+            $cart->refresh(); // Refresh cart to get updated items relation
+            $cartCount = $cart->items()->sum('jumlah');
+            return response()->json(['message' => $message, 'cartCount' => $cartCount]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Terjadi kesalahan saat menambahkan produk'], 500);
+        }
     }
 
     /**
@@ -73,16 +105,42 @@ class CartController extends Controller
      */
     public function update(Request $request)
     {
-        // Validasi request (misal: produk_id dan jumlah harus ada dan jumlah > 0)
-        $request->validate(['produk_id' => 'required|exists:produks,id', 'jumlah' => 'required|integer|min:1']);
-        $produk_id = $request->input('produk_id');
-        $jumlah = $request->input('jumlah');
+        $request->validate([
+            'produk_id' => 'required|exists:produk,id',
+            'jumlah' => 'required|integer|min:1'
+        ]);
+
         $user = Auth::user();
-        // Misalkan kita punya model Cart (atau CartItem) yang menyimpan data keranjang di database.
-        // Contoh: $cart = Cart::where('user_id', $user->id)->first();
-        // Misalkan kita update jumlah (misal: CartItem::where('cart_id', $cart->id)->where('produk_id', $produk_id)->update(['jumlah' => $jumlah]);)
-        // Misalkan kita kembalikan pesan "Jumlah produk berhasil diperbarui".
-        return response()->json(['message' => 'Jumlah produk berhasil diperbarui']);
+        $cart = $user->cart;
+        
+        if (!$cart) {
+            return response()->json(['message' => 'Keranjang tidak ditemukan'], 404);
+        }
+
+        DB::beginTransaction();
+        try {
+            $cartItem = $cart->items()->where('produk_id', $request->produk_id)->first();
+            
+            if (!$cartItem) {
+                return response()->json(['message' => 'Produk tidak ditemukan di keranjang'], 404);
+            }
+
+            $cartItem->jumlah = $request->jumlah;
+            $cartItem->updateSubtotal();
+            $cart->refresh();
+            $cartCount = $cart->items()->sum('jumlah');
+
+            DB::commit();
+            return response()->json([
+                'message' => 'Jumlah produk berhasil diperbarui',
+                'new_subtotal' => $cartItem->subtotal,
+                'new_total' => $cart->total,
+                'cartCount' => $cartCount
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Terjadi kesalahan saat memperbarui jumlah'], 500);
+        }
     }
 
     /**
@@ -93,15 +151,34 @@ class CartController extends Controller
      */
     public function remove(Request $request)
     {
-        // Validasi request (misal: produk_id harus ada)
-        $request->validate(['produk_id' => 'required|exists:produks,id']);
-        $produk_id = $request->input('produk_id');
+        $request->validate([
+            'produk_id' => 'required|exists:produk,id'
+        ]);
+
         $user = Auth::user();
-        // Misalkan kita punya model Cart (atau CartItem) yang menyimpan data keranjang di database.
-        // Contoh: $cart = Cart::where('user_id', $user->id)->first();
-        // Misalkan kita hapus produk (misal: CartItem::where('cart_id', $cart->id)->where('produk_id', $produk_id)->delete();)
-        // Misalkan kita kembalikan pesan "Produk berhasil dihapus dari keranjang".
+        $cart = $user->cart;
+        
+        if (!$cart) {
+            return response()->json(['message' => 'Keranjang tidak ditemukan'], 404);
+        }
+
+        DB::beginTransaction();
+        try {
+            $cartItem = $cart->items()->where('produk_id', $request->produk_id)->first();
+            
+            if (!$cartItem) {
+                return response()->json(['message' => 'Produk tidak ditemukan di keranjang'], 404);
+            }
+
+            $cartItem->delete();
+            $cart->updateTotal();
+            
+            DB::commit();
         return response()->json(['message' => 'Produk berhasil dihapus dari keranjang']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Terjadi kesalahan saat menghapus produk'], 500);
+        }
     }
 
     /**
@@ -112,10 +189,37 @@ class CartController extends Controller
     public function updateTotal(Request $request)
     {
         $user = Auth::user();
-        // Misalkan kita punya model Cart (atau CartItem) yang menyimpan data keranjang di database.
-        // Contoh: $cart = Cart::where('user_id', $user->id)->first();
-        // Misalkan kita hitung ulang total (misal: $cart->update(['total' => CartItem::where('cart_id', $cart->id)->sum(DB::raw('jumlah * harga'))]);)
-        // Misalkan kita kembalikan total harga (misal: "Total: Rp 20000").
-        return response()->json(['total' => 'Total: Rp 20000']);
+        $cart = $user->cart;
+        
+        if (!$cart) {
+            return response()->json(['message' => 'Keranjang tidak ditemukan'], 404);
+        }
+
+        $cart->updateTotal();
+        return response()->json(['total' => 'Total: Rp ' . number_format($cart->total, 0, ',', '.')]);
+    }
+
+    /**
+     * Proses checkout hanya untuk item yang dipilih user.
+     */
+    public function checkout(Request $request)
+    {
+        $request->validate([
+            'item_ids' => 'required|array',
+            'item_ids.*' => 'exists:cart_items,id'
+        ]);
+
+        $user = Auth::user();
+        $cart = $user->cart;
+        $selectedItems = $cart->items()->whereIn('id', $request->item_ids)->with('produk')->get();
+
+        if ($selectedItems->isEmpty()) {
+            return redirect()->route('cart.index')->with('error', 'Pilih minimal satu produk untuk checkout!');
+        }
+
+        // Simpan ke session atau langsung proses pembayaran
+        session(['checkout_items' => $selectedItems->pluck('id')->toArray()]);
+        // Redirect ke halaman pembayaran/checkout
+        return redirect()->route('user.payments.index');
     }
 } 

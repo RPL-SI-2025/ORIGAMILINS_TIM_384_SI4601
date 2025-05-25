@@ -61,8 +61,22 @@
                     </div>
                 </div>
                 <div class="d-flex gap-2 mt-4">
-                    <button class="btn btn-success flex-fill py-2" style="font-weight:600; font-size:1.1rem;">+ Keranjang</button>
-                    <button class="btn btn-primary flex-fill py-2" style="font-weight:600; font-size:1.1rem;">Beli Langsung</button>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label"><b>Jumlah:</b></label>
+                        <div class="input-group" style="max-width: 200px;">
+                            <button class="btn btn-outline-secondary" type="button" onclick="decrementQuantity()">-</button>
+                            <input type="number" class="form-control text-center" id="quantity" value="1" min="1" max="{{ $product->stok ?? 999 }}">
+                            <button class="btn btn-outline-secondary" type="button" onclick="incrementQuantity()">+</button>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-lg" onclick="addToCart()">
+                            <i class="fas fa-shopping-cart me-2"></i>Tambah ke Keranjang
+                        </button>
+                        <button class="btn btn-success btn-lg">
+                            <i class="fas fa-bolt me-2"></i>Beli Langsung
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -77,5 +91,50 @@
     .breadcrumb-item + .breadcrumb-item::before { color: #bbb; }
     .shadow-sm { box-shadow: 0 2px 8px rgba(8,53,216,0.06) !important; }
 </style>
+@endpush
+@push('scripts')
+<script>
+function incrementQuantity() {
+    const input = document.getElementById('quantity');
+    const max = parseInt(input.getAttribute('max'));
+    const currentValue = parseInt(input.value);
+    if (currentValue < max) {
+        input.value = currentValue + 1;
+    }
+}
+
+function decrementQuantity() {
+    const input = document.getElementById('quantity');
+    const currentValue = parseInt(input.value);
+    if (currentValue > 1) {
+        input.value = currentValue - 1;
+    }
+}
+
+function addToCart() {
+    const quantity = document.getElementById('quantity').value;
+    
+    $.ajax({
+        url: '/cart/add',
+        method: 'POST',
+        data: {
+            produk_id: {{ $product->id }},
+            jumlah: quantity
+        },
+        success: function(response) {
+            alert(response.message);
+            // Optionally refresh the page or update cart count
+            window.location.reload();
+        },
+        error: function(xhr) {
+            if (xhr.status === 401) {
+                window.location.href = '/login';
+            } else {
+                alert('Terjadi kesalahan saat menambahkan ke keranjang');
+            }
+        }
+    });
+}
+</script>
 @endpush
 @endsection 

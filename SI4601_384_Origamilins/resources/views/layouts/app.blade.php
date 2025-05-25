@@ -28,8 +28,10 @@
                 <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
-                        <a class="cart-icon" href="/user/cart" title="Keranjang Saya" style="float: right; margin-top: -30px; font-size: 1.2rem;">
-                            <i class="fas fa-shopping-cart"></i> Keranjang
+                        <a class="cart-icon position-relative" href="/cart" title="Keranjang Saya" style="float: right; margin-top: -30px; font-size: 1.2rem;">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="badge-cart" id="cart-badge">{{ isset($cartCount) ? $cartCount : 0 }}</span>
+                            Keranjang
                         </a>
                     </div>
                 </header>
@@ -37,12 +39,30 @@
 
             <!-- Page Content -->
             <main>
-                {{ $slot }}
+                @yield('content')
             </main>
         </div>
 
         @stack('modals')
 
         @livewireScripts
+
+        <style>
+        .badge-cart {
+            position: absolute;
+            top: -8px;
+            right: -12px;
+            background: #e91e63;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 2px 7px;
+            min-width: 22px;
+            text-align: center;
+            border: 2px solid #fff;
+            z-index: 2;
+        }
+        </style>
     </body>
 </html>
