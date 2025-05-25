@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fa94269c81f6bb757422f1f6a9b2cd8607abca47
 @extends('user.layouts.etalase')
 
 @section('content')
@@ -194,6 +197,7 @@ $(document).ready(function() {
 });
 </script>
 @endpush
+<<<<<<< HEAD
 @endsection
 =======
 @extends('layouts.app')
@@ -265,3 +269,6 @@ $(document).ready(function() {
 </script>
 @endsection 
 >>>>>>> 067a531 (Cart Sementara)
+=======
+@endsection
+>>>>>>> fa94269c81f6bb757422f1f6a9b2cd8607abca47
