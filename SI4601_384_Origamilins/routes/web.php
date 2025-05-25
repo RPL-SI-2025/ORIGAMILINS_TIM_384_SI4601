@@ -66,7 +66,7 @@ Route::middleware(['auth'])->group(function () {
             $cart = Auth::user()->getOrCreateCart();
             $cartCount = $cart->items()->sum('jumlah');
         }
-        return view('user.etalase', compact('products', 'categories', 'cartCount'));
+        return view('user.produk.etalase', compact('products', 'categories', 'cartCount'));
     })->name('etalase');
 
     // Cart Routes
