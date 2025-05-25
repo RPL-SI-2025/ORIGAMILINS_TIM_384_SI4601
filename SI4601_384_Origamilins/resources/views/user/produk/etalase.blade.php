@@ -157,8 +157,6 @@
 <body>
     @include('user.navigation-menu')
 
-    <h1 class="mb-4">Etalase Produk</h1>
-
     <div class="product-grid">
         @forelse ($products as $product)
             <div class="product-card" onclick="alert('Melihat detail produk ID: {{ $product->id }}')">
