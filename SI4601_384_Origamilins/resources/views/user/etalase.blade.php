@@ -5,7 +5,6 @@
             @forelse($products as $product)
                 <div class="col-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                     <div class="tokopedia-card h-100 d-flex flex-column position-relative">
-                        <!-- Badge kategori dan stok (dihapus sesuai permintaan) -->
                         <div class="tokopedia-img-wrapper mt-3">
                             @if($product->gambar)
                                 @if(filter_var($product->gambar, FILTER_VALIDATE_URL))
@@ -29,9 +28,14 @@
                                 </div>
                                 <div class="tokopedia-meta small text-muted mb-1">by <span class="fw-semibold" style="color:#0835d8;">Origamilins</span></div>
                             </div>
-                            <a href="{{ route('user.produk.detail', $product->id) }}" class="btn btn-outline-primary btn-sm w-100 mt-2">
+                            <div class="d-grid gap-2">
+                                <a href="{{ route('user.produk.detail', $product->id) }}" class="btn btn-outline-primary btn-sm">
                                 <i class="fas fa-eye me-1"></i> Lihat Detail
                             </a>
+                                <button class="btn btn-primary btn-sm add-to-cart" data-produk-id="{{ $product->id }}">
+                                    <i class="fas fa-shopping-cart me-1"></i> Tambah ke Keranjang
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -112,6 +116,46 @@
         @media (max-width: 575px) {
             .col-6 { flex: 0 0 auto; width: 100%; }
         }
+        .add-to-cart-icon:hover { background: #e6f0ff; }
     </style>
+    @endpush
+    @push('scripts')
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Setup CSRF token for all AJAX requests
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        // Handle add to cart clicks
+        $('.add-to-cart').on('click', function() {
+            const produkId = $(this).data('produk-id');
+            $.ajax({
+                url: '/cart/add',
+                method: 'POST',
+                data: {
+                    produk_id: produkId,
+                    jumlah: 1
+                },
+                success: function(response) {
+                    alert(response.message);
+                    // Update cart badge in navbar
+                    $('#cart-badge').text(response.cartCount);
+                    // Optionally refresh the page if needed for other elements
+                    // window.location.reload();
+                },
+                error: function(xhr) {
+                    if (xhr.status === 401) {
+                        window.location.href = '/login';
+                    } else {
+                        alert('Terjadi kesalahan saat menambahkan ke keranjang');
+                    }
+                }
+            });
+        });
+    });
+    </script>
     @endpush
 @endsection 

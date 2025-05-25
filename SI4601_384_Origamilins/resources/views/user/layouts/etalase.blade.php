@@ -8,8 +8,9 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
         body { background: #f7f7f7; }
         .etalase-navbar {
@@ -85,7 +86,10 @@
         </form>
         <div class="etalase-icons d-flex align-items-center" style="gap:1.5rem;">
             <div class="position-relative">
-                <i class="fas fa-shopping-cart fa-lg text-dark"></i>
+                <a href="/cart">
+                    <i class="fas fa-shopping-cart fa-lg text-dark"></i>
+                    <span class="badge-cart" id="cart-badge">{{ isset($cartCount) ? $cartCount : 0 }}</span>
+                </a>
             </div>
             <div class="position-relative">
                 <i class="fas fa-bell fa-lg text-dark"></i>
@@ -102,6 +106,7 @@
         @yield('content')
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @stack('scripts')
 </body>
 </html> 
