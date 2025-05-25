@@ -28,10 +28,15 @@
                 <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
+<<<<<<< HEAD
                         <a class="cart-icon position-relative" href="/cart" title="Keranjang Saya" style="float: right; margin-top: -30px; font-size: 1.2rem;">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="badge-cart" id="cart-badge">{{ isset($cartCount) ? $cartCount : 0 }}</span>
                             Keranjang
+=======
+                        <a class="cart-icon" href="/user/cart" title="Keranjang Saya" style="float: right; margin-top: -30px; font-size: 1.2rem;">
+                            <i class="fas fa-shopping-cart"></i> Keranjang
+>>>>>>> 067a5319de60d23a60430c7348f2cdd72eeb33ed
                         </a>
                     </div>
                 </header>
