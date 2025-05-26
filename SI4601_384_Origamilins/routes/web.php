@@ -63,10 +63,7 @@ Route::middleware(['auth'])->group(function () {
         $products = $query->paginate(9);
         $categories = \App\Models\Produk::distinct()->pluck('kategori');
         
-        // Set default cart count
         $cartCount = 0;
-        
-        // Only try to get cart count if user is logged in
         if (Auth::check()) {
             try {
                 $cart = Auth::user()->cart;
@@ -74,7 +71,6 @@ Route::middleware(['auth'])->group(function () {
                     $cartCount = $cart->items()->sum('jumlah');
                 }
             } catch (\Exception $e) {
-                // If there's any error accessing cart, just keep cartCount as 0
                 $cartCount = 0;
             }
         }
@@ -82,7 +78,7 @@ Route::middleware(['auth'])->group(function () {
         return view('user.produk.etalase', compact('products', 'categories', 'cartCount'));
     })->name('etalase');
 
-    // Detail Produk Route (moved outside auth group to allow public access)
+    // Detail Produk Route 
     Route::get('/produk/{id}', function ($id) {
         $produk = \App\Models\Produk::findOrFail($id);
         
