@@ -46,6 +46,7 @@ class CartController extends Controller
      * Jika produk sudah ada di keranjang, update jumlahnya.
      * Jika produk belum ada, tambahkan produk baru.
      */
+   
     public function add(Request $request)
     {
         $request->validate([
@@ -56,17 +57,23 @@ class CartController extends Controller
         $cart = $this->cartService->getOrCreateCart(Auth::user());
         $produk = Produk::findOrFail($request->produk_id);
 
+        // Hitung subtotal
+        $subtotal = $request->jumlah * $produk->harga;
+
         // Check if product already in cart
         $cartItem = $cart->items()->where('produk_id', $produk->id)->first();
 
         if ($cartItem) {
+            $newJumlah = $cartItem->jumlah + $request->jumlah;
             $cartItem->update([
-                'jumlah' => $cartItem->jumlah + $request->jumlah
+                'jumlah' => $newJumlah,
+                'subtotal' => $newJumlah * $produk->harga // update subtotal juga
             ]);
         } else {
             $cart->items()->create([
                 'produk_id' => $produk->id,
-                'jumlah' => $request->jumlah
+                'jumlah' => $request->jumlah,
+                'subtotal' => $subtotal // <-- tambahkan ini!
             ]);
         }
 

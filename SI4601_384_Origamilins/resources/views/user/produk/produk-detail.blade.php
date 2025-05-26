@@ -308,9 +308,14 @@
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-cart-plus me-2"></i>Tambahkan ke Keranjang
                                 </button>
-                                <button type="button" class="btn btn-warning">
+                            <form id="buy-now-form" action="{{ route('cart.add') }}" method="POST" style="display:inline;">
+                                @csrf
+                                <input type="hidden" name="produk_id" value="{{ $produk->id }}">
+                                <input type="hidden" name="jumlah" id="buy-now-qty" value="1">
+                                <button type="submit" class="btn btn-warning">
                                     <i class="fas fa-money-bill me-2"></i>Beli Sekarang
                                 </button>
+                            </form>
                             </form>
                         @else
                             <a href="{{ route('login') }}" class="btn btn-primary">
