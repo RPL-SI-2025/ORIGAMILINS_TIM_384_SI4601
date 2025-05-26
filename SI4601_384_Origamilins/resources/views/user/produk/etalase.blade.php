@@ -157,41 +157,51 @@
 <body>
     @include('user.navigation-menu')
 
-    <div class="product-grid">
-        @forelse ($products as $product)
-            <a href="{{ route('detail.produk', $product->id) }}" class="text-decoration-none">
-                <div class="product-card">
-                    @if($product->diskon)
-                        <div class="discount-badge">{{ $product->diskon }}% off</div>
-                    @endif
-                    <div class="product-image">
-                        @if($product->gambar)
-                            <img src="{{ $product->gambar }}" alt="{{ $product->nama }}" loading="lazy" />
-                        @else
-                            <div class="no-image"><i class="fas fa-image fa-2x text-muted"></i></div>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- DAFTAR PRODUK -->
+        <div class="col-md-10">
+          <div class="product-grid">
+            @forelse ($products as $product)
+                <a href="{{ route('detail.produk', $product->id) }}" class="text-decoration-none">
+                    <div class="product-card">
+                        @if($product->diskon)
+                            <div class="discount-badge">{{ $product->diskon }}% off</div>
                         @endif
-                    </div>
-                    <div class="product-content">
-                        <div class="product-category">{{ $product->kategori ?? 'Produk' }}</div>
-                        <div class="product-title">{{ $product->nama }}</div>
-                        <div class="product-price">Rp {{ number_format($product->harga, 0, ',', '.') }}</div>
-                        @if(isset($product->stok))
-                        <div class="product-stock">
-                            <small class="text-{{ $product->stok > 0 ? 'success' : 'danger' }}">
-                                {{ $product->stok > 0 ? 'Stok: '.$product->stok : 'Stok Habis' }}
-                            </small>
+                        <div class="product-image">
+                            @if($product->gambar)
+                                <img src="{{ $product->gambar }}" alt="{{ $product->nama }}" loading="lazy" />
+                            @else
+                                <div class="no-image"><i class="fas fa-image fa-2x text-muted"></i></div>
+                            @endif
                         </div>
-                        @endif
+                        <div class="product-content">
+                            <div class="product-category">{{ $product->kategori ?? 'Produk' }}</div>
+                            <div class="product-title">{{ $product->nama }}</div>
+                            <div class="product-price">Rp {{ number_format($product->harga, 0, ',', '.') }}</div>
+                            @if(isset($product->stok))
+                            <div class="product-stock">
+                                <small class="text-{{ $product->stok > 0 ? 'success' : 'danger' }}">
+                                    {{ $product->stok > 0 ? 'Stok: '.$product->stok : 'Stok Habis' }}
+                                </small>
+                            </div>
+                            @endif
+                        </div>
                     </div>
-                </div>
-            </a>
-        @empty
-            <div class="no-products">Tidak ada produk untuk ditampilkan.</div>
-        @endforelse
-    </div>
-
-    <div class="mt-4">
-        {{ $products->links() }}
+                </a>
+            @empty
+                <div class="no-products">Tidak ada produk untuk ditampilkan.</div>
+            @endforelse
+          </div>
+          <div class="mt-4">
+            {{ $products->links() }}
+          </div>
+        </div>
+        <!-- SIDEBAR FILTER DI KANAN -->
+        <div class="col-md-2 mb-4">
+          @include('user.produk.filter', ['categories' => $categories])
+        </div>
+      </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
