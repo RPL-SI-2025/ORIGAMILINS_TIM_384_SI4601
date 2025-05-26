@@ -91,7 +91,7 @@
             <div class="hero-content">
                 <h1>Percayakan Kreasi Terbaik Anda Pada Kami!</h1>
                 <p>15+ tahun pengalaman mengajar origami & siap mewujudkan pesanan sesuai keinginan Anda.</p>
-                <a href="#" class="btn btn-primary">Lihat Etalase</a>
+                <a href="{{ route('etalase') }}" class="btn btn-primary">Lihat Etalase</a>
             </div>
         </div>
     </section>

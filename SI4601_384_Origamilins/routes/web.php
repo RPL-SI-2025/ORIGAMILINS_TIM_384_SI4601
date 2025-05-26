@@ -62,13 +62,52 @@ Route::middleware(['auth'])->group(function () {
         }
         $products = $query->paginate(9);
         $categories = \App\Models\Produk::distinct()->pluck('kategori');
+        
+        // Set default cart count
         $cartCount = 0;
+        
+        // Only try to get cart count if user is logged in
         if (Auth::check()) {
-            $cart = Auth::user()->getOrCreateCart();
-            $cartCount = $cart->items()->sum('jumlah');
+            try {
+                $cart = Auth::user()->cart;
+                if ($cart) {
+                    $cartCount = $cart->items()->sum('jumlah');
+                }
+            } catch (\Exception $e) {
+                // If there's any error accessing cart, just keep cartCount as 0
+                $cartCount = 0;
+            }
         }
+        
         return view('user.produk.etalase', compact('products', 'categories', 'cartCount'));
     })->name('etalase');
+
+    // Detail Produk Route (moved outside auth group to allow public access)
+    Route::get('/produk/{id}', function ($id) {
+        $produk = \App\Models\Produk::findOrFail($id);
+        
+        // Ambil ulasan produk
+        $ulasan = \App\Models\ProductReview::where('produk_id', $id)
+                                    ->with('user')
+                                    ->orderBy('created_at', 'desc')
+                                    ->get();
+        
+        // Hitung jumlah item di keranjang
+        $cartCount = 0;
+        if (Auth::check()) {
+            $cartService = app(\App\Services\CartService::class);
+            $cart = $cartService->getOrCreateCart(Auth::user());
+            $cartCount = $cart->items()->sum('jumlah');
+        }
+        
+        // Ambil produk terkait (kategori sama, exclude produk saat ini)
+        $produkTerkait = \App\Models\Produk::where('kategori', $produk->kategori)
+                                        ->where('id', '!=', $id)
+                                        ->limit(4)
+                                        ->get();
+        
+        return view('user.produk.produk-detail', compact('produk', 'ulasan', 'cartCount', 'produkTerkait'));
+    })->name('detail.produk');
 
     // Cart Routes
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -219,11 +258,6 @@ Route::get('/debug-login', function () {
         ]
     ];
 });
-
-Route::get('/produk/{id}', function ($id) {
-    $product = \App\Models\Produk::findOrFail($id);
-    return view('user.produk-detail', compact('product'));
-})->name('user.produk.detail');
 
 Route::get('/reset-password', [ResetPasswordController::class, 'showForm'])->name('reset.password.form');
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset.password');

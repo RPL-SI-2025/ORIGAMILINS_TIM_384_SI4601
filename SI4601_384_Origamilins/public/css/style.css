@@ -232,16 +232,18 @@ body {
 }
 
 .btn-primary {
-    background-color: white;
-    color: var(--primary-color);
+    background-color: transparent;
+    color: #fff;
+    border: 2px solid #fff;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: background 0.2s, color 0.2s, border 0.2s;
 }
 
 .btn-primary:hover {
-    background-color: transparent;
-    color: white;
-    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
-    border: 2px solid white;
+    background-color: #38a6be;
+    color: #fff;
+    border: 2px solid #38a6be;
+    box-shadow: 0 4px 20px rgba(56, 166, 190, 0.2);
 }
 
 .btn-secondary {
@@ -925,8 +927,7 @@ body {
 }
 
 .btn-primary {
-    background-color: #3fbad5;
-    border-color: #3fbad5;
+    border-color: #fff;
 }
 
 .btn-primary:hover {

@@ -159,30 +159,32 @@
 
     <div class="product-grid">
         @forelse ($products as $product)
-            <div class="product-card" onclick="alert('Melihat detail produk ID: {{ $product->id }}')">
-                @if($product->diskon)
-                    <div class="discount-badge">{{ $product->diskon }}% off</div>
-                @endif
-                <div class="product-image">
-                    @if($product->gambar)
-                        <img src="{{ $product->gambar }}" alt="{{ $product->nama }}" loading="lazy" />
-                    @else
-                        <div class="no-image"><i class="fas fa-image fa-2x text-muted"></i></div>
+            <a href="{{ route('detail.produk', $product->id) }}" class="text-decoration-none">
+                <div class="product-card">
+                    @if($product->diskon)
+                        <div class="discount-badge">{{ $product->diskon }}% off</div>
                     @endif
-                </div>
-                <div class="product-content">
-                    <div class="product-category">{{ $product->kategori ?? 'Produk' }}</div>
-                    <div class="product-title">{{ $product->nama }}</div>
-                    <div class="product-price">Rp {{ number_format($product->harga, 0, ',', '.') }}</div>
-                    @if(isset($product->stok))
-                    <div class="product-stock">
-                        <small class="text-{{ $product->stok > 0 ? 'success' : 'danger' }}">
-                            {{ $product->stok > 0 ? 'Stok: '.$product->stok : 'Stok Habis' }}
-                        </small>
+                    <div class="product-image">
+                        @if($product->gambar)
+                            <img src="{{ $product->gambar }}" alt="{{ $product->nama }}" loading="lazy" />
+                        @else
+                            <div class="no-image"><i class="fas fa-image fa-2x text-muted"></i></div>
+                        @endif
                     </div>
-                    @endif
+                    <div class="product-content">
+                        <div class="product-category">{{ $product->kategori ?? 'Produk' }}</div>
+                        <div class="product-title">{{ $product->nama }}</div>
+                        <div class="product-price">Rp {{ number_format($product->harga, 0, ',', '.') }}</div>
+                        @if(isset($product->stok))
+                        <div class="product-stock">
+                            <small class="text-{{ $product->stok > 0 ? 'success' : 'danger' }}">
+                                {{ $product->stok > 0 ? 'Stok: '.$product->stok : 'Stok Habis' }}
+                            </small>
+                        </div>
+                        @endif
+                    </div>
                 </div>
-            </div>
+            </a>
         @empty
             <div class="no-products">Tidak ada produk untuk ditampilkan.</div>
         @endforelse
