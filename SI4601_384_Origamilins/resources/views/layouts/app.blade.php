@@ -21,7 +21,8 @@
         <x-banner />
 
         <div class="min-h-screen bg-gray-100">
-            @livewire('navigation-menu')
+            <!-- @livewire('navigation-menu') error jadi diganti dibawah (fauzan)  -->
+            @include('layouts.navbar')
 
             <!-- Page Heading -->
             @if (isset($header))

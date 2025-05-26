@@ -87,6 +87,9 @@
                         <a href="{{ route('pesananproduk.index') }}" class="list-group-item {{ request()->routeIs('pesananproduk.*') ? 'active' : '' }}">
                             <i class="fas fa-shopping-cart me-2"></i> Pesanan Saya
                         </a>
+                        <a href="{{ route('user.payments.history') }}" class="list-group-item {{ request()->routeIs('user.payments.*') ? 'active' : '' }}">
+                            <i class="fas fa-history me-2"></i> Riwayat Transaksi
+                        </a>
                         <a href="{{ route('profile.create') }}" class="list-group-item">
                             <i class="fas fa-user me-2"></i> Profil
                         </a>
