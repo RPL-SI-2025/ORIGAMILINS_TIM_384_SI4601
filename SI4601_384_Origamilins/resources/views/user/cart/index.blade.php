@@ -1,3 +1,59 @@
+include('user.navigation-menu')
+@section('content')
+<div class="container-fluid py-4">
+    <a href="{{ route('etalase') }}" class="btn btn-outline-secondary mb-3"><i class="fas fa-arrow-left me-2"></i>Kembali</a>
+    <h1 class="mb-4">Keranjang Saya</h1>
+    @if (isset($message) && $message == 'Keranjang Anda masih kosong')
+        <div class="alert alert-info text-center" role="alert">
+            <i class="fas fa-shopping-cart fa-2x mb-3"></i><br>
+            {{ $message }}
+            <br><br>
+            <a href="{{ route('etalase') }}" class="btn btn-primary">Mulai Belanja</a>
+        </div>
+    @else
+        <form id="checkout-form" method="POST" action="{{ route('cart.checkout') }}">
+            @csrf
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center mb-3">
+                        <input type="checkbox" id="select-all-cart" class="form-check-input me-2" />
+                        <label for="select-all-cart" class="mb-0">Pilih Semua</label>
+                    </div>
+                    @foreach ($cartItems as $item)
+                    <div class="bg-white rounded-4 p-4 mb-4 shadow-sm cart-item-row">
+                        <div class="row align-items-center">
+                            <div class="col-1 text-center">
+                                <input type="checkbox" class="form-check-input cart-item-checkbox" name="item_ids[]" value="{{ $item->id }}" checked data-subtotal="{{ $item->subtotal }}" />
+                            </div>
+                            <div class="col-12 col-md-2 text-center mb-3 mb-md-0">
+                                @if($item->produk->gambar)
+                                    <img src="{{ filter_var($item->produk->gambar, FILTER_VALIDATE_URL) ? $item->produk->gambar : asset($item->produk->gambar) }}" 
+                                         class="img-fluid rounded-3" alt="{{ $item->produk->nama }}" style="max-height: 120px; object-fit: cover;">
+                                @else
+                                    <div class="bg-light d-flex align-items-center justify-content-center rounded-3" style="height: 120px;">
+                                        <i class="fas fa-image fa-2x text-muted"></i>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <h5 class="mb-1">{{ $item->produk->nama }}</h5>
+                                <span class="badge bg-primary mb-1">{{ $item->produk->kategori ?? '-' }}</span>
+                                <div class="mb-1 text-muted" style="font-size: 0.95em;">Harga: <b>Rp {{ number_format($item->produk->harga, 0, ',', '.') }}</b></div>
+                                <div class="mb-1 text-muted subtotal-produk" style="font-size: 0.95em;">Subtotal: <b>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</b></div>
+                            </div>
+                            <div class="col-12 col-md-3 text-center mt-3 mt-md-0">
+                                <div class="d-flex flex-row flex-md-column align-items-center justify-content-center gap-2">
+                                    <input type="number" min="1" value="{{ $item->jumlah }}"
+                                        data-produk-id="{{ $item->produk_id }}"
+                                        class="form-control update-quantity text-center form-control-sm"
+                                        style="width: 60px" />
+                                    <button class="btn btn-outline-danger btn-sm remove-produk" data-produk-id="{{ $item->produk_id }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -278,6 +334,19 @@
                 this.value = quantity;
             }
         });
+
+        $('.subtotal-cart, .total-cart').text('Rp ' + total.toLocaleString('id-ID'));
+    }
+    $('#select-all-cart, .cart-item-checkbox').on('change', function() {
+        updateSummaryByChecked();
+        toggleCheckoutButton();
+    });
+    // Inisialisasi saat load
+    updateSummaryByChecked();
+});
+</script>
+@endpush
+
         
         // Back button functionality
         document.querySelector('.back-btn').addEventListener('click', function() {
@@ -293,3 +362,4 @@
     </script>
 </body>
 </html>
+

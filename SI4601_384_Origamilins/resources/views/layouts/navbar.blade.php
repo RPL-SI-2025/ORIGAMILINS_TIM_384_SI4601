@@ -16,6 +16,10 @@
         <div style="display:flex; align-items:center; gap:20px;">
             <a href="#" style="color:#333;"><i class="fa fa-search"></i></a>
             <a href="#" style="color:#333;"><i class="fa fa-bell"></i></a>
+            <a href="/cart" style="color:#333; position:relative; text-decoration:none;">
+                <i class="fa fa-shopping-cart"></i>
+                <span style="position:absolute; top:-8px; right:-12px; background:#e91e63; color:#fff; font-size:0.8rem; font-weight:700; border-radius:12px; padding:2px 7px; min-width:22px; text-align:center; border:2px solid #fff;">{{ isset($cartCount) ? $cartCount : 0 }}</span>
+            </a>
             <img src="{{ asset('img/user.png') }}" alt="User" style="height:32px; border-radius:50%;">
             <span style="margin-left:8px; font-weight:500;">Customer Dummy</span>
             <i class="fa fa-chevron-down" style="color:#888; margin-left:4px;"></i>
