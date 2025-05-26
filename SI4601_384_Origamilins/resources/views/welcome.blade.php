@@ -13,6 +13,7 @@
    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
    
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar">
@@ -202,3 +203,208 @@
     <p class="event-date">12 Agustus 2025</p>
   </div>
 </div>
+
+<!-- FAQ Section -->
+<section class="faq-section">
+    <div class="container">
+        <h2 style="font-weight: bold; font-size:2rem; text-align: center; margin-bottom: 1rem;">
+            <span style="color:#FFC107;">FAQ</span> (Frequently Asked Question)
+        </h2>
+        <div class="faq-list">
+            <div class="faq-item active">
+                <div class="faq-question">
+                    <span>Apa itu Origamilins?</span>
+                    <span class="faq-toggle">–</span>
+                </div>
+                <div class="faq-answer">
+                    Origamilins adalah aplikasi yang dirancang untuk membantu ibu rumah tangga dan pecinta origami dalam mengembangkan keterampilan melipat kertas. Aplikasi ini menyediakan berbagai fitur, termasuk tutorial origami, komunitas berbagi, serta layanan dekorasi dan merchandise origami.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Siapa yang bisa menggunakan aplikasi Origamilins?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Aplikasi ini terbuka untuk semua orang, terutama ibu rumah tangga dan pecinta origami yang ingin belajar, berbagi, atau bahkan menjual produk origami mereka.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Apa saja layanan yang ditawarkan oleh Origamilins?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Kami menawarkan dua layanan utama yaitu:<br>
+                    <b>Produk</b>: Jasa pembuatan dekorasi origami ataupun merchandise untuk berbagai keperluan.<br>
+                    <b>Event</b>: Menyediakan program pelatihan ataupun seminar untuk ibu rumah tangga agar dapat meningkatkan keterampilan.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Bagaimana cara mengikuti event atau workshop di Origamilins?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Anda bisa melihat jadwal workshop ataupun seminar dari fitur "Event" di website. Pendaftaran bisa dilakukan langsung melalui website atau melalui link yang disediakan.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@include('footer')
+
+<style>
+.faq-section {
+    margin: 2rem 0 0 0; /* dari 3rem 0 jadi 2rem 0 0 0 */
+}
+.features {
+    padding-bottom: 40px; /* dari 100px jadi 40px */
+}
+.faq-section {
+    margin: 3rem 0;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.faq-list {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    padding: 1.5rem 2rem;
+    max-width: 700px;
+    margin: 2rem auto 0 auto;
+}
+
+.faq-item {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 1.1rem 0;
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 1.08rem;
+    color: #222;
+    transition: color 0.2s;
+}
+
+.faq-question:hover {
+    color: #1e88e5;
+}
+
+.faq-item.active .faq-question {
+    color: #1e88e5;
+}
+
+.faq-toggle {
+    font-size: 1.5rem;
+    color: #FFC107;
+    font-weight: bold;
+    margin-left: 1rem;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+
+.faq-answer {
+    overflow: hidden;
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.6;
+    word-break: break-word;
+    transition: all 0.4s cubic-bezier(.4,0,.2,1);
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px; /* Increased height to accommodate longer content */
+    opacity: 1;
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .faq-list {
+        padding: 1rem 1.5rem;
+        margin: 2rem 1rem 0 1rem;
+    }
+    
+    .faq-question {
+        font-size: 1rem;
+    }
+    
+    .faq-toggle {
+        font-size: 1.3rem;
+        margin-left: 0.5rem;
+    }
+    
+    .faq-answer {
+        font-size: 0.95rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the first FAQ as open
+    const firstItem = document.querySelector('.faq-item.active');
+    if (firstItem) {
+        const firstAnswer = firstItem.querySelector('.faq-answer');
+        firstAnswer.style.maxHeight = firstAnswer.scrollHeight + 20 + "px"; // Added extra space
+    }
+    
+    // Add click event listeners to all FAQ questions
+    document.querySelectorAll('.faq-question').forEach(function(question) {
+        question.addEventListener('click', function() {
+            const item = this.parentElement;
+            const answer = item.querySelector('.faq-answer');
+            const toggle = item.querySelector('.faq-toggle');
+            const isActive = item.classList.contains('active');
+            
+            // Close all FAQ items
+            document.querySelectorAll('.faq-item').forEach(function(faqItem) {
+                const faqAnswer = faqItem.querySelector('.faq-answer');
+                const faqToggle = faqItem.querySelector('.faq-toggle');
+                
+                faqItem.classList.remove('active');
+                faqToggle.textContent = '+';
+                faqAnswer.style.maxHeight = '0';
+                faqAnswer.style.opacity = '0';
+                faqAnswer.style.paddingTop = '0';
+                faqAnswer.style.marginTop = '0';
+            });
+            
+            // Open clicked item if it wasn't already open
+            if (!isActive) {
+                item.classList.add('active');
+                toggle.textContent = '–';
+                
+                // Calculate the actual height needed
+                answer.style.maxHeight = 'none';
+                const height = answer.scrollHeight;
+                answer.style.maxHeight = '0';
+                
+                // Force reflow and animate
+                setTimeout(() => {
+                    answer.style.maxHeight = height + 20 + "px"; // Added extra space
+                    answer.style.opacity = '1';
+                    answer.style.paddingTop = '1rem';
+                    answer.style.marginTop = '0.5rem';
+                }, 10);
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>
