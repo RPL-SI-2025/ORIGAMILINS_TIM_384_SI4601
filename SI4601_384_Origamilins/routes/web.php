@@ -81,6 +81,9 @@ Route::middleware(['auth'])->group(function () {
     // Payment History Routes
     Route::get('/payments/history', [UserPaymentHistoryController::class, 'index'])->name('user.payments.history');
     Route::get('/payments/{id}', [UserPaymentHistoryController::class, 'show'])->name('user.payments.show');
+
+    Route::get('/event', [App\Http\Controllers\EventController::class, 'index'])->name('user.event.index');
+    Route::get('/event/{id}', [App\Http\Controllers\EventController::class, 'show'])->name('user.event.show');
 });
 
 // Produk Input Publik

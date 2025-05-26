@@ -16,23 +16,22 @@
 
         <!-- Styles -->
         @livewireStyles
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </head>
     <body class="font-sans antialiased">
         <x-banner />
 
         <div class="min-h-screen bg-gray-100">
-            <!-- @livewire('navigation-menu') error jadi diganti dibawah (fauzan)  -->
-            @include('layouts.navbar')
+            @livewire('navigation-menu')
 
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
-                        <a class="cart-icon position-relative" href="/cart" title="Keranjang Saya" style="float: right; margin-top: -30px; font-size: 1.2rem;">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span class="badge-cart" id="cart-badge">{{ isset($cartCount) ? $cartCount : 0 }}</span>
-                            Keranjang
+                        <a class="cart-icon" href="/user/cart" title="Keranjang Saya" style="float: right; margin-top: -30px; font-size: 1.2rem;">
+                            <i class="fas fa-shopping-cart"></i> Keranjang
                         </a>
                     </div>
                 </header>
@@ -47,6 +46,9 @@
         @stack('modals')
 
         @livewireScripts
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        @stack('scripts')
 
         <style>
         .badge-cart {

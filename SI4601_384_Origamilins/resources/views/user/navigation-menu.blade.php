@@ -36,7 +36,16 @@
                         <span class="visually-hidden">New alerts</span>
                     </span>
                 </button>
+                <div class="etalase-icons d-flex align-items-center" style="gap:1.5rem;">
+                    <div class="position-relative">
+                        <a href="/cart">
+                        <i class="fas fa-shopping-cart fa-lg text-dark"></i>
+                            <span class="badge-cart" id="cart-badge">{{ isset($cartCount) ? $cartCount : 0 }}</span>
+                        </a>
+                    </div>
+                </div>
 
+                {{-- Cart Icon --}}
                 {{-- User Info --}}
                 <div class="d-flex align-items-center gap-2">
                     <img src="{{ asset('uploads/user.jpg') }}" alt="Profile" class="rounded-circle" width="32" height="32">

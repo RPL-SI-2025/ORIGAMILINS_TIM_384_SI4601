@@ -1,4 +1,4 @@
-@extends('user.layouts.etalase')
+@extends('user.navigation-menu')
 @section('content')
 <div class="container-fluid py-4">
     <!-- Breadcrumb -->
