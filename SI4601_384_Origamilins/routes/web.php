@@ -17,6 +17,7 @@ use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\UserPaymentHistoryController;
 
 // Home
 Route::get('/', function () {
@@ -76,6 +77,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/update-total', [CartController::class, 'updateTotal'])->name('cart.update-total');
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+
+    // Payment History Routes
+    Route::get('/payments/history', [UserPaymentHistoryController::class, 'index'])->name('user.payments.history');
+    Route::get('/payments/{id}', [UserPaymentHistoryController::class, 'show'])->name('user.payments.show');
 });
 
 // Produk Input Publik
