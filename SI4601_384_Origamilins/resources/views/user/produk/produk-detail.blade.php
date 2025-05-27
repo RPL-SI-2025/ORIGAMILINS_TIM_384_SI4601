@@ -24,9 +24,8 @@
         body, h1, h2, h3, h4, h5, h6, .btn, .form-control, .product-title, .product-category, .product-price, .product-stock, .filter-sidebar, .page-title, .pagination, .no-products {
             font-family: 'Poppins', Arial, sans-serif !important;
         }
-        .main-content {
-            padding-top: 70px; /* Lebih rapat ke navbar */
-            min-height: 100vh;
+        .main-content {=
+            padding-top: 10px; 
         }
 
         .product-image {
@@ -206,7 +205,6 @@
                                 </div>
                             </div>
                         @endif
-
                        @auth
                             <div class="d-flex align-items-center gap-2 mb-3">
                                 <form action="{{ route('cart.add') }}" method="POST" class="d-flex align-items-center" id="add-to-cart-form">
@@ -343,5 +341,7 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
+     <!-- Footer -->
+     @include('user.footer')
 </body>
 </html>
