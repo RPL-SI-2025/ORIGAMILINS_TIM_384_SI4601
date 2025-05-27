@@ -17,7 +17,7 @@
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="#">Katalog</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="#">Layanan</a></li>
-                <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="#">Event</a></li>
+                <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="{{ route('user.event.index') }}">Event</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="#">Tentang Kami</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="#">Kontak</a></li>
             </ul>
