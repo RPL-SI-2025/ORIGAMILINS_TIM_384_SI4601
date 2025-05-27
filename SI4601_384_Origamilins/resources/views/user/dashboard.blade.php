@@ -1,4 +1,4 @@
-@extends('user.layouts.app')
+@extends('user.app')
 @section('content')
     <!-- Etalase Produk -->
     <div id="etalase" class="card">

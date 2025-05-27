@@ -27,11 +27,11 @@
                 </div>
                 
                 <div class="nav-links">
-                    <a href="#">Katalog</a>
-                    <a href="#">Layanan</a>
-                    <a href="#">Event</a>
-                    <a href="#">Tentang Kami</a>
-                    <a href="#">Kontak</a>
+                    <a href="{{ route('etalase') }}">Katalog</a>
+                    <a href="#layanan">Layanan</a>
+                    <a href="#event-terdekat">Event</a>
+                    <a href="#tentang-kami">Tentang Kami</a>
+                    <a href="#kontak">Kontak</a>
                 </div>  
 
                 <div class="search-auth d-flex align-items-center gap-3">
@@ -60,15 +60,8 @@
                     });
                 </script>
 
-                
-                <div class="hamburger">
-                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
-                        <path d="M3 12h18M3 6h18M3 18h18"></path>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </nav>
+    </div>
+</nav>
     
     <!-- Hero Section -->
     <section class="hero">
@@ -98,7 +91,7 @@
     </section>
     
     <!-- Features Section -->
-    <section class="features">
+    <section class="features" id="layanan">
         <div class="container">
             <div class="section-title">
                 <h2>Layanan Kami</h2>
@@ -170,13 +163,14 @@
                     </div>
                 </div>
 
-                <a href="#" class="katalog-link">Jelajahi Katalog &rarr;</a>
+                <a href="{{ route('etalase') }}" class="katalog-link">Jelajahi Katalog &rarr;</a>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Event Terdekat Section -->
+<section id="event-terdekat">
 <h2>Seminar & Workshop Terdekat!</h2>
 <div class="event-cards">
   <div class="event-card">
@@ -203,9 +197,71 @@
     <p class="event-date">12 Agustus 2025</p>
   </div>
 </div>
+</section>
+
+
+<!-- Tentang Kami Section -->
+<section class="tentang-kami-section" id="tentang-kami">
+    <div class="container">
+        <h2 class="section-title">Tentang Kami</h2>
+        <div class="tentang-kami-content">
+            <!-- Left Side - Visi & Misi -->
+            <div class="visi-misi">
+                <div class="visi">
+                    <h3>Visi</h3>
+                    <p>Menjadi katalisator seni origami serta memberdayakan perempuan melalui kreativitas dan inovasi.</p>
+                </div>
+                <div class="misi">
+                    <h3>Misi</h3>
+                    <ol>
+                        <li>Menyediakan layanan dan produk origami berkualitas dengan sentuhan seni tinggi.</li>
+                        <li>Mengadakan workshop dan seminar untuk mengenalkan serta mengembangkan kreativitas dalam origami.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Right Side - Kultur & Budaya -->
+            <div class="kultur-budaya">
+                <div class="kultur-header">
+                    <h3>Kultur & Budaya</h3>
+                </div>
+                <div class="fold-timeline">
+                    <div class="fold-item">
+                        <div class="fold-icon"></div>
+                        <div class="fold-content">
+                            <h4>F - Focus on Creativity</h4>
+                            <p>Kreatif dalam setiap lipatan origami.</p>
+                        </div>
+                    </div>
+                    <div class="fold-item">
+                        <div class="fold-icon"></div>
+                        <div class="fold-content">
+                            <h4>O - Originality</h4>
+                            <p>Mendorong keunikan dalam setiap karya.</p>
+                        </div>
+                    </div>
+                    <div class="fold-item">
+                        <div class="fold-icon"></div>
+                        <div class="fold-content">
+                            <h4>L - Learn & Grow</h4>
+                            <p>Selalu berkembang dan berbagi ilmu serta keterampilan.</p>
+                        </div>
+                    </div>
+                    <div class="fold-item">
+                        <div class="fold-icon"></div>
+                        <div class="fold-content">
+                            <h4>D - Dedication to Art</h4>
+                            <p>Berkomitmen memajukan seni origami dan komunitasnya.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- FAQ Section -->
-<section class="faq-section">
+<section class="faq-section" id="kontak">
     <div class="container">
         <h2 style="font-weight: bold; font-size:2rem; text-align: center; margin-bottom: 1rem;">
             <span style="color:#FFC107;">FAQ</span> (Frequently Asked Question)
@@ -252,107 +308,7 @@
         </div>
     </div>
 </section>
-@include('footer')
 
-<style>
-.faq-section {
-    margin: 2rem 0 0 0; /* dari 3rem 0 jadi 2rem 0 0 0 */
-}
-.features {
-    padding-bottom: 40px; /* dari 100px jadi 40px */
-}
-.faq-section {
-    margin: 3rem 0;
-    font-family: 'Poppins', Arial, sans-serif;
-}
-
-.faq-list {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    padding: 1.5rem 2rem;
-    max-width: 700px;
-    margin: 2rem auto 0 auto;
-}
-
-.faq-item {
-    border-bottom: 1px solid #f0f0f0;
-    padding: 1.1rem 0;
-}
-
-.faq-item:last-child {
-    border-bottom: none;
-}
-
-.faq-question {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 1.08rem;
-    color: #222;
-    transition: color 0.2s;
-}
-
-.faq-question:hover {
-    color: #1e88e5;
-}
-
-.faq-item.active .faq-question {
-    color: #1e88e5;
-}
-
-.faq-toggle {
-    font-size: 1.5rem;
-    color: #FFC107;
-    font-weight: bold;
-    margin-left: 1rem;
-    transition: transform 0.2s;
-    flex-shrink: 0;
-}
-
-.faq-answer {
-    overflow: hidden;
-    font-size: 1rem;
-    color: #444;
-    line-height: 1.6;
-    word-break: break-word;
-    transition: all 0.4s cubic-bezier(.4,0,.2,1);
-    max-height: 0;
-    opacity: 0;
-    padding-top: 0;
-    margin-top: 0;
-}
-
-.faq-item.active .faq-answer {
-    max-height: 500px; /* Increased height to accommodate longer content */
-    opacity: 1;
-    padding-top: 1rem;
-    margin-top: 0.5rem;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    .faq-list {
-        padding: 1rem 1.5rem;
-        margin: 2rem 1rem 0 1rem;
-    }
-    
-    .faq-question {
-        font-size: 1rem;
-    }
-    
-    .faq-toggle {
-        font-size: 1.3rem;
-        margin-left: 0.5rem;
-    }
-    
-    .faq-answer {
-        font-size: 0.95rem;
-    }
-}
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -406,5 +362,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<script>
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+
+@extends('user.footer')
 </body>
 </html>
