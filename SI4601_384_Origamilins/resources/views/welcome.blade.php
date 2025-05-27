@@ -27,7 +27,7 @@
                 </div>
                 
                 <div class="nav-links">
-                    <a href="{{ route('etalase') }}">Katalog</a>
+                    <a href="{{ route('etalase') }}">Etalase</a>
                     <a href="#layanan">Layanan</a>
                     <a href="#event-terdekat">Event</a>
                     <a href="#tentang-kami">Tentang Kami</a>
@@ -163,7 +163,7 @@
                     </div>
                 </div>
 
-                <a href="{{ route('etalase') }}" class="katalog-link">Jelajahi Katalog &rarr;</a>
+                <a href="{{ route('etalase') }}" class="katalog-link">Jelajahi Etalase &rarr;</a>
             </div>
         </div>
     </div>

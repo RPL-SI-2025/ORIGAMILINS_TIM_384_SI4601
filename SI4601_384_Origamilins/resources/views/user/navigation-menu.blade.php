@@ -1,70 +1,57 @@
-<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); font-family:'Poppins',Arial,sans-serif;">
-    <div class="container">
-        {{-- Logo --}}
-        <a class="navbar-brand d-flex align-items-center fw-bold" href="#">
-            <img src="{{ asset('uploads/Logo Origamilins.png') }}" alt="Origamilins Logo" width="36" height="36" class="me-2">
-            <span style="color:#f9bd1e; font-weight:700; font-size:1.8rem; letter-spacing:0.5px;">Origamilins</span>
-        </a>
-
-        {{-- Toggle untuk mobile --}}
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        {{-- Isi navbar --}}
-        <div class="collapse navbar-collapse" id="navbarContent">
-            {{-- Menu tengah --}}
-            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link px-3" href="{{ route('dashboard') }}">Beranda</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="{{ route('etalase') }}">Katalog</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="/welcome#layanan">Layanan</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="/welcome#event-terdekat">Event</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="/welcome#tentang-kami">Tentang Kami</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="/welcome#kontak">Kontak</a></li>
-            </ul>
-
-            {{-- Search dan Profile kanan --}}
+<nav class="navbar navbar-expand-lg fixed-top" style="background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); font-family:'Poppins',Arial,sans-serif;">
+    <div class="container px-0">
+        <div class="navbar-content d-flex w-100 align-items-center justify-content-between">
+            {{-- Logo --}}
+            <div class="logo d-flex align-items-center">
+                <a href="{{ url('/') }}" class="d-flex align-items-center text-decoration-none">
+                    <img src="{{ asset('uploads/Logo Origamilins.png') }}" alt="Origamilins Logo" class="brand-logo" style="width:36px; height:36px; object-fit:contain; margin-right:10px;">
+                    <span style="color:#f9bd1e; font-weight:700; font-size:1.8rem; letter-spacing:0.5px;">Origamilins</span>
+                </a>
+            </div>
+            {{-- Menu --}}
+            <div class="nav-links d-flex align-items-center">
+                <a href="{{ url('/') }}" class="nav-link px-3">Beranda</a>
+                <a href="{{ route('etalase') }}" class="nav-link px-3">Etalase</a>
+                <a href="{{ url('/#layanan') }}" class="nav-link px-3">Layanan</a>
+                <a href="{{ url('/#event-terdekat') }}" class="nav-link px-3">Event</a>
+                <a href="{{ url('/#tentang-kami') }}" class="nav-link px-3">Tentang Kami</a>
+                <a href="{{ url('/#kontak') }}" class="nav-link px-3">Kontak</a>
+            </div>
+            {{-- Icon & Auth --}}
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-link p-0 navbar-icon" type="button">
+                <button class="btn btn-link p-0 navbar-icon" type="button" style="color:#333;">
                     <i class="fas fa-search fs-5"></i>
                 </button>
+                <button class="btn btn-link position-relative p-0 navbar-icon" type="button" style="color:#333;">
+                    <i class="fas fa-bell fs-5"></i>
+                </button>
+                <a href="{{ url('/cart') }}" class="btn btn-link position-relative p-0 navbar-icon" style="color:#333;">
+                    <i class="fas fa-shopping-cart fs-5"></i>
+                </a>
                 @auth
-                    <button class="btn btn-link position-relative p-0 navbar-icon" type="button">
-                        <i class="fas fa-bell fs-5"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-warning border border-light rounded-circle">
-                            <span class="visually-hidden">New alerts</span>
-                        </span>
-                    </button>
-                    <button class="btn btn-link position-relative p-0 navbar-icon" type="button">
-                        <i class="fas fa-shopping-cart fs-5"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                           0
-                           <span class="visually-hidden">items in cart</span>
-                         </span>
-                     </button>
                     <div class="dropdown">
                         <a class="d-flex align-items-center gap-2 text-decoration-none dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="{{ Auth::user()->profile_photo_url ?? asset('uploads/user.jpg') }}" alt="Profile" class="rounded-circle" width="32" height="32">
                             <span class="text-dark">{{ Auth::user()->name }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                             <li><a class="dropdown-item" href="{{ route('profile.show') }}"><i class="fas fa-user me-2"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="{{ route('profile.show') }}"><i class="fas fa-user me-2"></i> Profile</a></li>
                             <li><a class="dropdown-item" href="{{ route('dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                     <button type="submit" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt me-2"></i> Logout</button>
+                                    <button type="submit" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt me-2"></i> Logout</button>
                                 </form>
                             </li>
                         </ul>
                     </div>
                 @else
-                    <div class="auth-links">
-                         <a href="{{ route('login') }}" class="auth-link login">Masuk</a>
-                         <a href="{{ route('register') }}" class="auth-link register">Daftar</a>
-                     </div>
-                 @endauth
+                    <div class="auth-links d-none d-lg-flex">
+                        <a href="{{ route('login') }}" class="auth-link login">Masuk</a>
+                        <a href="{{ route('register') }}" class="auth-link register">Daftar</a>
+                    </div>
+                @endauth
             </div>
         </div>
     </div>

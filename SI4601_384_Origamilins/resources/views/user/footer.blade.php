@@ -7,17 +7,14 @@
                 Kota Bandung, Jawa Barat 40121
             </div>
             <div class="social-links">
-                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
                 <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
             </div>
         </div>
         <div class="footer-links">
             <div class="footer-link-group">
-                <a href="/tentang" class="footer-link footer-link-primary">Tentang Kami</a>
-                <a href="/layanan" class="footer-link">Layanan</a>
-                <a href="/blog" class="footer-link">Blog</a>
+                <a href="/tentang-kami" class="footer-link footer-link-primary">Tentang Kami</a>
+                <a href="{{ url('/#layanan') }}" class="footer-link">Layanan</a>
+                <a href="/#artikel" class="footer-link">Blog</a>
             </div>
             <div class="footer-link-group">
                 <a href="/dukungan" class="footer-link footer-link-primary">Dukung Kami</a>
@@ -29,9 +26,8 @@
                 <a href="/privasi" class="footer-link">Privasi</a>
             </div>
             <div class="footer-link-group">
-                <a href="/katalog" class="footer-link footer-link-primary">Katalog</a>
-                <a href="/promo" class="footer-link">Promo</a>
-                <a href="/event" class="footer-link">Informasi Event</a>
+                <a href="{{ route('etalase') }}" class="footer-link footer-link-primary">Etalas</a>
+                <a href="{{ url('/#event-terdekat') }}" class="footer-link">Informasi Event</a>
             </div>
         </div>
     </div>
@@ -101,14 +97,14 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #0835d8;
+    color: #333; /* Ubah ke abu tua */
     box-shadow: 0 1px 4px rgba(8,53,216,0.07);
-    transition: background 0.2s;
+    transition: background 0.2s, color 0.2s;
     text-decoration: none;
 }
 
 .social-link:hover {
-    background: #0835d8;
+    background: #333; /* Abu tua saat hover */
     color: #fff;
 }
 
