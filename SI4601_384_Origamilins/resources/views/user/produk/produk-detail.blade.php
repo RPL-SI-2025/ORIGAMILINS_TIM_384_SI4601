@@ -15,62 +15,18 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
 
     <style>
-        body { 
-            background-color: #f8f9fa; 
-            font-family: 'Figtree', sans-serif;
+        body, h1, h2, h3, h4, h5, h6, .navbar, .btn, .form-control, .product-title, .product-category, .product-price, .product-stock, .filter-sidebar, .page-title, .pagination, .no-products {
+            font-family: 'Poppins', Arial, sans-serif !important;
         }
-        
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .brand-logo {
-            height: 35px;
-            width: auto;
-        }
-        
-        .brand-text {
-            margin: 0;
-            color: #0835d8;
-            font-weight: 600;
-            font-size: 1.5rem;
-        }
-        
         .main-content {
-            min-height: calc(100vh - 200px);
-            padding: 20px 0;
-        }
-        
-        .nav-link {
-            color: #6c757d !important;
-            font-weight: 500;
-        }
-        
-        .nav-link:hover {
-            color: #0835d8 !important;
-        }
-        
-        .nav-link.active {
-            color: #0835d8 !important;
-            font-weight: 600;
-        }
-        
-        .btn-primary {
-            background-color: #0835d8;
-            border-color: #0835d8;
-        }
-        
-        .btn-primary:hover {
-            background-color: #0629a8;
-            border-color: #0629a8;
+            padding-top: 70px; /* Lebih rapat ke navbar */
+            min-height: 100vh;
         }
 
         .product-image {
@@ -182,66 +138,7 @@
     @stack('styles')
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('dashboard') }}">
-                <img src="{{ asset('uploads/Logo Origamilins.png') }}" alt="Origamilins Logo" class="brand-logo">
-                <span class="brand-text">Origamilins</span>
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
-                            <i class="fas fa-home me-1"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('etalase') ? 'active' : '' }}" href="{{ route('etalase') }}">
-                            <i class="fas fa-store me-1"></i> Etalase Produk
-                        </a>
-                    </li>
-                    @auth
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('pesananproduk.*') ? 'active' : '' }}" href="{{ route('pesananproduk.index') }}">
-                            <i class="fas fa-shopping-cart me-1"></i> Pesanan Saya
-                        </a>
-                    </li>
-                    @endauth
-                </ul>
-                
-                <ul class="navbar-nav">
-                    @auth
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user me-1"></i> {{ Auth::user()->name }}
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ route('profile.create') }}">
-                                    <i class="fas fa-user me-2"></i> Profil
-                                </a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="{{ route('logout') }}">
-                                    <i class="fas fa-sign-out-alt me-2"></i> Logout
-                                </a></li>
-                            </ul>
-                        </li>
-                    @else
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">
-                                <i class="fas fa-sign-in-alt me-1"></i> Login
-                            </a>
-                        </li>
-                    @endauth
-                </ul>
-            </div>
-        </div>
-    </nav>
+    @include('user.navigation-menu')
 
     <!-- Main Content -->
     <main class="main-content">
@@ -398,24 +295,8 @@
             @endif
         </div>
     </main>
-
     <!-- Footer -->
-    <footer class="bg-white border-top py-4 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="navbar-brand">
-                        <img src="{{ asset('uploads/Logo Origamilins.png') }}" alt="Origamilins Logo" class="brand-logo">
-                        <span class="brand-text">Origamilins</span>
-                    </div>
-                    <p class="text-muted mt-2">Platform jual beli produk origami berkualitas</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="text-muted mb-0">&copy; {{ date('Y') }} Origamilins. All rights reserved.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+     @include('user.footer')
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
