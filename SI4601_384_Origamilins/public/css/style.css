@@ -71,7 +71,9 @@ body {
 }
 
 .brand-logo {
-    height: 40px; /* Adjusted height */
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
     margin-right: 10px;
 }
 
@@ -1468,6 +1470,9 @@ a:hover {
     position: relative;
     transition: color 0.3s;
     text-decoration: none;
+    background: none;
+    border: none;
+    display: inline-block;
 }
 
 .navbar-nav .nav-link:after {
@@ -1494,9 +1499,33 @@ a:hover {
 
 /* Icon hover kuning */
 .navbar-icon {
-    color: #333;
+    color: #333 !important;
     transition: color 0.2s;
 }
 .navbar-icon:hover, .navbar-icon:focus {
+    color: #333 !important;
+}
+
+.nav-links .nav-link {
+    color: #3fbad5 !important;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s;
+    text-decoration: none;
+}
+.nav-links .nav-link:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    left: 0;
+    bottom: -4px;
+    background: #f9bd1e;
+    transition: width 0.3s;
+}
+.nav-links .nav-link:hover {
     color: #f9bd1e !important;
+}
+.nav-links .nav-link:hover:after {
+    width: 100%;
 }
