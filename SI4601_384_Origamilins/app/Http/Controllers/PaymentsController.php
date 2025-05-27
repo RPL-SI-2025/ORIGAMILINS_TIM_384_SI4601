@@ -167,7 +167,6 @@ class PaymentsController extends Controller
         $ongkir = session('ongkir');
         $total = session('total');
         $payment = session('payment'); 
-        $alamat = session('alamat'); 
 
         if (!$items) {
             return redirect()->route('user.payments.create')->with('error', 'Data tidak ditemukan.');
