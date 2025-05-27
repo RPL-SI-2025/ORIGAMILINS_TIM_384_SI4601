@@ -142,6 +142,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/payments/shipping', [PaymentsController::class, 'shipping'])->name('user.payments.shipping');
     Route::post('/user/payments/shipping', [PaymentsController::class, 'shipping'])->name('user.payments.shipping');
     Route::get('/user/payments/checkout', [PaymentsController::class, 'checkout'])->name('user.payments.checkout');
+
+    Route::get('/payment/success/{order_id}', function($order_id) {
+        $payment = \App\Models\Payments::where('order_id', $order_id)->firstOrFail();
+        return view('user.payments.success', compact('payment'));
+    })->name('payment.success');
+
+    Route::get('/payment/pending/{order_id}', function($order_id) {
+        $payment = \App\Models\Payments::where('order_id', $order_id)->firstOrFail();
+        return view('user.payments.status', compact('payment'));
+    })->name('payment.pending');
 });
 
 // Produk Input Publik

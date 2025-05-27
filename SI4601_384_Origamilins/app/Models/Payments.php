@@ -45,7 +45,6 @@ class Payments extends Model
     {
         return $query->where('status', self::STATUS_REFUND_REQUESTED);
     }
-
     // Scope for processed refunds
     public function scopeProcessedRefunds($query)
     {

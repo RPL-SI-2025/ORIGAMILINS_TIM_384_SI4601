@@ -11,7 +11,7 @@ class MidtransService
 {
     public function __construct()
     {
-        // Set Midtrans configuration
+        // Set Midtrans configuration from config file
         Config::$serverKey = config('midtrans.server_key');
         Config::$clientKey = config('midtrans.client_key');
         Config::$isProduction = config('midtrans.is_production');
@@ -28,6 +28,7 @@ class MidtransService
     public function getSnapToken($params)
     {
         try {
+            // Generate Snap Token
             $snapToken = Snap::getSnapToken($params);
             return [
                 'success' => true,
