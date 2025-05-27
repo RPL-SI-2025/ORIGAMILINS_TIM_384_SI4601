@@ -66,6 +66,36 @@
             border: 2px solid #fff;
             z-index: 2;
         }
+
+        /* Styles for Notification Dropdown */
+        .dropdown-menu {
+            max-height: 400px;
+            overflow-y: auto;
+            /* Adjustments for footer link colors */
+            .dropdown-footer-link {
+                color: #3FBAD5 !important; /* Origamilins blue */
+            }
+        }
+        .badge.bg-danger {
+            position: absolute;
+            /* Adjusted position */
+            top: 0px; 
+            right: 0px;
+            transform: translate(50%, -50%); /* Center relative to corner */
+            padding: .25em .4em;
+            font-size: .75em;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: .375rem;
+            border: 1px solid white; /* Optional: add a white border like in the example */
+        }
+         .notification-icon-container {
+             position: relative;
+             cursor: pointer;
+         }
         </style>
     </body>
 </html>

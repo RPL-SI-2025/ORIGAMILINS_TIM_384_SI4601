@@ -17,7 +17,7 @@
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="#">Katalog</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="#">Layanan</a></li>
-                <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="{{ route('user.event.index') }}">Event</a></li>
+                <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="{{ route('event.melihat_event') }}">Event</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="#">Tentang Kami</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="#">Kontak</a></li>
             </ul>
@@ -28,12 +28,50 @@
                     <i class="fas fa-search fs-5"></i>
                 </button>
                 @auth
-                    <button class="btn btn-link position-relative p-0 navbar-icon" type="button">
-                        <i class="fas fa-bell fs-5"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-warning border border-light rounded-circle">
-                            <span class="visually-hidden">New alerts</span>
-                        </span>
-                    </button>
+                    <!-- Notification Dropdown -->
+                    <div class="dropdown">
+                        <a class="btn btn-link position-relative p-0 navbar-icon" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-bell fs-5"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notificationCount" style="font-size: 0.6rem; padding: 0.3em 0.6em;">
+                                0
+                                <span class="visually-hidden">unread notifications</span>
+                            </span>
+                        </a>
+                        
+                        <!-- Dropdown Menu -->
+                        <ul class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="notificationDropdown" style="width: 320px; border-radius: 8px;">
+                            <!-- Header -->
+                            <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                                <h6 class="mb-0">Notifikasi</h6>
+                                <a href="#" class="text-muted"><i class="fas fa-cog"></i></a>
+                            </div>
+
+                            <!-- Tabs -->
+                            <ul class="nav nav-tabs nav-fill px-3" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="transaksi-tab" data-bs-toggle="tab" data-bs-target="#transaksi" type="button" role="tab" aria-controls="transaksi" aria-selected="true">Transaksi</button>
+                                </li>
+                            </ul>
+
+                            <!-- Tab Content -->
+                            <div class="tab-content" id="notificationTabsContent">
+                                <!-- Transaksi Tab Content -->
+                                <div class="tab-pane fade show active" id="transaksi" role="tabpanel" aria-labelledby="transaksi-tab">
+                                    <div id="notificationItems" style="max-height: 300px; overflow-y: auto;">
+                                        <!-- Notification items will be loaded here by JS -->
+                                        <div class="dropdown-item text-center text-muted py-3">Tidak ada notifikasi baru.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Footer -->
+                            <div class="d-flex justify-content-between align-items-center p-2 border-top" style="font-size: 0.9rem;">
+                                <a href="#" class="text-success text-decoration-none">Tandai semua dibaca</a>
+                                <a href="#" class="text-success text-decoration-none">Lihat selengkapnya</a>
+                            </div>
+                        </ul>
+                    </div>
+
                     <button class="btn btn-link position-relative p-0 navbar-icon" type="button">
                         <i class="fas fa-shopping-cart fs-5"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
