@@ -24,6 +24,7 @@ class PaymentsController extends Controller
         $cart = $user->cart()->with('items.produk')->first();
 
         $products = [];
+        $subtotal = 0; // Tambahkan inisialisasi subtotal
         if ($cart) {
             foreach ($cart->items as $item) {
                 $products[] = [
@@ -34,9 +35,9 @@ class PaymentsController extends Controller
                     'harga' => $item->produk->harga,
                     'jumlah' => $item->jumlah,
                 ];
+                $subtotal += $item->produk->harga * $item->jumlah; // Hitung subtotal
             }
         }
-
         $kecamatanList = [
             ['nama' => 'Kiaracondong', 'jarak' => 0],
             ['nama' => 'Antapani', 'jarak' => 2],
@@ -61,7 +62,7 @@ class PaymentsController extends Controller
             ['nama' => 'Padalarang (Bandung Barat)', 'jarak' => 22],
             ['nama' => 'Ngamprah (Bandung Barat)', 'jarak' => 20],
             ['nama' => 'Lembang (Bandung Barat)', 'jarak' => 21],
-        ];
+    ];
 
         return view('user.payments.create', compact('products', 'kecamatanList', 'subtotal'));
     }
