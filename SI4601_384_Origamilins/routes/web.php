@@ -54,11 +54,27 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/etalase-produk', function () {
         $query = \App\Models\Produk::query();
-        if (request()->has('kategori') && request('kategori') != '') {
-            $query->where('kategori', request('kategori'));
+        $kategoriRequest = request('kategori');
+        if (is_array($kategoriRequest) && !empty($kategoriRequest)) {
+            // Jika 'Semua' dicentang, tampilkan semua kategori (tidak perlu filter)
+            if (!in_array('Semua', $kategoriRequest)) {
+                $query->whereIn('kategori', $kategoriRequest);
+            }
+        } elseif (!empty($kategoriRequest) && $kategoriRequest != 'Semua') {
+            // Jika hanya satu kategori dipilih dan bukan 'Semua'
+            $query->where('kategori', $kategoriRequest);
         }
         if (request()->has('nama') && request('nama') != '') {
             $query->where('nama', 'like', '%' . request('nama') . '%');
+        }
+        // Bersihkan input harga dari titik
+        $hargaMin = str_replace('.', '', request('harga_min'));
+        $hargaMax = str_replace('.', '', request('harga_max'));
+        if (request()->has('harga_min') && $hargaMin !== null && $hargaMin !== '') {
+            $query->where('harga', '>=', $hargaMin);
+        }
+        if (request()->has('harga_max') && $hargaMax !== null && $hargaMax !== '') {
+            $query->where('harga', '<=', $hargaMax);
         }
         $products = $query->paginate(9);
         $categories = \App\Models\Produk::distinct()->pluck('kategori');
