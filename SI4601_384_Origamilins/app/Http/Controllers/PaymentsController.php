@@ -18,16 +18,89 @@ class PaymentsController extends Controller
     /**
      * Show payment form
      */
+
+    public function create()
+    {
+        $cart = auth()->user()->cart;
+        $items = $cart ? $cart->items()->with('produk')->get() : collect();
+
+        $kecamatanList = [
+        ['nama' => 'Kiaracondong', 'jarak' => 0],
+        ['nama' => 'Antapani', 'jarak' => 2],
+        ['nama' => 'Cicadas', 'jarak' => 3],
+        ['nama' => 'Lengkong', 'jarak' => 4],
+        ['nama' => 'Batununggal', 'jarak' => 2],
+        ['nama' => 'Bandung Wetan', 'jarak' => 4],
+        ['nama' => 'Cibiru', 'jarak' => 7],
+        ['nama' => 'Ujungberung', 'jarak' => 8],
+        ['nama' => 'Cilengkrang (Kab. Bandung)', 'jarak' => 10],
+        ['nama' => 'Margahayu (Kab. Bandung)', 'jarak' => 13],
+        ['nama' => 'Ciparay (Kab. Bandung)', 'jarak' => 17],
+        ['nama' => 'Dayeuhkolot (Kab. Bandung)', 'jarak' => 11],
+        ['nama' => 'Baleendah (Kab. Bandung)', 'jarak' => 13],
+        ['nama' => 'Banjaran (Kab. Bandung)', 'jarak' => 18],
+        ['nama' => 'Soreang (Kab. Bandung)', 'jarak' => 22],
+        ['nama' => 'Margaasih (Kab. Bandung)', 'jarak' => 14],
+        ['nama' => 'Katapang (Kab. Bandung)', 'jarak' => 16],
+        ['nama' => 'Cimahi Utara', 'jarak' => 13],
+        ['nama' => 'Cimahi Tengah', 'jarak' => 12],
+        ['nama' => 'Cimahi Selatan', 'jarak' => 14],
+        ['nama' => 'Padalarang (Bandung Barat)', 'jarak' => 22],
+        ['nama' => 'Ngamprah (Bandung Barat)', 'jarak' => 20],
+        ['nama' => 'Lembang (Bandung Barat)', 'jarak' => 21],
+    ];
+
+        return view('user.payments.create', compact('items', 'kecamatanList'));
+    }
     public function index()
     {
         return view('user.payments.create');
     }
 
+    public function shipping(Request $request)
+    {
+        $cart = auth()->user()->cart;
+        $items = $cart ? $cart->items()->with('produk')->get() : collect();
+        $alamat = $request->only([
+            'nama_awal', 'nama_akhir', 'alamat', 'blok_gang', 'kecamatan', 'kota', 'provinsi', 'kode_pos', 'country_code', 'phone', 'shipping_method'
+        ]);
+        $subtotal = $request->subtotal;
+        $ongkir = $request->ongkir;
+        $total = $request->total;
+        $payment =     $payment = (object)[
+        'order_id' => 'INV-' . time(),
+        'email' => $request->email,
+        'snap_token' => 'dummy-snap-token',
+        'id' => 1, 
+    ];
+; 
+
+        // Simpan ke session
+        session([
+            'items' => $items,
+            'alamat' => $alamat,
+            'subtotal' => $subtotal,
+            'ongkir' => $ongkir,
+            'total' => $total,
+            'payment' => $payment,
+        ]);
+
+        return redirect()->route('user.payments.checkout');
+    }
+
     /**
      * Create a new payment and get Midtrans Snap token
      */
+        public function saveShipping(Request $request)
+    {
+        session(['cart_items' => $request->items]);
+        session(['jarak_kecamatan' => $request->jarak_kecamatan]);
+        return redirect()->route('user.payments.shipping');
+    }
     public function store(Request $request)
     {
+
+        
         $request->validate([
             'nama' => 'required|string|max:255',
             'total' => 'required|numeric|min:10000',
@@ -48,15 +121,16 @@ class PaymentsController extends Controller
         $params = [
             'transaction_details' => [
                 'order_id' => $payment->order_id,
-                'gross_amount' => (int) $payment->total, // Menggunakan 'total'
+                'gross_amount' => (int) $payment->total, 
             ],
             'customer_details' => [
-                'first_name' => $payment->nama, // Menggunakan 'nama'
+                'first_name' => $payment->nama, 
             ],
             'callbacks' => [
                 'finish' => route('user.payments.finish', $payment->id),
             ],
         ];
+        
 
         // Get Snap token
         $snapResponse = $this->midtransService->getSnapToken($params);
@@ -71,6 +145,21 @@ class PaymentsController extends Controller
         ]);
 
         return view('user.payments.checkout', compact('payment', 'snapResponse'));
+    }
+
+    public function checkout()
+    {
+        $items = session('items'); 
+        $subtotal = session('subtotal');
+        $ongkir = session('ongkir');
+        $total = session('total');
+        $payment = session('payment'); 
+
+        if (!$items) {
+            return redirect()->route('user.payments.create')->with('error', 'Data tidak ditemukan.');
+        }
+
+        return view('user.payments.checkout', compact('items', 'payment'));
     }
 
     /**
