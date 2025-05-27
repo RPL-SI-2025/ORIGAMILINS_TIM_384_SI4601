@@ -25,8 +25,7 @@
             font-family: 'Poppins', Arial, sans-serif !important;
         }
         .main-content {
-            padding-top: 70px; /* Lebih rapat ke navbar */
-            min-height: 100vh;
+            padding-top: 10px; /* Lebih rapat ke navbar */
         }
 
         .product-image {
@@ -144,6 +143,11 @@
     <main class="main-content">
         <div class="container">
             <div class="row">
+            <div class="container py-4">
+                <a href="{{ route('etalase') }}" class="btn btn-outline-secondary mb-3">
+                    <i class="fas fa-arrow-left me-2"></i> Kembali
+                </a>
+            </div>
                 <!-- Product Image -->
                 <div class="col-md-6 mb-4">
                     @if($produk->gambar)
@@ -156,7 +160,7 @@
                 </div>
 
                 <!-- Product Details -->
-                <div class="col-md-6">
+                <div class="col-md-6 mb-4">
                     <div class="product-details">
                         <h1 class="product-title">{{ $produk->nama }}</h1>
                         <div class="d-flex align-items-center mb-3">
@@ -172,7 +176,7 @@
                         </div>
                         <div class="text-muted mb-3">
                             <span class="me-3">{{ $produk->likes_count ?? 0 }} Disukai</span> | 
-                            <span>{{ $produk->reviews_count ?? 0 }} Komentar</span>
+                            <span>{{ $ulasan->count() }} Komentar</span>
                             @if($produk->is_pre_order ?? false)
                                 <span class="badge bg-warning ms-2">Pre-Order</span>
                             @endif
@@ -213,7 +217,7 @@
                                     <i class="fas fa-cart-plus me-2"></i>Tambahkan ke Keranjang
                                 </button>
                             </form>
-                            <form action="{{ route('cart.add') }}" method="POST" id="buy-now-form">
+                            <form action="{{ route('user.payments.create') }}" method="POST" id="buy-now-form">
                                 @csrf
                                 <input type="hidden" name="produk_id" value="{{ $produk->id }}">
                                 <input type="hidden" name="jumlah" id="buy-now-qty" value="1">
@@ -301,5 +305,17 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const navbarCollapse = document.getElementById('navbarContent');
+        if (navbarCollapse) {
+            // Remove the 'collapse' class and add 'show' class
+            navbarCollapse.classList.remove('collapse');
+            navbarCollapse.classList.add('show');
+            // Ensure the display is not 'none' in case of conflicting CSS
+            navbarCollapse.style.display = 'block';
+        }
+    });
+    </script>
 </body>
 </html>

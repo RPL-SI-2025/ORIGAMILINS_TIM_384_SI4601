@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); font-family:'Poppins',Arial,sans-serif;">
+<nav class="navbar navbar-expand-lg navbar-light" style="background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); font-family:'Poppins',Arial,sans-serif;">
     <div class="container">
         {{-- Logo --}}
         <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ url('/') }}">

@@ -13,8 +13,7 @@
         }
 
         .main-content {
-            padding-top: 70px;
-            min-height: 100vh;
+            padding-top: 20px;
         }
 
         .event-card {
