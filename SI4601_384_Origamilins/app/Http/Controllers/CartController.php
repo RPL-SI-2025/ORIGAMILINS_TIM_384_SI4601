@@ -79,6 +79,10 @@ class CartController extends Controller
         return redirect()->route('cart.index');
     }
 
+    if ($request->ajax() || $request->wantsJson()) {
+        return response()->json(['success' => true]);
+    }
+
     return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang');
 }
 

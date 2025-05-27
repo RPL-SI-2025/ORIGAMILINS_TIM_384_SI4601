@@ -18,54 +18,23 @@ class PaymentsController extends Controller
     /**
      * Show payment form
      */
-
-    public function create(Request $request)
+    public function create()
     {
         $user = auth()->user();
+        $cart = $user->cart()->with('items.produk')->first();
 
         $products = [];
-        $subtotal = 0;
-
-        // Cek apakah request datang dari tombol "Beli Sekarang" di detail produk
-        if ($request->has('produk_id') && $request->has('jumlah')) {
-            $produkId = $request->input('produk_id');
-            $jumlah = $request->input('jumlah');
-
-            $produk = \App\Models\Produk::find($produkId);
-
-            if ($produk && $jumlah > 0) {
+        if ($cart) {
+            foreach ($cart->items as $item) {
                 $products[] = [
-                    'nama' => $produk->nama,
-                    'deskripsi' => $produk->deskripsi,
-                    'kategori' => $produk->kategori,
-                    'gambar' => $produk->gambar ?? 'https://via.placeholder.com/80x80?text=IMG',
-                    'harga' => $produk->harga,
-                    'jumlah' => $jumlah,
+                    'nama' => $item->produk->nama,
+                    'deskripsi' => $item->produk->deskripsi,
+                    'kategori' => $item->produk->kategori,
+                    'gambar' => $item->produk->gambar ?? 'https://via.placeholder.com/80x80?text=IMG',
+                    'harga' => $item->produk->harga,
+                    'jumlah' => $item->jumlah,
                 ];
-                $subtotal = $produk->harga * $jumlah;
             }
-        } else {
-            // Jika tidak, proses dari keranjang
-            $cart = $user->cart()->with('items.produk')->first();
-
-            if ($cart) {
-                foreach ($cart->items as $item) {
-                    $products[] = [
-                        'nama' => $item->produk->nama,
-                        'deskripsi' => $item->produk->deskripsi,
-                        'kategori' => $item->produk->kategori,
-                        'gambar' => $item->produk->gambar ?? 'https://via.placeholder.com/80x80?text=IMG',
-                        'harga' => $item->produk->harga,
-                        'jumlah' => $item->jumlah,
-                    ];
-                    $subtotal += $item->produk->harga * $item->jumlah;
-                }
-            }
-        }
-
-        // Jika tidak ada produk, redirect kembali (misalnya jika keranjang kosong dan tidak ada produk di request)
-        if (empty($products)) {
-             return redirect()->back()->with('error', 'Tidak ada produk untuk diproses.');
         }
 
         $kecamatanList = [
@@ -96,115 +65,92 @@ class PaymentsController extends Controller
 
         return view('user.payments.create', compact('products', 'kecamatanList', 'subtotal'));
     }
+
     public function index()
     {
         return view('user.payments.create');
     }
 
+    /**
+     * Proses data pengiriman dan langsung proses pembayaran (langsung ke checkout)
+     */
     public function shipping(Request $request)
     {
         $cart = auth()->user()->cart;
         $items = $cart ? $cart->items()->with('produk')->get() : collect();
         $alamat = $request->only([
-            'nama_awal', 'nama_akhir', 'alamat', 'blok_gang', 'kecamatan', 'kota', 'provinsi', 'kode_pos', 'country_code', 'phone', 'shipping_method'
+            'nama_awal', 'nama_akhir', 'alamat', 'blok_gang', 'kecamatan', 'kota', 'provinsi', 'kode_pos', 'country_code', 'phone', 'shipping_method', 'email'
         ]);
         $subtotal = $request->subtotal;
         $ongkir = $request->ongkir;
         $total = $request->total;
-        $payment =     $payment = (object)[
-        'order_id' => 'INV-' . time(),
-        'email' => $request->email,
-        'snap_token' => 'dummy-snap-token',
-        'id' => 1, 
-    ];
-; 
 
-        // Simpan ke session
-        session([
-            'items' => $items,
-            'alamat' => $alamat,
-            'subtotal' => $subtotal,
-            'ongkir' => $ongkir,
-            'total' => $total,
-            'payment' => $payment,
-        ]);
-
-        return redirect()->route('user.payments.checkout');
-    }
-
-    /**
-     * Create a new payment and get Midtrans Snap token
-     */
-        public function saveShipping(Request $request)
-    {
-        session(['cart_items' => $request->items]);
-        session(['jarak_kecamatan' => $request->jarak_kecamatan]);
-        return redirect()->route('user.payments.shipping');
-    }
-    public function store(Request $request)
-    {
-
-        
+        // Validasi data
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama_awal' => 'required|string|max:255',
+            'nama_akhir' => 'nullable|string|max:255',
             'total' => 'required|numeric|min:10000',
+            'email' => 'required|email',
         ]);
 
         // Generate unique order ID
         $orderId = 'ORDER-' . Str::random(10) . '-' . time();
 
-        // Create payment record
+        // Buat record payment
         $payment = Payments::create([
             'order_id' => $orderId,
-            'total' => $request->total, 
-            'nama' => $request->nama, 
+            'total' => $total,
+            'nama' => trim(($alamat['nama_awal'] ?? '') . ' ' . ($alamat['nama_akhir'] ?? '')),
             'status' => 'pending',
+            'email' => $alamat['email'] ?? null,
         ]);
 
-        // Prepare Midtrans parameters
+        // Siapkan parameter Midtrans
         $params = [
             'transaction_details' => [
                 'order_id' => $payment->order_id,
-                'gross_amount' => (int) $payment->total, 
+                'gross_amount' => (int) $payment->total,
             ],
             'customer_details' => [
-                'first_name' => $payment->nama, 
+                'first_name' => $payment->nama,
+                'email' => $payment->email,
             ],
             'callbacks' => [
                 'finish' => route('user.payments.finish', $payment->id),
             ],
         ];
-        
 
-        // Get Snap token
+        // Ambil Snap token
         $snapResponse = $this->midtransService->getSnapToken($params);
 
         if (!$snapResponse['success']) {
             return redirect()->back()->with('error', 'Failed to process payment: ' . $snapResponse['message']);
         }
 
-        // Update payment with snap token
+        // Update payment dengan snap token
         $payment->update([
             'snap_token' => $snapResponse['token'],
         ]);
 
-        return view('user.payments.checkout', compact('payment', 'snapResponse'));
+        // Kirim data ke checkout
+        return view('user.payments.checkout', [
+            'items' => $items,
+            'subtotal' => $subtotal,
+            'ongkir' => $ongkir,
+            'total' => $total,
+            'alamat' => $alamat,
+            'payment' => $payment,
+            'snapResponse' => $snapResponse,
+        ]);
     }
 
+    /**
+     * Tidak digunakan lagi, kecuali untuk menampilkan ulang jika user reload setelah store
+     */
     public function checkout()
     {
-        $items = session('items'); 
-        $subtotal = session('subtotal');
-        $ongkir = session('ongkir');
-        $total = session('total');
-        $payment = session('payment'); 
-        $alamat = session('alamat'); // Tambahkan baris ini
-
-        if (!$items) {
-            return redirect()->route('user.payments.create')->with('error', 'Data tidak ditemukan.');
-        }
-
-        return view('user.payments.checkout', compact('items', 'payment', 'subtotal', 'ongkir', 'total', 'alamat'));
+        // Optional: bisa redirect ke create atau tampilkan pesan error
+        return redirect()->route('user.payments.create');
     }
 
     /**
@@ -265,23 +211,26 @@ class PaymentsController extends Controller
     public function finish($id)
     {
         $payment = Payments::findOrFail($id);
-        
+
+        // Ambil data alamat dari kolom metadata (jika ada)
+        $alamat = $payment->metadata['alamat'] ?? [];
+
         // Check the latest status from Midtrans
         $statusResponse = $this->midtransService->checkTransactionStatus($payment->order_id);
-        
+
         if ($statusResponse['success']) {
             $transactionStatus = $statusResponse['status']->transaction_status ?? null;
-            
+
             if ($transactionStatus == 'settlement' || $transactionStatus == 'capture') {
                 if ($payment->status != 'success') {
                     $payment->status = 'success';
                     $payment->paid_at = now();
                     $payment->save();
                 }
-                return view('user.payments.success', compact('payment'));
+                    return view('user.payments.success', compact('payment', 'alamat'));
             }
         }
-        
+
         return view('user.payments.status', compact('payment'));
     }
 }

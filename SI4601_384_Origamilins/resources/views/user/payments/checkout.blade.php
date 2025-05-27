@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Konfirmasi Pemesanan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="YOUR_CLIENT_KEY"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-tZKK0PWiSK_48jYX"></script>
     <style>
         :root {
             --primary-color: #4f46e5;
-            --secondary-color: #f59e0b;
+            --secondary-color: #f59e0b;YOUR_SNAP_TOKE
             --success-color: #10b981;
             --gray-100: #f8fafc;
             --gray-200: #e2e8f0;
@@ -196,7 +196,7 @@
         }
         .payment-button {
             background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
-            border: none;
+            border: 2px solid #059669; 
             border-radius: 12px;
             padding: 1rem 2rem;
             font-weight: 600;
@@ -204,11 +204,11 @@
             color: white;
             transition: all 0.3s ease;
             width: 100%;
+            box-shadow: 0 4px 16px rgba(16,185,129,0.12);
         }
         .payment-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-            color: white;
         }
         .payment-button:disabled {
             background: var(--gray-200);
@@ -358,33 +358,33 @@
             <!-- Ringkasan Pembayaran -->
             <div class="col-lg-4">
                 <div class="main-card p-4">
-                    <h5 class="section-title">
-                        <i class="fas fa-calculator"></i>
-                        Ringkasan Pembayaran
-                    </h5>
-                    <div class="summary-table mb-3">
-                        <div class="summary-row">
-                            <span>Subtotal</span>
-                            <span>Rp {{ number_format($subtotal ?? 0, 0, ',', '.') }}</span>
-                        </div>
-                        <div class="summary-row">
-                            <span>Ongkir</span>
-                            <span>Rp {{ number_format($ongkir ?? 0, 0, ',', '.') }}</span>
-                        </div>
-                        <div class="summary-row">
-                            <span>Total Pembayaran</span>
-                            <span>Rp {{ number_format($total ?? 0, 0, ',', '.') }}</span>
-                        </div>
+                <h5 class="section-title">
+                    <i class="fas fa-calculator"></i>
+                    Ringkasan Pembayaran
+                </h5>
+                <div class="summary-table mb-3">
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span>Rp {{ number_format($subtotal ?? 0, 0, ',', '.') }}</span>
                     </div>
-                    <button id="pay-button" class="payment-button">
-                        <i class="fas fa-credit-card me-2"></i>
-                        Bayar Sekarang - Rp {{ number_format($total ?? 0, 0, ',', '.') }}
-                    </button>
-                    <small class="text-center text-muted mt-2 d-block">
-                        <i class="fas fa-shield-alt me-1"></i>
-                        Pembayaran aman dengan Midtrans
-                    </small>
+                    <div class="summary-row">
+                        <span>Ongkir</span>
+                        <span>Rp {{ number_format($ongkir ?? 0, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Total Pembayaran</span>
+                        <span>Rp {{ number_format($total ?? 0, 0, ',', '.') }}</span>
+                    </div>
                 </div>
+                <button id="pay-button" class="payment-button">
+                    <i class="fas fa-credit-card me-2"></i>
+                    Bayar Sekarang - Rp {{ number_format($total ?? 0, 0, ',', '.') }}
+                </button>
+                <small class="text-center text-muted mt-2 d-block">
+                    <i class="fas fa-shield-alt me-1"></i>
+                    Pembayaran aman dengan Midtrans
+                </small>
+            </div>
                 <!-- Payment Methods Info -->
                 <div class="mt-4 text-center">
                     <small class="text-muted">Metode pembayaran yang tersedia:</small>

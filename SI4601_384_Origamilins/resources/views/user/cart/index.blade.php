@@ -160,6 +160,7 @@
     </style>
 </head>
 <body>
+    @include('user.navigation-menu')
     <div class="cart-container">
         <button class="back-btn" onclick="window.location.href='{{ route('etalase') }}'">
             <i class="fas fa-arrow-left"></i>
@@ -290,6 +291,7 @@
             console.log('Proceeding to checkout with quantity:', quantity);
         });
     </script>
+    @include('footer')
 </body>
 </html>
 
