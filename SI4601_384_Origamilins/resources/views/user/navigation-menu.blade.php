@@ -1,61 +1,110 @@
-<nav class="navbar navbar-expand-lg fixed-top" style="background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); font-family:'Poppins',Arial,sans-serif;">
-    <div class="container px-0">
-        <div class="navbar-content d-flex w-100 align-items-center justify-content-between">
-            {{-- Logo --}}
-            <div class="logo d-flex align-items-center">
-                <a href="{{ url('/') }}" class="d-flex align-items-center text-decoration-none">
-                    <img src="{{ asset('uploads/Logo Origamilins.png') }}" alt="Origamilins Logo" class="brand-logo" style="width:36px; height:36px; object-fit:contain; margin-right:10px;">
-                    <span style="color:#f9bd1e; font-weight:700; font-size:1.8rem; letter-spacing:0.5px;">Origamilins</span>
-                </a>
-            </div>
-            {{-- Menu --}}
-            <div class="nav-links d-flex align-items-center">
-                <a href="{{ url('/') }}" class="nav-link px-3">Beranda</a>
-                <a href="{{ route('etalase') }}" class="nav-link px-3">Etalase</a>
-                <a href="{{ url('/#layanan') }}" class="nav-link px-3">Layanan</a>
-                <a href="{{ route('user.event.index') }}" class="nav-link px-3">Event</a>
-                <a href="{{ url('/#tentang-kami') }}" class="nav-link px-3">Tentang Kami</a>
-                <a href="{{ url('/#kontak') }}" class="nav-link px-3">Kontak</a>
-            </div>
-            {{-- Icon & Auth --}}
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); font-family:'Poppins',Arial,sans-serif;">
+    <div class="container">
+        {{-- Logo --}}
+        <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ url('/') }}">
+            <img src="{{ asset('uploads/Logo Origamilins.png') }}" alt="Origamilins Logo" width="36" height="36" class="me-2">
+            <span style="color:#f9bd1e; font-weight:700; font-size:1.8rem; letter-spacing:0.5px;">Origamilins</span>
+        </a>
+
+        {{-- Toggle untuk mobile --}}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        {{-- Isi navbar --}}
+        <div class="collapse navbar-collapse" id="navbarContent">
+            {{-- Menu tengah --}}
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="{{ route('etalase') }}">Katalog</a></li>
+                <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="{{ url('/#layanan') }}">Layanan</a></li>
+                <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="{{ route('user.event.index') }}">Event</a></li>
+                <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="{{ url('/#tentang-kami') }}">Tentang Kami</a></li>
+                <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="{{ url('/#kontak') }}">Kontak</a></li>
+            </ul>
+
+            {{-- Ikon Kanan (Search, Notifikasi, Cart, User) --}}
+
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-link p-0 navbar-icon" type="button" style="color:#333;">
-                    <i class="fas fa-search fs-5"></i>
-                </button>
-                <button class="btn btn-link position-relative p-0 navbar-icon" type="button" style="color:#333;">
-                    <i class="fas fa-bell fs-5"></i>
-                </button>
-                <a href="{{ url('/cart') }}" class="btn btn-link position-relative p-0 navbar-icon" style="color:#333;">
-                    <i class="fas fa-shopping-cart fs-5"></i>
-                </a>
-                @auth
+                 <button class="btn btn-link p-0 navbar-icon" type="button" style="color:#333;">
+                      <i class="fas fa-search fs-5"></i>
+                  </button>
+
+                  <!-- Notification Dropdown -->
                     <div class="dropdown">
-                        <a class="d-flex align-items-center gap-2 text-decoration-none dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ Auth::user()->profile_photo_url ?? asset('uploads/user.jpg') }}" alt="Profile" class="rounded-circle" width="32" height="32">
-                            <span class="text-dark">{{ Auth::user()->name }}</span>
+                        <a class="btn btn-link position-relative p-0 navbar-icon" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:#333;">
+                            <i class="fas fa-bell fs-5"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notificationCount" style="font-size: 0.6rem; padding: 0.3em 0.6em; transform: translate(50%, -50%);">
+                                0
+                                <span class="visually-hidden">unread notifications</span>
+                            </span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ route('profile.show') }}"><i class="fas fa-user me-2"></i> Profile</a></li>
-                            <li><a class="dropdown-item" href="{{ route('dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt me-2"></i> Logout</button>
-                                </form>
-                            </li>
+                        
+                        <!-- Dropdown Menu -->
+                        <ul class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="notificationDropdown" style="width: 320px; border-radius: 8px;">
+                            <!-- Header -->
+                            <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                                <h6 class="mb-0">Notifikasi</h6>
+                                <a href="#" class="text-muted"><i class="fas fa-cog"></i></a>
+                            </div>
+
+                            <!-- Tabs (Only Transaksi) -->
+                            <ul class="nav nav-tabs nav-fill px-3" role="tablist" style="border-bottom: none;">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="transaksi-tab" data-bs-toggle="tab" data-bs-target="#transaksi" type="button" role="tab" aria-controls="transaksi" aria-selected="true" style="border: none;">Transaksi</button>
+                                </li>
+                            </ul>
+
+                            <!-- Tab Content -->
+                            <div class="tab-content" id="notificationTabsContent">
+                                <!-- Transaksi Tab Content -->
+                                <div class="tab-pane fade show active" id="transaksi" role="tabpanel" aria-labelledby="transaksi-tab">
+                                    <div id="notificationItems" style="max-height: 300px; overflow-y: auto;">
+                                        <!-- Notification items will be loaded here by JS -->
+                                        <div class="dropdown-item text-center text-muted py-3">Tidak ada notifikasi baru.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Footer -->
+                            <div class="d-flex justify-content-between align-items-center p-2 border-top" style="font-size: 0.9rem;">
+                                <a href="#" class="text-success text-decoration-none dropdown-footer-link">Tandai semua dibaca</a>
+                                <a href="#" class="text-success text-decoration-none dropdown-footer-link">Lihat selengkapnya</a>
+                            </div>
                         </ul>
                     </div>
-                @else
-                    <div class="auth-links d-none d-lg-flex">
-                        <a href="{{ route('login') }}" class="auth-link login">Masuk</a>
-                        <a href="{{ route('register') }}" class="auth-link register">Daftar</a>
-                    </div>
-                @endauth
-            </div>
-        </div>
-    </div>
-</nav>
+
+                 <a href="{{ url('/cart') }}" class="btn btn-link position-relative p-0 navbar-icon" style="color:#333;">
+                     <i class="fas fa-shopping-cart fs-5"></i>
+                 </a>
+
+                  @auth
+                      <div class="dropdown">
+                          <a class="d-flex align-items-center gap-2 text-decoration-none dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              <img src="{{ Auth::user()->profile_photo_url ?? asset('uploads/user.jpg') }}" alt="Profile" class="rounded-circle" width="32" height="32">
+                              <span class="text-dark">{{ Auth::user()->name }}</span>
+                          </a>
+                          <ul class="dropdown-menu dropdown-menu-end">
+                               <li><a class="dropdown-item" href="{{ route('profile.show') }}"><i class="fas fa-user me-2"></i> Profile</a></li>
+                              <li><a class="dropdown-item" href="{{ route('dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a></li>
+                              <li><hr class="dropdown-divider"></li>
+                              <li>
+                                  <form method="POST" action="{{ route('logout') }}">
+                                      @csrf
+                                      <button type="submit" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt me-2"></i> Logout</button>
+                                  </form>
+                              </li>
+                          </ul>
+                      </div>
+                  @else
+                      <div class="auth-links d-none d-lg-flex">
+                           <a href="{{ route('login') }}" class="auth-link login">Masuk</a>
+                           <a href="{{ route('register') }}" class="auth-link register">Daftar</a>
+                       </div>
+                   @endauth
+              </div>
+          </div>
+      </div>
+  </nav>
 
 {{-- Add this script for handling auth links if they are needed somewhere else --}}
 {{-- Note: With full page navigation, this might not be necessary here anymore --}}
