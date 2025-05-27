@@ -24,8 +24,9 @@
         body, h1, h2, h3, h4, h5, h6, .btn, .form-control, .product-title, .product-category, .product-price, .product-stock, .filter-sidebar, .page-title, .pagination, .no-products {
             font-family: 'Poppins', Arial, sans-serif !important;
         }
-        .main-content {=
-            padding-top: 10px; 
+        .main-content {
+            padding-top: 70px; /* Lebih rapat ke navbar */
+            min-height: 100vh;
         }
 
         .product-image {
@@ -142,6 +143,11 @@
     <main class="main-content">
         <div class="container">
             <div class="row">
+            <div class="container py-4">
+                <a href="{{ route('etalase') }}" class="btn btn-outline-secondary mb-3">
+                    <i class="fas fa-arrow-left me-2"></i> Kembali
+                </a>
+            </div>
                 <!-- Product Image -->
                 <div class="col-md-6 mb-4">
                     @if($produk->gambar)
@@ -154,7 +160,7 @@
                 </div>
 
                 <!-- Product Details -->
-                <div class="col-md-6">
+                <div class="col-md-6 mb-4">
                     <div class="product-details">
                         <h1 class="product-title">{{ $produk->nama }}</h1>
                         <div class="d-flex align-items-center mb-3">
@@ -170,7 +176,7 @@
                         </div>
                         <div class="text-muted mb-3">
                             <span class="me-3">{{ $produk->likes_count ?? 0 }} Disukai</span> | 
-                            <span>{{ $produk->reviews_count ?? 0 }} Komentar</span>
+                            <span>{{ $ulasan->count() }} Komentar</span>
                             @if($produk->is_pre_order ?? false)
                                 <span class="badge bg-warning ms-2">Pre-Order</span>
                             @endif
@@ -202,77 +208,36 @@
                         @endif
 
                         @auth
-                            <div class="d-flex align-items-center gap-2 mb-3">
-                                <form action="{{ route('cart.add') }}" method="POST" class="d-flex align-items-center" id="add-to-cart-form">
-                                    @csrf
-                                    <input type="hidden" name="produk_id" value="{{ $produk->id }}">
-                                    <input type="number" name="jumlah" value="1" min="1" class="form-control me-2" style="width: 80px" id="qty-input">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-cart-plus me-2"></i>Tambahkan ke Keranjang
-                                    </button>
-                                </form>
-                                <form action="{{ route('cart.add') }}" method="POST" id="buy-now-form">
-                                    @csrf
-                                    <input type="hidden" name="produk_id" value="{{ $produk->id }}">
-                                    <input type="hidden" name="jumlah" id="buy-now-qty" value="1">
-                                    <input type="hidden" name="redirect_to_cart" value="1">
-                                    <button type="submit" class="btn btn-warning ms-2">
-                                        <i class="fas fa-money-bill me-2"></i>Beli Sekarang
-                                    </button>
-                                </form>
-                            </div>
-
-                            {{-- Popup Success --}}
-                            <div id="cart-success-popup" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.15);">
-                                <div style="max-width:400px;margin:120px auto 0 auto;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.15);padding:32px 24px;text-align:center;">
-                                    <div style="font-size:1.2rem;font-weight:500;margin-bottom:24px;">Barang yang dipilih berhasil<br>dimasukkan ke dalam keranjang</div>
-                                    <button id="lanjut-belanja-btn" class="btn" style="background:#ffc107;color:#fff;font-weight:600;width:100%;border-radius:8px;margin-bottom:12px;">Lanjut Belanja</button>
-                                    <br>
-                                    <button id="batal-popup-btn" class="btn btn-link text-dark" style="font-weight:500;">Batal</button>
-                                </div>
-                            </div>
-
-                            <script>
-                                document.getElementById('qty-input').addEventListener('input', function() {
-                                    document.getElementById('buy-now-qty').value = this.value;
-                                });
-                                document.getElementById('add-to-cart-form').addEventListener('submit', function(e) {
-                                    e.preventDefault();
-                                    var form = this;
-                                    var formData = new FormData(form);
-
-                                    fetch(form.action, {
-                                        method: 'POST',
-                                        headers: {
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                            'Accept': 'application/json'
-                                        },
-                                        body: formData
-                                    })
-                                    .then(response => {
-                                        if (response.ok) {
-                                            document.getElementById('cart-success-popup').style.display = 'block';
-                                        } else {
-                                            return response.json().then(data => { throw data; });
-                                        }
-                                    })
-                                    .catch(error => {
-                                        alert('Gagal menambahkan ke keranjang!');
-                                    });
-                                });
-                                document.getElementById('lanjut-belanja-btn').onclick = function() {
-                                    document.getElementById('cart-success-popup').style.display = 'none';
-                                };
-                                document.getElementById('batal-popup-btn').onclick = function() {
-                                    document.getElementById('cart-success-popup').style.display = 'none';
-                                };
-                            </script>
-                        @else
-                            <a href="{{ route('login') }}" class="btn btn-primary">
-                                <i class="fas fa-sign-in-alt me-2"></i>Login untuk Membeli
-                            </a>
-                        @endauth
-
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <form action="{{ route('cart.add') }}" method="POST" class="d-flex align-items-center" id="add-to-cart-form">
+                                @csrf
+                                <input type="hidden" name="produk_id" value="{{ $produk->id }}">
+                                <input type="number" name="jumlah" value="1" min="1" class="form-control me-2" style="width: 80px" id="qty-input">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-cart-plus me-2"></i>Tambahkan ke Keranjang
+                                </button>
+                            </form>
+                            <form action="{{ route('cart.add') }}" method="POST" id="buy-now-form">
+                                @csrf
+                                <input type="hidden" name="produk_id" value="{{ $produk->id }}">
+                                <input type="hidden" name="jumlah" id="buy-now-qty" value="1">
+                                <input type="hidden" name="redirect_to_cart" value="1">
+                                <button type="submit" class="btn btn-warning ms-2">
+                                    <i class="fas fa-money-bill me-2"></i>Beli Sekarang
+                                </button>
+                            </form>
+                        </div>
+                        <script>
+                            // Sinkronkan jumlah pada "Beli Sekarang" dengan input jumlah utama
+                            document.getElementById('qty-input').addEventListener('input', function() {
+                                document.getElementById('buy-now-qty').value = this.value;
+                            });
+                        </script>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login untuk Membeli
+                        </a>
+                    @endauth
                     </div>
                 </div>
             </div>
@@ -338,8 +303,5 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
-
-     <!-- Footer -->
-     @include('user.footer')
 </body>
 </html>
