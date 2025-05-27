@@ -73,9 +73,10 @@ class Produk_Controller extends Controller
     /**
      * Display the specified product.
      */
-    public function show(Produk $product)
+    public function show($id)
     {
-        return view('admin.produk.show', compact('product'));
+        $product = Produk::findOrFail($id);
+        return view('user.produk.produk-detail', compact('product'));
     }
 
     // Menyimpan produk baru
