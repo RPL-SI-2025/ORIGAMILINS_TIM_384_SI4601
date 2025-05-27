@@ -17,12 +17,13 @@
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="{{ route('etalase') }}">Katalog</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="{{ url('/#layanan') }}">Layanan</a></li>
-                <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="{{ route('event.melihat_event') }}">Event</a></li>
+                <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="{{ route('user.event.index') }}">Event</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="{{ url('/#tentang-kami') }}">Tentang Kami</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-semibold px-3" href="{{ url('/#kontak') }}">Kontak</a></li>
             </ul>
 
             {{-- Ikon Kanan (Search, Notifikasi, Cart, User) --}}
+
             <div class="d-flex align-items-center gap-3">
                  <button class="btn btn-link p-0 navbar-icon" type="button" style="color:#333;">
                       <i class="fas fa-search fs-5"></i>

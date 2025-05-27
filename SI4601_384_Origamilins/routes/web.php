@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\Produk_Controller;
-use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\EventController as AdminEventController;
+use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Middleware\AdminMiddleware;
@@ -104,6 +105,8 @@ Route::middleware(['auth'])->group(function () {
         
         return view('user.produk.produk-detail', compact('produk', 'ulasan', 'cartCount', 'produkTerkait'));
     })->name('detail.produk');
+    Route::get('/events', [EventController::class, 'index'])->name('user.event.index');
+    Route::get('/events/{id}', [EventController::class, 'show'])->name('user.event.show');
 
     // Cart Routes
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

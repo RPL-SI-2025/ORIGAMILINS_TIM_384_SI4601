@@ -29,7 +29,7 @@
                 <div class="nav-links">
                     <a href="{{ route('etalase') }}">Etalase</a>
                     <a href="#layanan">Layanan</a>
-                    <a href="#event-terdekat">Event</a>
+                    <a href="{{ route('user.event.index') }}">Event</a>
                     <a href="#tentang-kami">Tentang Kami</a>
                     <a href="#kontak">Kontak</a>
                 </div>  
