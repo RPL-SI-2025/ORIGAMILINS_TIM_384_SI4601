@@ -109,16 +109,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
-    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    Route::delete('/cart/delete', [CartController::class, 'delete'])->name('cart.delete');
     Route::post('/cart/update-total', [CartController::class, 'updateTotal'])->name('cart.update-total');
-    Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::get('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+    
 
     // Payment History Routes
     Route::get('/payments/history', [UserPaymentHistoryController::class, 'index'])->name('user.payments.history');
     Route::get('/payments/{id}', [UserPaymentHistoryController::class, 'show'])->name('user.payments.show');
-
-    Route::get('/event', [App\Http\Controllers\EventController::class, 'index'])->name('user.event.index');
-    Route::get('/event/{id}', [App\Http\Controllers\EventController::class, 'show'])->name('user.event.show');
+    Route::get('/user/payments/create', [PaymentsController::class, 'create'])->name('user.payments.create');
 });
 
 // Produk Input Publik
