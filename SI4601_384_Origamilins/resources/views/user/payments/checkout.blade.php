@@ -254,7 +254,7 @@
     </style>
 </head>
 <body>
-    @include('user.navigation-menu ')
+    @include('user.navigation-menu')
     <div class="container container-custom">
         <!-- Progress Stepper -->
         <div class="progress-header">
@@ -269,13 +269,13 @@
                     </div>
                     <span class="step-text">Alamat</span>
                 </div>
-                <div class="step-connector"></div>
+                <div class="step-connector completed"></div>
                 <div class="step-item active">
                     <div class="step-circle">2</div>
                     <span class="step-text">Bayar</span>
                 </div>
                 <div class="step-connector"></div>
-                <div class="step-item ">
+                <div class="step-item">
                     <div class="step-circle">3</div>
                     <span class="step-text">Faktur Pembayaran</span>
                 </div>
@@ -430,6 +430,5 @@
         };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    @include('footer')
 </body>
 </html>
