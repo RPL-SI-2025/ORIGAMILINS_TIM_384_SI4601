@@ -234,7 +234,6 @@
                     <span>Total</span>
                     <span id="total">Rp{{ number_format($total,0,',','.') }}</span>
                 </div>
-                <div class="delivery-info">Estimasi pengiriman 1 hari</div>
                 <a href="{{ route('user.payments.create') }}" class="checkout-btn text-center d-block" style="text-decoration:none;">
                     Lanjut Ke Pembayaran
                 </a>

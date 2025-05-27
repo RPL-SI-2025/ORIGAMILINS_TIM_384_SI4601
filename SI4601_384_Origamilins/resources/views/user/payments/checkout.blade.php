@@ -23,14 +23,83 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        .progress-stepper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 2rem 0;
-            padding: 0 2rem;
+        .progress-header {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
-
+        .back-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            padding: 0;
+        }
+        .back-btn:hover {
+            color: #333;
+        }
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+        }
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            position: relative;
+        }
+        .step-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .step-item.active .step-circle {
+            background: #ffc107;
+            color: #333;
+        }
+        .step-item.active .step-text {
+            color: #ffc107;
+            font-weight: 600;
+        }
+        .step-item.completed .step-circle {
+            background: #28a745;
+            color: white;
+        }
+        .step-item.completed .step-text {
+            color: #28a745;
+        }
+        .step-item:not(.active):not(.completed) .step-circle {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+        .step-item:not(.active):not(.completed) .step-text {
+            color: #6c757d;
+        }
+        .step-connector {
+            width: 40px;
+            height: 2px;
+            background: #e9ecef;
+            margin: 0 12px;
+        }
+        .step-connector.completed {
+            background: #28a745;
+        }
         .step {
             display: flex;
             align-items: center;
@@ -265,45 +334,32 @@
     </style>
 </head>
 <body>
+   @include('user.navigation-menu ')
     <!-- Progress Stepper -->
-    <div class="progress-stepper">
-        <div class="step completed">
-            <div class="step-icon">
-                <i class="fas fa-check"></i>
-            </div>
-            Alamat
-        </div>
-        <div class="step-connector"></div>
-        <div class="step completed">
-            <div class="step-icon">
-                <i class="fas fa-check"></i>
-            </div>
-            Pengiriman
-        </div>
-        <div class="step-connector"></div>
-        <div class="step active">
-            <div class="step-icon">3</div>
-            Bayar
-        </div>
-    </div>
-
-    <div class="container py-4">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <!-- Back Button -->
-                <div class="mb-3">
-                    <a href="#" class="text-decoration-none text-muted">
-                        <i class="fas fa-arrow-left me-2"></i>Konfirmasi Pemesanan
-                    </a>
-                </div>
-
-                <div class="main-card">
-                    <div class="card-header-custom">
-                        <h4 class="mb-0">
-                            <i class="fas fa-shopping-cart me-2"></i>
-                            Konfirmasi Pemesanan
-                        </h4>
+     <div class="progress-header">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+                <span>Konfirmasi Pemesanan</span>
+            </button>
+            <div class="progress-steps">
+                <div class="step-item active">
+                    <div class="step-circle">
+                        <i class="fas fa-check"></i>
                     </div>
+                    <span class="step-text">Alamat</span>
+                </div>
+                <div class="step-connector completed"></div>
+                <div class="step-item">
+                    <div class="step-circle">2</div>
+                    <span class="step-text">Bayar</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step-item">
+                    <div class="step-circle">3</div>
+                    <span class="step-text">Faktur Pembayaran</span>
+                </div>
+            </div>
+        </div>
                     
                     <div class="card-body p-4">
                         <!-- Detail Produk -->

@@ -21,9 +21,22 @@ class PaymentsController extends Controller
 
     public function create()
     {
-        $cart = auth()->user()->cart;
-        $items = $cart ? $cart->items()->with('produk')->get() : collect();
+    $user = auth()->user();
+    $cart = $user->cart()->with('items.produk')->first();
 
+    $products = [];
+    if ($cart) {
+        foreach ($cart->items as $item) {
+            $products[] = [
+                'nama' => $item->produk->nama,
+                'deskripsi' => $item->produk->deskripsi,
+                'kategori' => $item->produk->kategori,
+                'gambar' => $item->produk->gambar ?? 'https://via.placeholder.com/80x80?text=IMG',
+                'harga' => $item->produk->harga,
+                'jumlah' => $item->jumlah,
+            ];
+        }
+    }
         $kecamatanList = [
         ['nama' => 'Kiaracondong', 'jarak' => 0],
         ['nama' => 'Antapani', 'jarak' => 2],
@@ -50,7 +63,7 @@ class PaymentsController extends Controller
         ['nama' => 'Lembang (Bandung Barat)', 'jarak' => 21],
     ];
 
-        return view('user.payments.create', compact('items', 'kecamatanList'));
+        return view('user.payments.create', compact('products', 'kecamatanList'));
     }
     public function index()
     {
