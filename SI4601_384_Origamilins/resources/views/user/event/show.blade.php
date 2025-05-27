@@ -3,65 +3,137 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Detail Event - {{ $event->nama_event }}</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-    <title>Detail Event</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; color: #333; margin: 20px; }
-        .event-poster-container { width: 100%; height: 340px; overflow: hidden; background: #f8f9fa; margin-bottom: 1.5rem; border-radius: 1rem; display: flex; align-items: center; justify-content: center; }
-        .event-poster-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 1rem; }
-        .shadow-sm { box-shadow: 0 2px 8px rgba(8,53,216,0.06) !important; }
-        .btn-back { margin-bottom: 1.5rem; border-radius: 20px; }
-        @media (max-width: 768px) { .event-poster-container { height: 200px; } }
+        body {
+            font-family: 'Poppins', Arial, sans-serif !important;
+        }
+
+        .main-content {
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+
+        .event-card {
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-image-container {
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .event-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .event-info {
+            padding: 1.5rem;
+        }
+
+        .event-info h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0835d8;
+        }
+
+        .event-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0835d8;
+        }
+
+        @media (max-width: 768px) {
+            .event-image-container {
+                height: 200px;
+            }
+
+            .event-info h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .main-content {
+                padding-top: 60px;
+            }
+
+            .event-image-container {
+                height: 160px;
+            }
+        }
     </style>
 </head>
 <body>
+    {{-- Navbar --}}
     @include('user.navigation-menu')
-    <div class="container py-4">
-        <a href="{{ route('user.event.index') }}" class="btn btn-outline-secondary btn-back"><i class="fas fa-arrow-left me-2"></i></a>
-        <div class="row g-4">
-            <div class="col-lg-6">
-                <div class="bg-white rounded-4 p-4 d-flex flex-column align-items-center shadow-sm">
+
+    <div class="main-content">
+        <div class="container py-4">
+            <a href="{{ route('user.event.index') }}" class="btn btn-outline-secondary mb-3">
+                <i class="fas fa-arrow-left me-2"></i> Kembali
+            </a>
+
+            <div class="event-card bg-white">
+                {{-- Poster Full Width --}}
+                <div class="event-image-container">
                     @if($event->poster)
-                        <div class="event-poster-container">
-                            <img src="{{ asset($event->poster) }}" alt="Poster {{ $event->nama_event }}">
-                        </div>
+                        <img src="{{ asset($event->poster) }}" alt="Poster {{ $event->nama_event }}">
                     @else
-                        <div class="event-poster-container" style="color:#bbb;">
-                            <i class="fas fa-image fa-4x"></i>
+                        <div class="text-muted">
+                            <i class="fas fa-image fa-3x"></i>
                         </div>
                     @endif
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="bg-white rounded-4 p-4 h-100 d-flex flex-column justify-content-between shadow-sm">
-                    <div>
-                        <h1 class="fw-bold mb-2" style="color:#0835d8; font-size:2rem;">{{ $event->nama_event }}</h1>
-                        <div class="mb-2 d-flex align-items-center gap-2">
-                            <span class="fs-5 fw-bold text-success">Harga: Rp {{ number_format($event->harga, 0, ',', '.') }}</span>
-                        </div>
-                        <div class="mb-2 d-flex align-items-center gap-2">
-                            <span class="badge bg-primary">Event</span>
-                            @if($event->kuota !== null)
-                                <span class="badge bg-warning text-dark">Kuota: {{ $event->kuota }}</span>
-                            @endif
-                        </div>
-                        <div class="mb-2 d-flex align-items-center gap-2">
-                            <span class="text-muted"><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($event->tanggal_pelaksanaan)->format('d M Y') }}</span>
-                            <span class="text-muted"><i class="fas fa-map-marker-alt"></i> {{ $event->lokasi }}</span>
-                        </div>
-                        <hr class="my-3">
-                        <div class="mb-3">
-                            <strong>Deskripsi Event:</strong>
-                            <div class="text-muted">{!! nl2br(e($event->deskripsi)) !!}</div>
-                        </div>
+
+                {{-- Detail Event --}}
+                <div class="event-info">
+                    <h1 class="mb-3">{{ $event->nama_event }}</h1>
+
+                    <div class="mb-3">
+                        <span class="event-price">Rp {{ number_format($event->harga, 0, ',', '.') }}</span>
                     </div>
-                    {{-- Tombol aksi bisa ditambah di sini --}}
+
+                    <div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
+                        <span class="badge bg-primary">Event</span>
+                        @if($event->kuota !== null)
+                            <span class="badge bg-warning text-dark">Kuota: {{ $event->kuota }}</span>
+                        @endif
+                    </div>
+
+                    <div class="mb-3 text-muted">
+                        <i class="fas fa-calendar-alt me-1"></i> {{ \Carbon\Carbon::parse($event->tanggal_pelaksanaan)->format('d M Y') }}<br>
+                        <i class="fas fa-map-marker-alt me-1"></i> {{ $event->lokasi }}
+                    </div>
+
+                    <hr>
+
+                    <div>
+                        <strong>Deskripsi Event:</strong>
+                        <p class="text-muted mt-2">{!! nl2br(e($event->deskripsi)) !!}</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    {{-- Footer --}}
+    @include('user.footer')
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </body>
-</html> 
+</html>

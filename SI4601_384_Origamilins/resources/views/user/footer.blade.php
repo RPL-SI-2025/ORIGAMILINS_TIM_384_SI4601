@@ -27,7 +27,7 @@
             </div>
             <div class="footer-link-group">
                 <a href="{{ route('etalase') }}" class="footer-link footer-link-primary">Etalas</a>
-                <a href="{{ url('/#event-terdekat') }}" class="footer-link">Informasi Event</a>
+                <a href="{{ route('user.event.index') }}" class="footer-link">Informasi Event</a>
             </div>
         </div>
     </div>

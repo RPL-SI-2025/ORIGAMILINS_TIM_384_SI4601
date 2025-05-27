@@ -13,7 +13,7 @@
                 <a href="{{ url('/') }}" class="nav-link px-3">Beranda</a>
                 <a href="{{ route('etalase') }}" class="nav-link px-3">Etalase</a>
                 <a href="{{ url('/#layanan') }}" class="nav-link px-3">Layanan</a>
-                <a href="{{ url('/#event-terdekat') }}" class="nav-link px-3">Event</a>
+                <a href="{{ route('user.event.index') }}" class="nav-link px-3">Event</a>
                 <a href="{{ url('/#tentang-kami') }}" class="nav-link px-3">Tentang Kami</a>
                 <a href="{{ url('/#kontak') }}" class="nav-link px-3">Kontak</a>
             </div>
