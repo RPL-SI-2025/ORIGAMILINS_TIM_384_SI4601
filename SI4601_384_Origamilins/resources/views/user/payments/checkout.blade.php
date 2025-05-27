@@ -17,12 +17,15 @@
             --gray-600: #64748b;
             --gray-800: #1e293b;
         }
-
         body {
             background-color: var(--gray-100);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        .container-custom {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px 0;
+        }
         .progress-header {
             background: white;
             border-radius: 12px;
@@ -100,55 +103,6 @@
         .step-connector.completed {
             background: #28a745;
         }
-        .step {
-            display: flex;
-            align-items: center;
-            color: var(--gray-600);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .step.active {
-            color: var(--secondary-color);
-        }
-
-        .step.completed {
-            color: var(--success-color);
-        }
-
-        .step-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: var(--gray-200);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 0.5rem;
-            font-size: 0.8rem;
-        }
-
-        .step.active .step-icon {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-
-        .step.completed .step-icon {
-            background-color: var(--success-color);
-            color: white;
-        }
-
-        .step-connector {
-            width: 60px;
-            height: 2px;
-            background-color: var(--gray-200);
-            margin: 0 1rem;
-        }
-
-        .step.completed + .step-connector {
-            background-color: var(--success-color);
-        }
-
         .main-card {
             background: white;
             border-radius: 16px;
@@ -156,14 +110,6 @@
             border: none;
             overflow: hidden;
         }
-
-        .card-header-custom {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #6366f1 100%);
-            color: white;
-            padding: 1.5rem;
-            border: none;
-        }
-
         .section-title {
             font-size: 1.1rem;
             font-weight: 600;
@@ -172,12 +118,10 @@
             display: flex;
             align-items: center;
         }
-
         .section-title i {
             margin-right: 0.5rem;
             color: var(--primary-color);
         }
-
         .product-item {
             display: flex;
             align-items: center;
@@ -187,7 +131,6 @@
             margin-bottom: 1rem;
             background: white;
         }
-
         .product-image {
             width: 60px;
             height: 60px;
@@ -195,23 +138,14 @@
             object-fit: cover;
             margin-right: 1rem;
         }
-
         .product-details {
             flex-grow: 1;
         }
-
         .product-name {
             font-weight: 600;
             color: var(--gray-800);
             margin-bottom: 0.25rem;
         }
-
-        .product-specs {
-            font-size: 0.85rem;
-            color: var(--gray-600);
-            margin-bottom: 0.25rem;
-        }
-
         .product-category {
             font-size: 0.75rem;
             color: var(--primary-color);
@@ -220,55 +154,46 @@
             border-radius: 4px;
             display: inline-block;
         }
-
         .product-price {
             font-weight: 600;
             color: var(--gray-800);
         }
-
         .shipping-info {
             background: #f8fafc;
             border: 1px solid var(--gray-200);
             border-radius: 12px;
             padding: 1.5rem;
         }
-
         .info-row {
             display: flex;
             margin-bottom: 0.5rem;
         }
-
         .info-label {
             font-weight: 500;
             color: var(--gray-600);
             min-width: 120px;
         }
-
         .info-value {
             color: var(--gray-800);
             flex-grow: 1;
         }
-
         .summary-table {
             background: white;
             border-radius: 12px;
             overflow: hidden;
         }
-
         .summary-row {
             display: flex;
             justify-content: space-between;
             padding: 1rem 1.5rem;
             border-bottom: 1px solid var(--gray-200);
         }
-
         .summary-row:last-child {
             border-bottom: none;
             background: #f8fafc;
             font-weight: 600;
             font-size: 1.1rem;
         }
-
         .payment-button {
             background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
             border: none;
@@ -280,19 +205,16 @@
             transition: all 0.3s ease;
             width: 100%;
         }
-
         .payment-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
             color: white;
         }
-
         .payment-button:disabled {
             background: var(--gray-200);
             color: var(--gray-600);
             cursor: not-allowed;
         }
-
         .order-info {
             background: #fff7ed;
             border: 1px solid #fed7aa;
@@ -300,32 +222,30 @@
             padding: 1rem;
             margin-bottom: 1.5rem;
         }
-
         .edit-link {
             color: var(--secondary-color);
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 500;
         }
-
         .edit-link:hover {
             color: #d97706;
         }
-
+        @media (max-width: 992px) {
+            .container-custom {
+                padding: 16px 0;
+            }
+        }
         @media (max-width: 768px) {
-            .progress-stepper {
-                font-size: 0.8rem;
-                padding: 0 1rem;
+            .container-custom {
+                padding: 8px 0;
             }
-            
-            .step-connector {
-                width: 40px;
+            .progress-header {
+                padding: 12px;
             }
-            
             .product-item {
                 flex-wrap: wrap;
             }
-            
             .product-image {
                 width: 50px;
                 height: 50px;
@@ -334,10 +254,11 @@
     </style>
 </head>
 <body>
-   @include('user.navigation-menu ')
-    <!-- Progress Stepper -->
-     <div class="progress-header">
-            <button class="back-btn" onclick="goBack()">
+    @include('user.navigation-menu')
+    <div class="container container-custom">
+        <!-- Progress Stepper -->
+        <div class="progress-header">
+            <button class="back-btn" onclick="window.history.back()">
                 <i class="fas fa-arrow-left"></i>
                 <span>Konfirmasi Pemesanan</span>
             </button>
@@ -349,7 +270,7 @@
                     <span class="step-text">Alamat</span>
                 </div>
                 <div class="step-connector completed"></div>
-                <div class="step-item">
+                <div class="step-item active">
                     <div class="step-circle">2</div>
                     <span class="step-text">Bayar</span>
                 </div>
@@ -360,115 +281,110 @@
                 </div>
             </div>
         </div>
-                    
-                    <div class="card-body p-4">
-                        <!-- Detail Produk -->
-                        <div class="mb-4">
-                            <h5 class="section-title">
-                                <i class="fas fa-box"></i>
-                                Detail Produk
+        <div class="row">
+            <div class="col-lg-8 mb-4">
+                <div class="main-card p-4">
+                    <!-- Detail Produk -->
+                    <div class="mb-4">
+                        <h5 class="section-title">
+                            <i class="fas fa-box"></i>
+                            Detail Produk
+                        </h5>
+                        @foreach($items as $item)
+                        <div class="product-item">
+                            <img src="{{ $item->produk->gambar ?? 'https://via.placeholder.com/60x60?text=IMG' }}" 
+                                 alt="{{ $item->produk->nama }}" class="product-image">
+                            <div class="product-details">
+                                <div class="product-name">{{ $item->produk->nama }}</div>
+                                <span class="product-category">{{ $item->produk->kategori }}</span>
+                            </div>
+                            <div class="text-end">
+                                <div class="product-price">Rp {{ number_format($item->produk->harga * $item->jumlah, 0, ',', '.') }}</div>
+                                <small class="text-muted">Qty: {{ $item->jumlah }}</small>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    <!-- Detail Pengiriman -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="section-title mb-0">
+                                <i class="fas fa-truck"></i>
+                                Detail Pengiriman
                             </h5>
-                            
-                            <!-- Sample Product - Replace with dynamic data -->
-                            <div class="product-item">
-                                <img src="https://via.placeholder.com/60x60/FF6B6B/FFFFFF?text=🌸" 
-                                     alt="Bunga Kertas" class="product-image">
-                                <div class="product-details">
-                                    <div class="product-name">Bunga Kertas</div>
-                                    <div class="product-specs">Handmade paper flowers</div>
-                                    <span class="product-category">Dekorasi</span>
+                            <a href="#" class="edit-link">Edit Detail</a>
+                        </div>
+                        <div class="shipping-info">
+                            <div class="mb-3">
+                                <strong>Alamat Pengiriman</strong>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-value">
+                                    <strong>{{ $alamat['nama_awal'] ?? '' }} {{ $alamat['nama_akhir'] ?? '' }}</strong><br>
+                                    {{ $alamat['alamat'] ?? '' }}{{ $alamat['blok_gang'] ? ', '.$alamat['blok_gang'] : '' }}, 
+                                    {{ $alamat['kecamatan'] ?? '' }}, {{ $alamat['kota'] ?? '' }}, 
+                                    {{ $alamat['provinsi'] ?? '' }} {{ $alamat['kode_pos'] ?? '' }}
                                 </div>
-                                <div class="text-end">
-                                    <div class="product-price">Rp 250.000</div>
-                                    <small class="text-muted">Qty: 1</small>
-                                </div>
+                            </div>
+                            <div class="info-row mt-3">
+                                <span class="info-label">Alamat Invoice:</span>
+                                <span class="info-value">
+                                    {{ (isset($alamat['alamat_sama']) && $alamat['alamat_sama']) ? 'Sama dengan alamat pengiriman' : 'Berbeda' }}
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Informasi Kontak:</span>
+                                <span class="info-value">{{ $alamat['email'] ?? '' }}</span>
                             </div>
                         </div>
-
-                        <!-- Detail Pengiriman -->
-                        <div class="mb-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="section-title mb-0">
-                                    <i class="fas fa-truck"></i>
-                                    Detail Pengiriman
-                                </h5>
-                                <a href="#" class="edit-link">Edit Detail</a>
+                    </div>
+                    <!-- Order Information -->
+                    <div class="order-info">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong>Order ID:</strong> {{ $payment->order_id ?? '-' }}<br>
+                                <strong>Email:</strong> {{ $payment->email ?? ($alamat['email'] ?? '-') }}
                             </div>
-                            
-                            <div class="shipping-info">
-                                <div class="mb-3">
-                                    <strong>Alamat Pengiriman</strong>
-                                </div>
-                                <div class="info-row">
-                                    <div class="info-value">
-                                        <strong>John Doe</strong><br>
-                                        Gg. PGA Blok Braja No.104, RT./RW.04/02, Lengkong, Kec. Bojongsoang, Kabupaten Bandung, Jawa Barat 40287
-                                    </div>
-                                </div>
-                                <div class="info-row mt-3">
-                                    <span class="info-label">Alamat Invoice:</span>
-                                    <span class="info-value">Sama dengan alamat pengiriman</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Informasi Kontak:</span>
-                                    <span class="info-value">custdummy@gmail.com</span>
-                                </div>
+                            <div class="text-end">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>
+                                    Valid hingga: 24 jam
+                                </small>
                             </div>
-                        </div>
-
-                        <!-- Order Information -->
-                        <div class="order-info">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <strong>Order ID:</strong> ORD-2024-001<br>
-                                    <strong>Email:</strong> custdummy@gmail.com
-                                </div>
-                                <div class="text-end">
-                                    <small class="text-muted">
-                                        <i class="fas fa-clock me-1"></i>
-                                        Valid hingga: 24 jam
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Ringkasan Pembayaran -->
-                        <div class="mb-4">
-                            <h5 class="section-title">
-                                <i class="fas fa-calculator"></i>
-                                Ringkasan Pembayaran
-                            </h5>
-                            
-                            <div class="summary-table">
-                                <div class="summary-row">
-                                    <span>Subtotal</span>
-                                    <span>Rp 250.000</span>
-                                </div>
-                                <div class="summary-row">
-                                    <span>Ongkir (JNE Regular)</span>
-                                    <span>Rp 15.000</span>
-                                </div>
-                                <div class="summary-row">
-                                    <span>Total Pembayaran</span>
-                                    <span>Rp 265.000</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Payment Button -->
-                        <div class="d-grid gap-2">
-                            <button id="pay-button" class="payment-button">
-                                <i class="fas fa-credit-card me-2"></i>
-                                Bayar Sekarang - Rp 265.000
-                            </button>
-                            <small class="text-center text-muted mt-2">
-                                <i class="fas fa-shield-alt me-1"></i>
-                                Pembayaran aman dengan Midtrans
-                            </small>
                         </div>
                     </div>
                 </div>
-
+            </div>
+            <!-- Ringkasan Pembayaran -->
+            <div class="col-lg-4">
+                <div class="main-card p-4">
+                    <h5 class="section-title">
+                        <i class="fas fa-calculator"></i>
+                        Ringkasan Pembayaran
+                    </h5>
+                    <div class="summary-table mb-3">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span>Rp {{ number_format($subtotal ?? 0, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Ongkir</span>
+                            <span>Rp {{ number_format($ongkir ?? 0, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Total Pembayaran</span>
+                            <span>Rp {{ number_format($total ?? 0, 0, ',', '.') }}</span>
+                        </div>
+                    </div>
+                    <button id="pay-button" class="payment-button">
+                        <i class="fas fa-credit-card me-2"></i>
+                        Bayar Sekarang - Rp {{ number_format($total ?? 0, 0, ',', '.') }}
+                    </button>
+                    <small class="text-center text-muted mt-2 d-block">
+                        <i class="fas fa-shield-alt me-1"></i>
+                        Pembayaran aman dengan Midtrans
+                    </small>
+                </div>
                 <!-- Payment Methods Info -->
                 <div class="mt-4 text-center">
                     <small class="text-muted">Metode pembayaran yang tersedia:</small>
@@ -484,54 +400,35 @@
             </div>
         </div>
     </div>
-
     <script>
-        // Sample snap token - replace with actual token from backend
-        const snapToken = 'YOUR_SNAP_TOKEN';
-        
+        // Ganti dengan snap token dari backend
+        const snapToken = '{{ $payment->snap_token ?? "YOUR_SNAP_TOKEN" }}';
         document.getElementById('pay-button').onclick = function() {
-            // Check if snap token exists
             if (!snapToken || snapToken === 'YOUR_SNAP_TOKEN') {
                 alert('Snap token belum tersedia. Pastikan data pembayaran sudah dibuat di backend.');
                 return;
             }
-
-            // Disable button during payment process
             this.disabled = true;
             this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Memproses...';
-            
             snap.pay(snapToken, {
                 onSuccess: function(result) {
-                    console.log('Payment success:', result);
                     window.location.href = '/payment/success/' + result.order_id;
                 },
                 onPending: function(result) {
-                    console.log('Payment pending:', result);
                     window.location.href = '/payment/pending/' + result.order_id;
                 },
                 onError: function(result) {
-                    console.log('Payment error:', result);
                     alert('Terjadi kesalahan saat memproses pembayaran. Coba lagi.');
-                    // Re-enable button
                     document.getElementById('pay-button').disabled = false;
-                    document.getElementById('pay-button').innerHTML = '<i class="fas fa-credit-card me-2"></i>Bayar Sekarang - Rp 265.000';
+                    document.getElementById('pay-button').innerHTML = '<i class="fas fa-credit-card me-2"></i>Bayar Sekarang - Rp {{ number_format($total ?? 0, 0, ',', '.') }}';
                 },
                 onClose: function() {
-                    console.log('Payment popup closed');
-                    // Re-enable button
                     document.getElementById('pay-button').disabled = false;
-                    document.getElementById('pay-button').innerHTML = '<i class="fas fa-credit-card me-2"></i>Bayar Sekarang - Rp 265.000';
+                    document.getElementById('pay-button').innerHTML = '<i class="fas fa-credit-card me-2"></i>Bayar Sekarang - Rp {{ number_format($total ?? 0, 0, ',', '.') }}';
                 }
             });
         };
-
-        // Auto-refresh token setiap 30 menit untuk menghindari expired token
-        setInterval(function() {
-            console.log('Checking token validity...');
-            // Implement token refresh logic here if needed
-        }, 30 * 60 * 1000);
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
