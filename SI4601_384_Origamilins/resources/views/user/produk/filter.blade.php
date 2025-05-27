@@ -35,17 +35,42 @@
 document.addEventListener('DOMContentLoaded', function() {
     const checkAll = document.getElementById('checkAllKategori');
     const kategoriCheckboxes = document.querySelectorAll('.kategori-checkbox');
+    
+    // Fungsi untuk memperbarui status checkbox "Semua"
     function updateCheckAll() {
         const allChecked = Array.from(kategoriCheckboxes).every(cb => cb.checked);
         checkAll.checked = allChecked;
     }
-    updateCheckAll();
+
+    // Fungsi untuk menangani perubahan checkbox "Semua"
     checkAll.addEventListener('change', function() {
-        kategoriCheckboxes.forEach(cb => cb.checked = checkAll.checked);
+        if (this.checked) {
+            // Jika "Semua" dicentang, centang semua checkbox lainnya
+            kategoriCheckboxes.forEach(cb => cb.checked = true);
+        } else {
+            // Jika "Semua" tidak dicentang, hapus centang semua checkbox lainnya
+            kategoriCheckboxes.forEach(cb => cb.checked = false);
+        }
     });
+
+    // Menangani perubahan checkbox individual
     kategoriCheckboxes.forEach(cb => {
-        cb.addEventListener('change', updateCheckAll);
+        cb.addEventListener('change', function() {
+            // Jika ada checkbox yang tidak dicentang, hapus centang "Semua"
+            if (!this.checked) {
+                checkAll.checked = false;
+            } else {
+                // Periksa apakah semua checkbox lain dicentang
+                const allChecked = Array.from(kategoriCheckboxes).every(cb => cb.checked);
+                checkAll.checked = allChecked;
+            }
+        });
     });
+
+    // Inisialisasi status awal
+    updateCheckAll();
+
+    // Menangani pengiriman form
     const form = document.querySelector('form');
     form.addEventListener('submit', function(e) {
         const min = form.querySelector('input[name="harga_min"]');
