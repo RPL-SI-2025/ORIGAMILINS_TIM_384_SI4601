@@ -19,51 +19,82 @@ class PaymentsController extends Controller
      * Show payment form
      */
 
-    public function create()
+    public function create(Request $request)
     {
-    $user = auth()->user();
-    $cart = $user->cart()->with('items.produk')->first();
+        $user = auth()->user();
 
-    $products = [];
-    if ($cart) {
-        foreach ($cart->items as $item) {
-            $products[] = [
-                'nama' => $item->produk->nama,
-                'deskripsi' => $item->produk->deskripsi,
-                'kategori' => $item->produk->kategori,
-                'gambar' => $item->produk->gambar ?? 'https://via.placeholder.com/80x80?text=IMG',
-                'harga' => $item->produk->harga,
-                'jumlah' => $item->jumlah,
-            ];
+        $products = [];
+        $subtotal = 0;
+
+        // Cek apakah request datang dari tombol "Beli Sekarang" di detail produk
+        if ($request->has('produk_id') && $request->has('jumlah')) {
+            $produkId = $request->input('produk_id');
+            $jumlah = $request->input('jumlah');
+
+            $produk = \App\Models\Produk::find($produkId);
+
+            if ($produk && $jumlah > 0) {
+                $products[] = [
+                    'nama' => $produk->nama,
+                    'deskripsi' => $produk->deskripsi,
+                    'kategori' => $produk->kategori,
+                    'gambar' => $produk->gambar ?? 'https://via.placeholder.com/80x80?text=IMG',
+                    'harga' => $produk->harga,
+                    'jumlah' => $jumlah,
+                ];
+                $subtotal = $produk->harga * $jumlah;
+            }
+        } else {
+            // Jika tidak, proses dari keranjang
+            $cart = $user->cart()->with('items.produk')->first();
+
+            if ($cart) {
+                foreach ($cart->items as $item) {
+                    $products[] = [
+                        'nama' => $item->produk->nama,
+                        'deskripsi' => $item->produk->deskripsi,
+                        'kategori' => $item->produk->kategori,
+                        'gambar' => $item->produk->gambar ?? 'https://via.placeholder.com/80x80?text=IMG',
+                        'harga' => $item->produk->harga,
+                        'jumlah' => $item->jumlah,
+                    ];
+                    $subtotal += $item->produk->harga * $item->jumlah;
+                }
+            }
         }
-    }
-        $kecamatanList = [
-        ['nama' => 'Kiaracondong', 'jarak' => 0],
-        ['nama' => 'Antapani', 'jarak' => 2],
-        ['nama' => 'Cicadas', 'jarak' => 3],
-        ['nama' => 'Lengkong', 'jarak' => 4],
-        ['nama' => 'Batununggal', 'jarak' => 2],
-        ['nama' => 'Bandung Wetan', 'jarak' => 4],
-        ['nama' => 'Cibiru', 'jarak' => 7],
-        ['nama' => 'Ujungberung', 'jarak' => 8],
-        ['nama' => 'Cilengkrang (Kab. Bandung)', 'jarak' => 10],
-        ['nama' => 'Margahayu (Kab. Bandung)', 'jarak' => 13],
-        ['nama' => 'Ciparay (Kab. Bandung)', 'jarak' => 17],
-        ['nama' => 'Dayeuhkolot (Kab. Bandung)', 'jarak' => 11],
-        ['nama' => 'Baleendah (Kab. Bandung)', 'jarak' => 13],
-        ['nama' => 'Banjaran (Kab. Bandung)', 'jarak' => 18],
-        ['nama' => 'Soreang (Kab. Bandung)', 'jarak' => 22],
-        ['nama' => 'Margaasih (Kab. Bandung)', 'jarak' => 14],
-        ['nama' => 'Katapang (Kab. Bandung)', 'jarak' => 16],
-        ['nama' => 'Cimahi Utara', 'jarak' => 13],
-        ['nama' => 'Cimahi Tengah', 'jarak' => 12],
-        ['nama' => 'Cimahi Selatan', 'jarak' => 14],
-        ['nama' => 'Padalarang (Bandung Barat)', 'jarak' => 22],
-        ['nama' => 'Ngamprah (Bandung Barat)', 'jarak' => 20],
-        ['nama' => 'Lembang (Bandung Barat)', 'jarak' => 21],
-    ];
 
-        return view('user.payments.create', compact('products', 'kecamatanList'));
+        // Jika tidak ada produk, redirect kembali (misalnya jika keranjang kosong dan tidak ada produk di request)
+        if (empty($products)) {
+             return redirect()->back()->with('error', 'Tidak ada produk untuk diproses.');
+        }
+
+        $kecamatanList = [
+            ['nama' => 'Kiaracondong', 'jarak' => 0],
+            ['nama' => 'Antapani', 'jarak' => 2],
+            ['nama' => 'Cicadas', 'jarak' => 3],
+            ['nama' => 'Lengkong', 'jarak' => 4],
+            ['nama' => 'Batununggal', 'jarak' => 2],
+            ['nama' => 'Bandung Wetan', 'jarak' => 4],
+            ['nama' => 'Cibiru', 'jarak' => 7],
+            ['nama' => 'Ujungberung', 'jarak' => 8],
+            ['nama' => 'Cilengkrang (Kab. Bandung)', 'jarak' => 10],
+            ['nama' => 'Margahayu (Kab. Bandung)', 'jarak' => 13],
+            ['nama' => 'Ciparay (Kab. Bandung)', 'jarak' => 17],
+            ['nama' => 'Dayeuhkolot (Kab. Bandung)', 'jarak' => 11],
+            ['nama' => 'Baleendah (Kab. Bandung)', 'jarak' => 13],
+            ['nama' => 'Banjaran (Kab. Bandung)', 'jarak' => 18],
+            ['nama' => 'Soreang (Kab. Bandung)', 'jarak' => 22],
+            ['nama' => 'Margaasih (Kab. Bandung)', 'jarak' => 14],
+            ['nama' => 'Katapang (Kab. Bandung)', 'jarak' => 16],
+            ['nama' => 'Cimahi Utara', 'jarak' => 13],
+            ['nama' => 'Cimahi Tengah', 'jarak' => 12],
+            ['nama' => 'Cimahi Selatan', 'jarak' => 14],
+            ['nama' => 'Padalarang (Bandung Barat)', 'jarak' => 22],
+            ['nama' => 'Ngamprah (Bandung Barat)', 'jarak' => 20],
+            ['nama' => 'Lembang (Bandung Barat)', 'jarak' => 21],
+        ];
+
+        return view('user.payments.create', compact('products', 'kecamatanList', 'subtotal'));
     }
     public function index()
     {
