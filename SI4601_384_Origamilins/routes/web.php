@@ -118,6 +118,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payments/history', [UserPaymentHistoryController::class, 'index'])->name('user.payments.history');
     Route::get('/payments/{id}', [UserPaymentHistoryController::class, 'show'])->name('user.payments.show');
     Route::get('/user/payments/create', [PaymentsController::class, 'create'])->name('user.payments.create');
+
+    // Tambahkan route shipping berikut
+    Route::get('/user/payments/shipping', [PaymentsController::class, 'shipping'])->name('user.payments.shipping');
+    Route::post('/user/payments/shipping', [PaymentsController::class, 'shipping'])->name('user.payments.shipping');
+    Route::get('/user/payments/checkout', [PaymentsController::class, 'checkout'])->name('user.payments.checkout');
 });
 
 // Produk Input Publik
