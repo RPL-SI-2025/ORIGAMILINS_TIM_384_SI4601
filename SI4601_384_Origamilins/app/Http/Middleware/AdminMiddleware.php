@@ -22,6 +22,8 @@ class AdminMiddleware
             return redirect('/login');
         }
 
+        \Log::info('User role:', ['role' => Auth::user()->role]);
+
         // Periksa apakah user adalah admin
         if (Auth::user()->role !== 'admin') {
             return redirect('/')->with('error', 'Unauthorized access');

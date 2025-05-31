@@ -28,7 +28,7 @@
 
                 <!-- Current Profile Photo -->
                 <div class="mt-2" x-show="! photoPreview">
-                <img src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}" class="rounded-full size-20 object-cover">
+                    <img src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}" class="rounded-full size-20 object-cover">
                 </div>
 
                 <!-- New Profile Photo Preview -->
@@ -79,7 +79,8 @@
                         {{ __('A new verification link has been sent to your email address.') }}
                     </p>
                 @endif
-        </div>
+            @endif
+        </div>  
     </x-slot>
 
     <x-slot name="actions">

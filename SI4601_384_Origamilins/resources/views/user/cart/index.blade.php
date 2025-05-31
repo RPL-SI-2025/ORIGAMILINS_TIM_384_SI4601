@@ -215,7 +215,8 @@
                                 @csrf
                                 @method('DELETE')
                                 <input type="hidden" name="item_id" value="{{ $item->id }}">
-                                <button type="submit" class="btn btn-danger btn-sm" title="Hapus">
+                                <button type="submit" class="btn btn-danger btn-sm d-flex align-items-center justify-content-center" 
+                                    title="Hapus" dusk="btn-hapus-produk-{{ $item->produk->id }}" style="width:32px;height:32px;padding:0;">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
