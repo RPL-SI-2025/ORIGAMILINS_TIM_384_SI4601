@@ -18,12 +18,11 @@ use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\UserPaymentHistoryController;
 
 // Home
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [WelcomeController::class, 'index'])->name('home');
 
 // Event Publik
 Route::get('/event', [EventController::class, 'index'])->name('event.melihat_event');
@@ -275,21 +274,16 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
     });
 
 // Debug Route
-Route::get('/debug-login', function () {
-    if (!Auth::check()) {
-        return 'Status: Not logged in';
-    }
-
+Route::post('/user/profile/photo', function(Request $request) {
+    $request->validate([
+        'photo' => 'required|image|max:1024',
+    ]);
     $user = Auth::user();
-    return [
-        'status' => 'Logged in',
-        'user' => [
-            'name' => $user->name,
-            'email' => $user->email,
-            'role' => $user->role
-        ]
-    ];
-});
+    $path = $request->file('photo')->store('profile-photos', 'public');
+    $user->profile_photo_path = $path;
+    $user->save();
+    return back()->with('success', 'Foto profil berhasil diubah.');
+})->middleware(['auth'])->name('profile.photo');
 
 Route::get('/reset-password', [ResetPasswordController::class, 'showForm'])->name('reset.password.form');
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset.password');

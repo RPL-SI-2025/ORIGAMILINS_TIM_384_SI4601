@@ -61,8 +61,7 @@
                 </script>
 
     </div>
-</nav>
-    
+</nav> 
     <!-- Hero Section -->
     <section class="hero">
         <div class="paper-plane paper-plane-1">
@@ -173,32 +172,18 @@
 <section id="event-terdekat">
 <h2>Seminar & Workshop Terdekat!</h2>
 <div class="event-cards">
-  <div class="event-card">
-    <img src="uploads/event1.png" alt="Event 1">
-    <a href="/event1.html" class="event-title">Bermain bersama anak melatih kreativitas</a>
-    <p class="event-date">17 Juni 2025</p>
-  </div>
-
-  <div class="event-card">
-    <img src="uploads/event2.png" alt="Event 2">
-    <a href="/event2.html" class="event-title">Melipat Origami Bisa Jadi Bisnis Belipat Ganda</a>
-    <p class="event-date">29 Juni 2025</p>
-  </div>
-
-  <div class="event-card">
-    <img src="uploads/event3.png" alt="Event 3">
-    <a href="/event3.html" class="event-title">Origami Bercuan, Hidup Berwarna</a>
-    <p class="event-date">5 September 2025</p>
-  </div>
-
-  <div class="event-card">
-    <img src="uploads/event4.png" alt="Event 4">
-    <a href="/event4.html" class="event-title">Menghias Kamar Anak Dengan Origami</a>
-    <p class="event-date">12 Agustus 2025</p>
+  @foreach($events as $event)
+    <div class="event-card">
+      <img src="{{ asset($event->poster) }}" alt="{{ $event->nama_event }}">
+      <a href="{{ route('user.event.show', $event->id) }}" class="event-title">{{ $event->nama_event }}</a>
+      <p class="event-date">{{ \Carbon\Carbon::parse($event->tanggal_pelaksanaan)->format('d F Y') }}</p>   
+    </div>
+  @endforeach
+  <div style="width:100%;text-align:center;margin-top:1.5rem;">
+    <a href="http://127.0.0.1:8000/events" class="katalog-link">Jelajahi Event Lainnya &rarr;</a>
   </div>
 </div>
 </section>
-
 
 <!-- Tentang Kami Section -->
 <section class="tentang-kami-section" id="tentang-kami">
