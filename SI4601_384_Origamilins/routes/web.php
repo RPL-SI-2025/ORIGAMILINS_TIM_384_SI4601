@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\ArtikelController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\PengrajinManagementController;
@@ -20,6 +21,8 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\UserPaymentHistoryController;
+use App\Http\Controllers\UserNotifikasiController;
+use App\Http\Controllers\UserPesananController;
 
 // Home
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
@@ -37,6 +40,9 @@ Route::get('/logout', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/profilpengguna', [UserProfileController::class, 'create'])->name('profile.create');
     Route::post('/profilpengguna', [UserProfileController::class, 'store'])->name('profile.store');
+
+    // pesanan saya
+    Route::get('/pesanan-saya/{id_pesanan}', [UserPesananController::class, 'show'])->name('pesanan.show');
 
     // Dashboard
     Route::get('/dashboard', function () {
@@ -151,6 +157,10 @@ Route::middleware(['auth'])->group(function () {
         $payment = \App\Models\Payments::where('order_id', $order_id)->firstOrFail();
         return view('user.payments.status', compact('payment'));
     })->name('payment.pending');
+
+    // Notifikasi Routes
+    Route::get('/notifikasi', [UserNotifikasiController::class, 'index'])->name('user.notifikasi');
+    Route::post('/notifikasi/{id}/read', [UserNotifikasiController::class, 'read'])->name('user.notifikasi.read');
 });
 
 // Produk Input Publik
@@ -278,7 +288,7 @@ Route::post('/user/profile/photo', function(Request $request) {
     $request->validate([
         'photo' => 'required|image|max:1024',
     ]);
-    $user = Auth::user();
+    $user = \App\Models\User::find(Auth::id());
     $path = $request->file('photo')->store('profile-photos', 'public');
     $user->profile_photo_path = $path;
     $user->save();
@@ -287,4 +297,8 @@ Route::post('/user/profile/photo', function(Request $request) {
 
 Route::get('/reset-password', [ResetPasswordController::class, 'showForm'])->name('reset.password.form');
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset.password');
+
+Route::middleware(['auth'])->group(function() {
+    Route::get('/pesanan-saya', [App\Http\Controllers\UserPesananController::class, 'index'])->name('user.pesanan.index');
+});
 

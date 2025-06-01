@@ -5,6 +5,7 @@ use App\Models\Payments;
 use App\Services\MidtransService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentsController extends Controller
 {
@@ -20,6 +21,7 @@ class PaymentsController extends Controller
      */
     public function create()
     {
+        $user = Auth::user();
         $user = auth()->user();
         $cart = $user->cart()->with('items.produk')->first();
 

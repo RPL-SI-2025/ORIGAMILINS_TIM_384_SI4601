@@ -77,6 +77,13 @@ body {
     margin-right: 10px;
 }
 
+.logo-img {
+    height: 40px;        /* Atur tinggi sesuai kebutuhan */
+    width: auto;         /* Biarkan lebar mengikuti rasio asli */
+    object-fit: contain; /* Hindari gepeng */
+    display: inline-block;
+}
+
 .nav-links {
     display: flex;
     gap: 2rem;
@@ -215,6 +222,40 @@ body {
 .search-auth .badge {
     font-size: 0.7rem; /* Smaller badge */
     padding: 0.3em 0.6em; /* Adjusted padding */
+}
+
+/* Konsistensi warna icon navbar Origamilins */
+.icon-search i {
+    color: #126ffb !important; /* Biru Origamilins */
+    transition: color 0.2s;
+}
+.icon-search:hover i,
+.icon-search:focus i {
+    color: #f9bd1e !important; /* Kuning saat hover */
+}
+
+.icon-bell i {
+    color: #f59e0b !important; /* Kuning/Orange */
+    transition: color 0.2s;
+}
+.icon-bell:hover i,
+.icon-bell:focus i {
+    color: #126ffb !important; /* Biru saat hover */
+}
+
+.icon-cart i {
+    color: #10b981 !important; /* Hijau */
+    transition: color 0.2s;
+}
+.icon-cart:hover i,
+.icon-cart:focus i {
+    color: #f9bd1e !important; /* Kuning saat hover */
+}
+
+/* Pastikan badge notifikasi tetap merah */
+#notificationCount {
+    background: #ef4444 !important;
+    color: #fff !important;
 }
 
 /* Responsive adjustments for Navbar */
@@ -1528,4 +1569,28 @@ a:hover {
 }
 .nav-links .nav-link:hover:after {
     width: 100%;
+}
+
+.product-price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #126ffb;
+    margin-bottom: 6px;
+}
+.quantity-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #f3f4f6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #126ffb;
+    transition: background 0.2s, color 0.2s;
+}
+.quantity-btn:hover:not(:disabled) {
+    background: #e0e7ff;
+    color: #126ffb;
 }
