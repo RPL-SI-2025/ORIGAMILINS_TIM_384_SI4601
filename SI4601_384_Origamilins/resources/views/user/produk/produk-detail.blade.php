@@ -134,10 +134,11 @@
         }
     </style>
     
-    @stack('styles')
 </head>
 <body>
-   @include('user.navigation-menu')
+   {{-- Navbar --}}
+    @include('user.navigation-menu')
+    
     <!-- Main Content -->
     <main class="main-content">
         <div class="container">
@@ -337,11 +338,9 @@
             @endif
         </div>
     </main>
-
+    @include('user.footer')
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    @stack('scripts')
-     <!-- Footer -->
-     @include('user.footer')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </body>
 </html>

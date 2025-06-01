@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Pesanan;
 use App\Models\Pengrajin;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -80,8 +81,30 @@ class PesananController extends Controller
             'status' => $request->status,
             'pengrajin_id' => $request->pengrajin_id,
             'nomor_resi' => $request->nomor_resi,
-            'ekspedisi' => $request->ekspedisi
+            'ekspedisi' => $request->ekspedisi,
+            'is_read' => false
         ]);
+
+        // Tambahkan trigger notifikasi di bawah ini
+        $user = $pesanan->user;
+        $status = $request->status;
+        $resi = $request->nomor_resi ?? null;
+
+        $notif = [
+            'Rencana'       => ['Pesanan Anda dalam konfirmasi Admin', 'Pesanan Anda telah masuk dan sedang dikonfirmasi oleh admin.'],
+            'Dalam Proses'  => ['Pesanan Anda sedang diproses', 'Pesanan Anda sedang diproses oleh pengrajin.'],
+            'Siap Dikirim'  => ['Pesanan Anda siap dikirim', 'Pesanan Anda siap dikirim.'],
+            'Dikirim'       => ['Pesanan Anda sedang dikirim', 'Pesanan Anda sedang dikirim dengan resi: ' . $resi],
+            'Selesai'       => ['Pesanan selesai', 'Pesanan Anda telah diterima. Terima kasih!'],
+        ];
+
+        if (isset($notif[$status])) {
+            Notification::create([
+                'user_id' => $user->id,
+                'title'   => $notif[$status][0],
+                'message' => $notif[$status][1],
+            ]);
+        }
 
         // Update timestamps berdasarkan status
         if ($request->status === 'Dalam Proses') {

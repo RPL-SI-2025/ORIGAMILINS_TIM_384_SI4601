@@ -34,17 +34,6 @@
                     <a href="#kontak">Kontak</a>
                 </div>  
 
-                <div class="search-auth d-flex align-items-center gap-3">
-                <div class="search-box position-relative">
-                    <input type="text" placeholder="Cari" class="form-control pe-5">
-                    <button type="submit" class="search-icon position-absolute">
-                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="gray" stroke-width="2" fill="none">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                    </button>
-                </div>
-
                 <div class="auth-links">
                     <a href="javascript:void(0)" class="auth-link login" data-url="{{ route('login') }}">Masuk</a>
                     <a href="javascript:void(0)" class="auth-link register" data-url="{{ route('register') }}">Daftar</a>
@@ -294,6 +283,7 @@
     </div>
 </section>
 
+@include('user.footer')
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -359,7 +349,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 </script>
-
-@extends('user.footer')
 </body>
 </html>
