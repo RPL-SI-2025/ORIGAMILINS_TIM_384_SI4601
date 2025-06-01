@@ -133,8 +133,6 @@
         </div>
     </div>
 </nav>
-
-{{-- Add this script for handling auth links if they are needed somewhere else --}}
 {{-- Note: With full page navigation, this might not be necessary here anymore --}}
 {{-- <script>
 document.addEventListener('DOMContentLoaded', function() {
