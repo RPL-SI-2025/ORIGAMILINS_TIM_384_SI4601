@@ -29,18 +29,29 @@
             // ... existing code ...
         }
     </style>
-</head>
+</head>/  
 <body>
     @include('user.navigation-menu')
+
+    {{-- Pop Up Notifikasi --}}
+    @if(session('notif_popup'))
+        <div class="toast show position-fixed top-0 end-0 m-4" style="z-index:9999;" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Notifikasi</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                {{ session('notif_popup') }}
+            </div>
+        </div>
+    @endif
 
     <!-- Main Content -->
     <main class="main-content">
         @yield('content')
     </main>
-
     <!-- Footer -->
     @include('user.footer')
-
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
