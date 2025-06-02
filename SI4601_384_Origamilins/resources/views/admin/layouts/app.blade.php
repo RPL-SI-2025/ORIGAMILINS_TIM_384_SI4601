@@ -146,6 +146,14 @@
             font-size: 1.5rem;
         }
 
+        /* Active link styles */
+        .nav-link.active, .nav-link.active:focus, .nav-link.active:hover {
+            background-color: #2563eb !important;
+            color: #fff !important;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
         /* Responsive styles */
         @media (max-width: 768px) {
             .admin-sidebar {

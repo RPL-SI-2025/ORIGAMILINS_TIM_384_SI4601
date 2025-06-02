@@ -195,24 +195,27 @@
             font-size: 1.1rem;
         }
         .payment-button {
-            background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
-            border: 2px solid #059669; 
+            background: #10b981;
+            border: none;
             border-radius: 12px;
             padding: 1rem 2rem;
             font-weight: 600;
             font-size: 1.1rem;
-            color: white;
+            color: #fff;
             transition: all 0.3s ease;
             width: 100%;
             box-shadow: 0 4px 16px rgba(16,185,129,0.12);
+            display: block;
+            text-align: center;
         }
-        .payment-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        .payment-button:hover, .payment-button:focus {
+            background: #059669;
+            color: #fff;
+            outline: none;
         }
         .payment-button:disabled {
-            background: var(--gray-200);
-            color: var(--gray-600);
+            background: #e2e8f0;
+            color: #6c757d;
             cursor: not-allowed;
         }
         .order-info {

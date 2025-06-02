@@ -19,32 +19,46 @@
 
         .event-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 2rem;
             margin-bottom: 2rem;
         }
 
         .event-card {
-            background: white;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 25px rgba(3, 53, 216, 0.08);
+            border: 1px solid rgba(3, 53, 216, 0.1);
             position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex; /* Use flexbox for internal layout */
-            flex-direction: column; /* Stack image and content vertically */
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
             height: 100%;
         }
 
         .event-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(3, 53, 216, 0.15);
+            border-color: rgba(3, 53, 216, 0.2);
         }
 
         .event-image {
             width: 100%;
-            height: 200px; /* Consistent image height */
+            height: 200px;
             overflow: hidden;
+            position: relative;
+        }
+
+        .event-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+            pointer-events: none;
         }
 
         .event-image img {
@@ -59,47 +73,72 @@
         }
 
         .no-image {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f8f9fa;
-            color: #999;
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            color: #3FBAD5;
         }
 
         .event-content {
-            padding: 1.5rem;
-            flex-grow: 1; /* Allow content to grow */
+            padding: 1.8rem;
+            flex-grow: 1;
             display: flex;
-            flex-direction: column; /* Stack content elements */
+            flex-direction: column;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            position: relative;
         }
 
-         .event-date, .event-location, .event-quota {
-             font-size: 0.95rem;
-             color: #666;
-             margin-bottom: 0.5rem;
-         }
-
-         .event-date i, .event-location i {
-             color: #3FBAD5;
-             margin-right: 4px;
-         }
+        .event-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #3FBAD5, #0835d8);
+            opacity: 0.8;
+        }
 
         .event-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0835d8;
+            margin-bottom: 1rem;
             line-height: 1.4;
+            padding-left: 0.5rem;
+        }
+
+        .event-date, .event-location, .event-quota {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 0.6rem;
+            padding-left: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .event-date i, .event-location i {
+            color: #0835d8;
+            font-size: 1.1rem;
         }
 
         .event-price {
-            font-size: 1.1rem;
-            font-weight: 700;
+            font-size: 1.2rem;
+            font-weight: 800;
             color: #0835d8;
-            margin-top: auto; /* Push price to bottom */
-             margin-bottom: 0.8rem;
+            margin-top: auto;
+            margin-bottom: 0.8rem;
+            padding: 0.8rem;
+            background: linear-gradient(145deg, rgba(3, 53, 216, 0.05), rgba(63, 186, 213, 0.05));
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .event-description {
+            padding: 0.8rem;
+            background: rgba(3, 53, 216, 0.02);
+            border-radius: 12px;
+            margin: 0.5rem 0;
+            border: 1px solid rgba(3, 53, 216, 0.05);
         }
 
         .btn-detail {
@@ -134,12 +173,13 @@
 
         @media (max-width: 992px) {
             .main-content { padding-top: 60px; }
+            .event-grid { grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); }
         }
 
         @media (max-width: 768px) {
             .main-content { padding-top: 56px; }
             .page-title h1 { font-size: 2rem; }
-            .event-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+            .event-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
         }
     </style>
 </head>
@@ -155,8 +195,12 @@
                 <p>Temukan dan ikuti berbagai event menarik seputar origami</p>
             </div>
             <div class="row">
+                {{-- SIDEBAR FILTER --}}
+                <div class="col-lg-3 col-md-4 mb-4">
+                    @include('user.event.filter')
+                </div>
                 <!-- EVENT GRID -->
-                <div class="col-lg-12"> {{-- Adjusted column size since no sidebar yet --}}
+                <div class="col-lg-9 col-md-8">
                     <div class="event-grid">
                          @forelse($events as $event)
                             <div class="event-card">
@@ -171,11 +215,13 @@
                                 @endif
                                 <div class="event-content">
                                     <div class="event-title">{{ $event->nama_event }}</div>
-                                    <div class="event-date"><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($event->tanggal)->format('d M Y') }}</div>
+                                    <div class="event-date"><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($event->tanggal_pelaksanaan)->format('d M Y') }}</div>
                                     <div class="event-location"><i class="fas fa-map-marker-alt"></i> {{ $event->lokasi }}</div>
                                     <div class="event-quota">Kuota: {{ $event->kuota }}</div>
+                                    <div class="event-description text-muted mb-2" style="font-size: 0.95rem;">
+                                         {!! nl2br(e($event->deskripsi)) !!}
+                                    </div>
                                     <div class="event-price" style="font-size:1.1rem; font-weight:700; color:#0835d8; margin-bottom: 0.8rem;">Harga: Rp {{ number_format($event->harga, 0, ',', '.') }}</div>
-                                    <a href="{{ route('user.event.show', $event->id) }}" class="btn btn-primary btn-detail">Lihat Detail</a>
                                 </div>
                             </div>
                         @empty
