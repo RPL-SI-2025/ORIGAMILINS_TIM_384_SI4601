@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light" style="background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); font-family:'Poppins',Arial,sans-serif;">
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); font-family:'Poppins',Arial,sans-serif;">
     <div class="container">
         {{-- Logo --}}
         <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ url('/') }}">
@@ -87,6 +87,18 @@
                 <!-- Cart -->
                 <a href="{{ url('/cart') }}" class="btn btn-link position-relative p-0 navbar-icon icon-cart" aria-label="Keranjang">
                     <i class="fas fa-shopping-cart fs-5"></i>
+                    @if(isset($cartItemCount) && $cartItemCount > 0)
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style="font-size: 0.6rem; padding: 0.3em 0.6em; transform: translate(50%, -50%);" id="cartItemCountBadge">
+                            {{ $cartItemCount }}
+                            <span class="visually-hidden">items in cart</span>
+                        </span>
+                    @else
+                         {{-- Tambahkan placeholder badge meskipun jumlah 0, agar elemennya selalu ada di DOM --}}
+                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style="font-size: 0.6rem; padding: 0.3em 0.6em; transform: translate(50%, -50%); display: none;" id="cartItemCountBadge">
+                            0
+                             <span class="visually-hidden">items in cart</span>
+                         </span>
+                    @endif
                 </a>
 
                 <!-- User -->

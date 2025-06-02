@@ -13,7 +13,7 @@
         }
 
         .main-content {
-            padding-top: 20px; /* Lebih rapat ke navbar */
+            padding-top: 80px; /* Lebih rapat ke navbar */
             min-height: 100vh;
         }
 
