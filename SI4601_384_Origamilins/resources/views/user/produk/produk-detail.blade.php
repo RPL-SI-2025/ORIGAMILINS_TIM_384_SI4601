@@ -175,6 +175,7 @@
                             </a>
                         </div>
                         <div class="text-muted mb-3">
+                            <span class="me-3">{{ $produk->likes_count ?? 0 }} Disukai</span> | 
                             <span>{{ $ulasan->count() }} Komentar</span>
                             @if($produk->is_pre_order ?? false)
                                 <span class="badge bg-warning ms-2">Pre-Order</span>
