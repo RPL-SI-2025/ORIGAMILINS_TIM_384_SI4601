@@ -94,6 +94,13 @@
                                     <i class="fas fa-box me-2"></i> Pesanan Saya
                                 </a>
                             </li>
+
+                            <li>
+                                <a class="dropdown-item" href="{{ route('user.payments.history') }}">
+                                    <i class="fas fa-receipt me-2"></i>  Riwayat Transaksi
+                                </a>
+                            </li>
+
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
