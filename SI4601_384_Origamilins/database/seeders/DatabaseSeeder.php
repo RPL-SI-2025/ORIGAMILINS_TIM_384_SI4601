@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             ProductReviewSeeder::class,
             PesananSeeder::class,
             PesananEventSeeder::class,
+            PaymentSeeder::class,
         ]);
     }
 }
