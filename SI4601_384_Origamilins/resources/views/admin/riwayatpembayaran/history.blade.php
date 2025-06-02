@@ -61,6 +61,7 @@
                                 <tr>
                                     <th>Order ID</th>
                                     <th>Nama</th>
+                                    <th>User</th>
                                     <th>Total</th>
                                     <th>Metode Pembayaran</th>
                                     <th>Status</th>
@@ -73,6 +74,14 @@
                                     <tr>
                                         <td>{{ $payment->order_id }}</td>
                                         <td>{{ $payment->nama }}</td>
+                                        <td>
+                                            @if($payment->user)
+                                                {{ $payment->user->name }}<br>
+                                                <small class="text-muted">{{ $payment->user->email }}</small>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
                                         <td>Rp {{ number_format($payment->total, 0, ',', '.') }}</td>
                                         <td>
                                             @switch($payment->payment_type)
@@ -101,25 +110,25 @@
                                         <td>
                                             @switch($payment->status)
                                                 @case('pending')
-                                                    <span class="badge badge-warning">Menunggu Pembayaran</span>
+                                                    <span class="badge bg-warning text-dark">Menunggu Pembayaran</span>
                                                     @break
                                                 @case('success')
-                                                    <span class="badge badge-success">Pembayaran Berhasil</span>
+                                                    <span class="badge bg-success text-white">Pembayaran Berhasil</span>
                                                     @break
                                                 @case('failed')
-                                                    <span class="badge badge-danger">Pembayaran Gagal</span>
+                                                    <span class="badge bg-danger text-white">Pembayaran Gagal</span>
                                                     @break
                                                 @case('refund_requested')
-                                                    <span class="badge badge-info">Refund Diminta</span>
+                                                    <span class="badge bg-info text-white">Refund Diminta</span>
                                                     @break
                                                 @case('refunded')
-                                                    <span class="badge badge-success">Refund Diterima</span>
+                                                    <span class="badge bg-success text-white">Refund Diterima</span>
                                                     @break
                                                 @case('refund_rejected')
-                                                    <span class="badge badge-danger">Refund Ditolak</span>
+                                                    <span class="badge bg-danger text-white">Refund Ditolak</span>
                                                     @break
                                                 @default
-                                                    <span class="badge badge-secondary">{{ $payment->status }}</span>
+                                                    <span class="badge bg-secondary text-white">{{ $payment->status }}</span>
                                             @endswitch
                                         </td>
                                         <td>{{ $payment->created_at->format('d/m/Y H:i') }}</td>

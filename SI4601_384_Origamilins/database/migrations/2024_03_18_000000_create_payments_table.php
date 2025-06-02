@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id(); // Kolom ID otomatis
             // Tambahkan kolom lain yang relevan di sini (misal: user_id, order_id, dll.)
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->string('order_id')->nullable(); // Contoh kolom order_id, sesuaikan jika nama kolom berbeda
             $table->string('nama'); // Kolom nama
             $table->decimal('total', 10, 2); // Kolom total

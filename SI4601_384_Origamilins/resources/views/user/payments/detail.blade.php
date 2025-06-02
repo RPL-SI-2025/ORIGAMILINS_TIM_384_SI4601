@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('user.layouts.app')
 
 @section('content')
 <div class="container py-4">
@@ -28,26 +28,26 @@
                                     <th>Status</th>
                                     <td>
                                         @switch($payment->status)
-                                            @case('success')
-                                                <span class="badge bg-success">Sukses</span>
-                                                @break
                                             @case('pending')
-                                                <span class="badge bg-warning">Menunggu</span>
+                                                <span class="badge bg-warning text-dark">Menunggu Pembayaran</span>
+                                                @break
+                                            @case('success')
+                                                <span class="badge bg-success text-white">Pembayaran Berhasil</span>
                                                 @break
                                             @case('failed')
-                                                <span class="badge bg-danger">Gagal</span>
+                                                <span class="badge bg-danger text-white">Pembayaran Gagal</span>
                                                 @break
                                             @case('refund_requested')
-                                                <span class="badge bg-info">Refund Diminta</span>
+                                                <span class="badge bg-info text-white">Refund Diminta</span>
                                                 @break
                                             @case('refunded')
-                                                <span class="badge bg-primary">Dikembalikan</span>
+                                                <span class="badge bg-success text-white">Refund Diterima</span>
                                                 @break
                                             @case('refund_rejected')
-                                                <span class="badge bg-danger">Refund Ditolak</span>
+                                                <span class="badge bg-danger text-white">Refund Ditolak</span>
                                                 @break
                                             @default
-                                                <span class="badge bg-secondary">{{ $payment->status }}</span>
+                                                <span class="badge bg-secondary text-white">{{ $payment->status }}</span>
                                         @endswitch
                                     </td>
                                 </tr>
@@ -57,16 +57,35 @@
                             <h5 class="text-muted mb-3">Informasi Pembayaran</h5>
                             <table class="table table-borderless">
                                 <tr>
-                                    <th width="40%">Nama</th>
-                                    <td>{{ $payment->nama }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Total</th>
+                                    <th width="40%">Total</th>
                                     <td>Rp {{ number_format($payment->total, 0, ',', '.') }}</td>
                                 </tr>
                                 <tr>
                                     <th>Metode Pembayaran</th>
-                                    <td>{{ $payment->payment_type ?? '-' }}</td>
+                                    <td>
+                                        @switch($payment->payment_type)
+                                            @case('bank_transfer')
+                                                Transfer Bank
+                                                @break
+                                            @case('credit_card')
+                                                Kartu Kredit
+                                                @break
+                                            @case('e_wallet')
+                                                E-Wallet
+                                                @break
+                                            @case('gopay')
+                                                GoPay
+                                                @break
+                                            @case('shopeepay')
+                                                ShopeePay
+                                                @break
+                                            @case('qris')
+                                                QRIS
+                                                @break
+                                            @default
+                                                {{ $payment->payment_type ?? '-' }}
+                                        @endswitch
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -87,10 +106,10 @@
                         </div>
                     @endif
 
-                    @if($payment->status === 'refund_rejected')
-                        <div class="alert alert-danger">
-                            <h5 class="alert-heading">Refund Ditolak</h5>
-                            <p class="mb-0">Ditolak pada: {{ $payment->refund_rejected_at->format('d M Y H:i') }}</p>
+                    @if($payment->status === 'pending')
+                        <div class="alert alert-warning">
+                            <h5 class="alert-heading">Pembayaran Menunggu</h5>
+                            <p class="mb-0">Silakan selesaikan pembayaran Anda sesuai dengan metode yang dipilih.</p>
                         </div>
                     @endif
                 </div>

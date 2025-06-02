@@ -131,6 +131,7 @@ class PaymentsController extends Controller
             'nama' => trim(($alamat['nama_awal'] ?? '') . ' ' . ($alamat['nama_akhir'] ?? '')),
             'status' => 'pending',
             'email' => $alamat['email'] ?? null,
+            'user_id' => auth()->id(),
         ]);
 
         // Siapkan parameter Midtrans
