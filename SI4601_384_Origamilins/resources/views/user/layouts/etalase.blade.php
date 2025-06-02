@@ -95,13 +95,15 @@
                 <i class="fas fa-bell fa-lg text-dark"></i>
             </div>
         </div>
-        <div class="etalase-user">
-            <span class="text-muted">{{ Auth::user()->name }}</span>
-            <a href="{{ route('logout') }}" class="btn btn-outline-danger btn-sm">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-        </div>
-    </nav>
+        @auth
+            <span class="me-3 text-muted">{{ Auth::user()->name }}</span>
+            <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                @csrf
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+        @endauth
     <main style="min-height:80vh;">
         @yield('content')
     </main>
