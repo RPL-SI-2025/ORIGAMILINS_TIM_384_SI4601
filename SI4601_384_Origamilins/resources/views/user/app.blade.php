@@ -25,9 +25,6 @@
             padding-top: 80px; /* Add padding to clear the fixed navbar */
         }
 
-        .navbar-brand {
-            // ... existing code ...
-        }
     </style>
 </head>/  
 <body>
