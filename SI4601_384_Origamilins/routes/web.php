@@ -127,12 +127,12 @@ Route::middleware(['auth'])->group(function () {
 
     // Cart Routes
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/delete', [CartController::class, 'delete'])->name('cart.delete');
     Route::post('/cart/update-total', [CartController::class, 'updateTotal'])->name('cart.update-total');
     Route::get('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
     Route::get('/cart-item-count', [CartController::class, 'getCartItemCount'])->name('cart.item.count');
+    Route::get('/cart/get-item-id', [CartController::class, 'getCartItemId'])->name('cart.get.item.id');
     
 
     // Payment History Routes
@@ -306,6 +306,9 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name(
 Route::middleware(['auth'])->group(function () {
     Route::get('/pesanan-saya', [App\Http\Controllers\UserPesananController::class, 'index'])->name('user.pesanan.index');
 });
+
+// Cart Add route harus di luar group middleware auth
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 
 
 

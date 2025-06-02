@@ -74,6 +74,10 @@
                 <!-- Cart -->
                 <a href="{{ url('/cart') }}" class="btn btn-link position-relative p-0 navbar-icon icon-cart" aria-label="Keranjang">
                     <i class="fas fa-shopping-cart fs-5"></i>
+                    <span class="cart-count-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style="font-size: 0.6rem; padding: 0.3em 0.6em; transform: translate(50%, -50%);">
+                        {{ isset($cartCount) ? $cartCount : 0 }}
+                        <span class="visually-hidden">items in cart</span>
+                    </span>
                 </a>
 
                 <!-- User -->

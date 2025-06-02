@@ -304,16 +304,142 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @stack('scripts')
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const navbarCollapse = document.getElementById('navbarContent');
         if (navbarCollapse) {
-            // Remove the 'collapse' class and add 'show' class
             navbarCollapse.classList.remove('collapse');
             navbarCollapse.classList.add('show');
-            // Ensure the display is not 'none' in case of conflicting CSS
             navbarCollapse.style.display = 'block';
+        }
+        
+        // Handle Add to Cart Form
+        const addToCartForm = document.getElementById('add-to-cart-form');
+        if (addToCartForm) {
+            addToCartForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                
+                // Show loading popup first
+               
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(async response => {
+                    console.log('Status:', response.status);
+                    let data = null;
+                    try {
+                        data = await response.clone().json();
+                        console.log("Response dari server:", data);
+                    } catch (e) {
+                        const text = await response.text();
+                        console.log("Response bukan JSON, isi:", text);
+                    }
+
+                    if (response.ok && data && data.success === true) {
+                        // Update cart count in navbar if it exists
+                        const cartCountBadge = document.querySelector('.cart-count-badge');
+                        if (cartCountBadge) {
+                            cartCountBadge.textContent = data.cart_count;
+                        }
+                        // Show custom success popup with two buttons
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Barang yang dipilih berhasil dimasukkan ke dalam keranjang',
+                            html: `
+                                <button id="lanjutBelanjaBtn" style="width:100%;background:#ffc107;color:#22223b;font-weight:700;padding:12px 0;border:none;border-radius:8px;font-size:1.1rem;display:block;margin:18px 0 8px 0;cursor:pointer;">Lanjut Belanja</button>
+                                <button id="batalBtn" style="background:none;border:none;color:#222;text-decoration:underline;font-size:1rem;display:block;margin:0 auto;">Batal</button>
+                            `,
+                            showConfirmButton: false,
+                            showCancelButton: false,
+                            allowOutsideClick: false,
+                            didRender: () => {
+                                document.getElementById('lanjutBelanjaBtn').onclick = () => {
+                                    window.location.href = '/etalase-produk';
+                                };
+                                document.getElementById('batalBtn').onclick = () => Swal.close();
+                            }
+                        });
+                        return;
+                    }
+
+                    // Tangani error (401, 302, atau selain 2xx)
+                    if (response.status === 401 || response.status === 302) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Sesi Anda telah habis, silakan login ulang.'
+                        }).then(() => {
+                            window.location.href = '/login';
+                        });
+                        return;
+                    }
+
+                    let errorMsg = 'Terjadi kesalahan saat menambahkan ke keranjang';
+                    if (data && data.message) errorMsg = data.message;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: errorMsg
+                    });
+                })
+                .catch(error => {
+                    console.log('Fetch error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Terjadi kesalahan saat menambahkan ke keranjang'
+                    });
+                });
+            });
+        }
+
+        // Handle Buy Now Form
+        const buyNowForm = document.getElementById('buy-now-form');
+        if (buyNowForm) {
+            buyNowForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                
+                // First add to cart via AJAX
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Get the cart item ID for this product
+                        fetch('/cart/get-item-id?produk_id=' + formData.get('produk_id'))
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.cart_item_id) {
+                                    // Redirect to checkout with the cart item ID
+                                    window.location.href = `/user/payments/create?selected_items[]=${data.cart_item_id}&jumlah_${data.cart_item_id}=${formData.get('jumlah')}`;
+                                }
+                            });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Terjadi kesalahan saat memproses pembelian'
+                    });
+                });
+            });
         }
     });
     </script>

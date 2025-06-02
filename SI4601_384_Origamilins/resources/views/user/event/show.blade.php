@@ -81,7 +81,7 @@
     @include('user.navigation-menu')
 
     <div class="main-content">
-        <div class="container py-4">
+    <div class="container py-4">
             <a href="{{ route('user.event.index') }}" class="btn btn-outline-secondary mb-3">
                 <i class="fas fa-arrow-left me-2"></i> Kembali
             </a>
@@ -90,7 +90,7 @@
                 {{-- Poster Full Width --}}
                 <div class="event-image-container">
                     @if($event->poster)
-                        <img src="{{ asset($event->poster) }}" alt="Poster {{ $event->nama_event }}">
+                            <img src="{{ asset($event->poster) }}" alt="Poster {{ $event->nama_event }}">
                     @else
                         <div class="text-muted">
                             <i class="fas fa-image fa-3x"></i>
@@ -104,24 +104,24 @@
 
                     <div class="mb-3">
                         <span class="event-price">Rp {{ number_format($event->harga, 0, ',', '.') }}</span>
-                    </div>
+            </div>
 
                     <div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
-                        <span class="badge bg-primary">Event</span>
-                        @if($event->kuota !== null)
-                            <span class="badge bg-warning text-dark">Kuota: {{ $event->kuota }}</span>
-                        @endif
-                    </div>
+                            <span class="badge bg-primary">Event</span>
+                            @if($event->kuota !== null)
+                                <span class="badge bg-warning text-dark">Kuota: {{ $event->kuota }}</span>
+                            @endif
+                        </div>
 
                     <div class="mb-3 text-muted">
                         <i class="fas fa-calendar-alt me-1"></i> {{ \Carbon\Carbon::parse($event->tanggal_pelaksanaan)->format('d M Y') }}<br>
                         <i class="fas fa-map-marker-alt me-1"></i> {{ $event->lokasi }}
-                    </div>
+                        </div>
 
                     <hr>
 
                     <div>
-                        <strong>Deskripsi Event:</strong>
+                            <strong>Deskripsi Event:</strong>
                         <p class="text-muted mt-2">{!! nl2br(e($event->deskripsi)) !!}</p>
                     </div>
                 </div>
@@ -135,4 +135,4 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </body>
-</html>
+</html> 

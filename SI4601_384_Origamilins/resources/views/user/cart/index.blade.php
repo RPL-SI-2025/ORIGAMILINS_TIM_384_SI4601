@@ -210,10 +210,16 @@
                 <a href="{{ route('etalase') }}" class="btn btn-primary mt-3">Belanja Sekarang</a>
             </div>
         @else
+            <form action="{{ route('user.payments.create') }}" method="GET" id="checkout-selected-form">
             <div class="row">
                 <div class="col-md-7">
+                    <div class="mb-2">
+                        <input type="checkbox" id="select-all" class="form-check-input me-2">
+                        <label for="select-all" style="font-weight:500;cursor:pointer;">Pilih Semua</label>
+                    </div>
                     @foreach($items as $item)
                     <div class="cart-item">
+                        <input type="checkbox" name="selected_items[]" value="{{ $item->id }}" class="form-check-input me-3 item-checkbox" data-harga="{{ $item->produk->harga * $item->jumlah }}" style="margin-top:0;">
                         <img src="{{ asset($item->produk->gambar) }}"
                              alt="{{ $item->produk->nama }}"
                              class="product-image"
@@ -263,18 +269,44 @@
                     <div class="summary-section">
                         <div class="summary-row">
                             <span>Subtotal</span>
-                            <span id="subtotal">Rp{{ number_format($total,0,',','.') }}</span>
+                            <span id="subtotal">Rp0</span>
                         </div>
                         <div class="summary-row total">
                             <span>Total</span>
-                            <span id="total">Rp{{ number_format($total,0,',','.') }}</span>
+                            <span id="total">Rp0</span>
                         </div>
-                        <a href="{{ route('user.payments.create') }}" class="checkout-btn text-center d-block" style="text-decoration:none;">
+                        <button type="submit" class="checkout-btn text-center d-block" style="text-decoration:none; width:100%;">
                             Lanjut Ke Pembayaran
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
+            </form>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const checkboxes = document.querySelectorAll('.item-checkbox');
+                const selectAll = document.getElementById('select-all');
+                const subtotalEl = document.getElementById('subtotal');
+                const totalEl = document.getElementById('total');
+                function updateTotal() {
+                    let total = 0;
+                    checkboxes.forEach(cb => {
+                        if (cb.checked) {
+                            total += parseInt(cb.getAttribute('data-harga'));
+                        }
+                    });
+                    subtotalEl.textContent = total > 0 ? 'Rp' + total.toLocaleString('id-ID') : 'Rp0';
+                    totalEl.textContent = subtotalEl.textContent;
+                }
+                checkboxes.forEach(cb => {
+                    cb.addEventListener('change', updateTotal);
+                });
+                selectAll.addEventListener('change', function() {
+                    checkboxes.forEach(cb => cb.checked = selectAll.checked);
+                    updateTotal();
+                });
+            });
+            </script>
         @endif
     </div>
 

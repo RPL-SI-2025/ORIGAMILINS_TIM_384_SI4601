@@ -20,7 +20,9 @@ abstract class DuskTestCase extends BaseTestCase
         if (! static::runningInSail()) {
             static::startChromeDriver([
                 '--port=9515',
-                '--whitelisted-ips=""'
+                '--whitelisted-ips=""',
+                '--verbose',
+                '--log-path=' . storage_path('logs/chromedriver.log')
             ]);
         }
     }
@@ -34,15 +36,23 @@ abstract class DuskTestCase extends BaseTestCase
             $this->shouldStartMaximized() ? '--start-maximized' : '--window-size=1920,1080',
             '--disable-search-engine-choice-screen',
             '--disable-smooth-scrolling',
+            '--no-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-gpu',
+            '--disable-extensions',
+            '--disable-infobars',
+            '--disable-notifications',
+            '--disable-popup-blocking',
+            '--ignore-certificate-errors',
+            '--allow-insecure-localhost',
         ])->unless($this->hasHeadlessDisabled(), function (Collection $items) {
             return $items->merge([
-                '--disable-gpu',
                 '--headless=new',
             ]);
         })->all());
 
         return RemoteWebDriver::create(
-            $_ENV['DUSK_DRIVER_URL'] ?? env('DUSK_DRIVER_URL', 'http://localhost:9515'),
+            $_ENV['DUSK_DRIVER_URL'] ?? 'http://localhost:9515',
             DesiredCapabilities::chrome()->setCapability(
                 ChromeOptions::CAPABILITY, $options
             )
@@ -54,7 +64,7 @@ abstract class DuskTestCase extends BaseTestCase
      */
     protected function hasHeadlessDisabled(): bool
     {
-        return env('DUSK_HEADLESS_DISABLED', false);
+        return env('DUSK_HEADLESS_DISABLED', true);
     }
 
     /**
@@ -62,6 +72,6 @@ abstract class DuskTestCase extends BaseTestCase
      */
     protected function baseUrl()
     {
-        return 'http://127.0.0.1:8000';
+        return env('APP_URL', 'http://localhost:8000');
     }
 }

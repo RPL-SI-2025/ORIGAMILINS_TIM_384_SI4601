@@ -10,5 +10,6 @@ class VerifyCsrfToken extends Middleware
     'payments/callback',
     'api/payments/callback',
     'payments/callback/*',
+    '/cart/add',
 ];
 }

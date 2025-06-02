@@ -19,7 +19,6 @@ class CartController extends Controller
     public function __construct(CartService $cartService)
     {
         $this->cartService = $cartService;
-        // Middleware auth agar hanya user yang sudah login yang bisa akses keranjang
         $this->middleware('auth')->except('add');
     }
 
@@ -47,6 +46,10 @@ class CartController extends Controller
 
     public function add(Request $request)
     {
+        if (!Auth::check()) {
+            return response()->json(['success' => false, 'message' => 'Sesi Anda habis, silakan login ulang.'], 401);
+        }
+
         $request->validate([
             'produk_id' => 'required|exists:produk,id',
             'jumlah' => 'required|integer|min:1'
@@ -74,16 +77,14 @@ class CartController extends Controller
             ]);
         }
 
-        // Handle buy now action (redirect to cart if requested)
-        if ($request->has('redirect_to_cart')) {
-            return redirect()->route('cart.index');
-        }
+        // Get updated cart count
+        $cartCount = $cart->items()->sum('jumlah');
 
-        if ($request->ajax() || $request->wantsJson()) {
-            return response()->json(['success' => true]);
-        }
-
-        return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang');
+        // SELALU return JSON!
+        return response()->json([
+            'success' => true,
+            'cart_count' => $cartCount
+        ]);
     }
 
     /**
@@ -174,5 +175,33 @@ class CartController extends Controller
             }
         }
         return response()->json(['count' => $cartItemCount]);
+    }
+
+    /**
+     * Get cart item ID by product ID
+     */
+    public function getCartItemId(Request $request)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $produkId = $request->query('produk_id');
+        if (!$produkId) {
+            return response()->json(['error' => 'Product ID is required'], 400);
+        }
+
+        $cart = $user->cart()->first();
+        if (!$cart) {
+            return response()->json(['error' => 'Cart not found'], 404);
+        }
+
+        $cartItem = $cart->items()->where('produk_id', $produkId)->first();
+        if (!$cartItem) {
+            return response()->json(['error' => 'Cart item not found'], 404);
+        }
+
+        return response()->json(['cart_item_id' => $cartItem->id]);
     }
 }
