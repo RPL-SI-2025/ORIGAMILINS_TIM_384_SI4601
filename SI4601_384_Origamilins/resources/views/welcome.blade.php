@@ -31,7 +31,7 @@
                     <a href="#layanan">Layanan</a>
                     <a href="{{ route('user.event.index') }}">Event</a>
                     <a href="#tentang-kami">Tentang Kami</a>
-                    <a href="#kontak">Kontak</a>
+                    <a href="#faq">FAQ</a>
                 </div>  
 
                 <div class="auth-links">
@@ -235,7 +235,7 @@
 </section>
 
 <!-- FAQ Section -->
-<section class="faq-section" id="kontak">
+<section class="faq-section" id="faq">
     <div class="container">
         <h2 style="font-weight: bold; font-size:2rem; text-align: center; margin-bottom: 1rem;">
             <span style="color:#FFC107;">FAQ</span> (Frequently Asked Question)
