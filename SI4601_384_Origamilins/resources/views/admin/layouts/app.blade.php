@@ -224,6 +224,14 @@
                         <button id="sidebarToggle" class="d-md-none">
                             <i class="fas fa-bars"></i>
                         </button>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <span style="font-weight: 600; font-size: 1.2rem; color: #666; line-height: 1;">Admin</span>
+                        <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger btn-sm d-flex align-items-center" style="height: 32px;">
+                                <i class="fas fa-sign-out-alt me-1"></i> Logout
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

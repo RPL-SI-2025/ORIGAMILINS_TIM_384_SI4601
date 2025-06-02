@@ -29,6 +29,20 @@ class UserPesananController extends Controller
 
         return view('user.pesanan.show', compact('pesanan'));
     }
+
+    public function selesai($id)
+    {
+        $userId = Auth::id();
+        $pesanan = Pesanan::where('id_pesanan', $id)
+            ->where('user_id', $userId)
+            ->where('status', 'Dikirim')
+            ->firstOrFail();
+
+        $pesanan->markAsCompleted();
+
+        return redirect()->route('user.pesanan.index')
+            ->with('success', 'Pesanan telah dikonfirmasi diterima.');
+    }
     public function konfirmasiTerima($id)
     {
         $pesanan = Pesanan::findOrFail($id);
