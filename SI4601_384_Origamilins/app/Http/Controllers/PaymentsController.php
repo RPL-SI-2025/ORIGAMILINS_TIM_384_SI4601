@@ -103,75 +103,97 @@ class PaymentsController extends Controller
      * Proses data pengiriman dan langsung proses pembayaran (langsung ke checkout)
      */
     public function shipping(Request $request)
-    {
-        $cart = auth()->user()->cart;
-        $items = $cart ? $cart->items()->with('produk')->get() : collect();
-        $alamat = $request->only([
-            'nama_awal', 'nama_akhir', 'alamat', 'blok_gang', 'kecamatan', 'kota', 'provinsi', 'kode_pos', 'country_code', 'phone', 'shipping_method', 'email'
-        ]);
-        $subtotal = $request->subtotal;
-        $ongkir = $request->ongkir;
-        $total = $request->total;
+{
+    $cart = auth()->user()->cart;
+    $items = $cart ? $cart->items()->with('produk')->get() : collect();
+    $alamat = $request->only([
+        'nama_awal', 'nama_akhir', 'alamat', 'blok_gang', 'kecamatan', 'kota', 'provinsi', 'kode_pos', 'country_code', 'phone', 'shipping_method', 'email'
+    ]);
+    $subtotal = $request->subtotal;
+    $ongkir = $request->ongkir;
+    $total = $request->total;
 
-        // Validasi data
-        $request->validate([
-            'nama_awal' => 'required|string|max:255',
-            'nama_akhir' => 'nullable|string|max:255',
-            'total' => 'required|numeric|min:10000',
-            'email' => 'required|email',
-        ]);
+    // Validasi data
+    $request->validate([
+        'nama_awal' => 'required|string|max:255',
+        'nama_akhir' => 'nullable|string|max:255',
+        'total' => 'required|numeric|min:10000',
+        'email' => 'required|email',
+    ]);
 
-        // Generate unique order ID
-        $orderId = 'ORDER-' . Str::random(10) . '-' . time();
+    // Generate unique order ID
+    $orderId = 'ORDER-' . Str::random(10) . '-' . time();
 
-        // Buat record payment
-        $payment = Payments::create([
-            'order_id' => $orderId,
-            'total' => $total,
-            'nama' => trim(($alamat['nama_awal'] ?? '') . ' ' . ($alamat['nama_akhir'] ?? '')),
-            'status' => 'pending',
-            'email' => $alamat['email'] ?? null,
-            'user_id' => auth()->id(),
-        ]);
-
-        // Siapkan parameter Midtrans
-        $params = [
-            'transaction_details' => [
-                'order_id' => $payment->order_id,
-                'gross_amount' => (int) $payment->total,
-            ],
-            'customer_details' => [
-                'first_name' => $payment->nama,
-                'email' => $payment->email,
-            ],
-            'callbacks' => [
-                'finish' => route('user.payments.finish', $payment->id),
-            ],
+    // Siapkan data items untuk disimpan di metadata
+    $itemsData = [];
+    foreach ($items as $item) {
+        $itemsData[] = [
+            'produk_id' => $item->produk_id,
+            'nama' => $item->produk->nama,
+            'deskripsi' => $item->produk->deskripsi,
+            'kategori' => $item->produk->kategori,
+            'gambar' => $item->produk->gambar,
+            'harga' => $item->produk->harga,
+            'jumlah' => $item->jumlah,
+            'total_harga' => $item->produk->harga * $item->jumlah,
         ];
+    }
 
-        // Ambil Snap token
-        $snapResponse = $this->midtransService->getSnapToken($params);
-
-        if (!$snapResponse['success']) {
-            return redirect()->back()->with('error', 'Failed to process payment: ' . $snapResponse['message']);
-        }
-
-        // Update payment dengan snap token
-        $payment->update([
-            'snap_token' => $snapResponse['token'],
-        ]);
-
-        // Kirim data ke checkout
-        return view('user.payments.checkout', [
-            'items' => $items,
+    // Buat record payment
+    $payment = Payments::create([
+        'order_id' => $orderId,
+        'user_id' => auth()->id(),
+        'nama' => $alamat['nama_awal'] . ' ' . ($alamat['nama_akhir'] ?? ''),
+        'email' => $alamat['email'],
+        'total' => $total,
+        'status' => 'pending',
+        'metadata' => [
+            'alamat' => $alamat,
             'subtotal' => $subtotal,
             'ongkir' => $ongkir,
             'total' => $total,
-            'alamat' => $alamat,
-            'payment' => $payment,
-            'snapResponse' => $snapResponse,
-        ]);
+            'items' => $itemsData,
+        ],
+    ]);
+
+    // Siapkan parameter Midtrans
+    $params = [
+        'transaction_details' => [
+            'order_id' => $payment->order_id,
+            'gross_amount' => (int) $payment->total,
+        ],
+        'customer_details' => [
+            'first_name' => $payment->nama,
+            'email' => $payment->email,
+        ],
+        'callbacks' => [
+            'finish' => route('user.payments.finish', $payment->id),
+        ],
+    ];
+
+    // Ambil Snap token
+    $snapResponse = $this->midtransService->getSnapToken($params);
+
+    if (!$snapResponse['success']) {
+        return redirect()->back()->with('error', 'Failed to process payment: ' . $snapResponse['message']);
     }
+
+    // Update payment dengan snap token
+    $payment->update([
+        'snap_token' => $snapResponse['token'],
+    ]);
+
+    // Kirim data ke checkout
+    return view('user.payments.checkout', [
+        'items' => $items,
+        'subtotal' => $subtotal,
+        'ongkir' => $ongkir,
+        'total' => $total,
+        'alamat' => $alamat,
+        'payment' => $payment,
+        'snapResponse' => $snapResponse,
+    ]);
+}
 
     /**
      * Tidak digunakan lagi, kecuali untuk menampilkan ulang jika user reload setelah store
@@ -189,9 +211,9 @@ class PaymentsController extends Controller
     {
         $notification = $this->midtransService->processNotification();
 
-        if (is_array($notification) && isset($notification['success']) && !$notification['success']) {
-            return response()->json(['status' => 'error', 'message' => $notification['message']], 500);
-        }
+    if (is_array($notification) && isset($notification['success']) && !$notification['success']) {
+        return response()->json(['status' => 'error', 'message' => $notification['message']], 500);
+    }
 
         $orderId = $notification->order_id;
         $transactionStatus = $notification->transaction_status;
@@ -213,76 +235,155 @@ class PaymentsController extends Controller
 
         // Handle transaction status
         if ($transactionStatus == 'capture') {
-            if ($fraudStatus == 'challenge') {
-                $payment->status = 'challenge';
-            } else if ($fraudStatus == 'accept') {
+            // Untuk credit_card, cek fraud_status
+            if (isset($fraudStatus)) {
+                if ($fraudStatus == 'challenge') {
+                    $payment->status = 'challenge';
+                } else if ($fraudStatus == 'accept') {
+                    $payment->status = 'success';
+                    $payment->paid_at = now();
+                } else {
+                    $payment->status = $fraudStatus; // fallback jika fraud_status tidak dikenal
+                }
+            } else {
+                // Jika tidak ada fraud_status, anggap sukses
                 $payment->status = 'success';
                 $payment->paid_at = now();
             }
         } else if ($transactionStatus == 'settlement') {
             $payment->status = 'success';
             $payment->paid_at = now();
-        } else if ($transactionStatus == 'cancel' || $transactionStatus == 'deny' || $transactionStatus == 'expire') {
+        } else if (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
             $payment->status = 'failed';
         } else if ($transactionStatus == 'pending') {
             $payment->status = 'pending';
+        } else {
+            // Log jika ada status tidak dikenal
+            \Log::warning('Midtrans unknown transaction status', [
+                'order_id' => $orderId,
+                'transaction_status' => $transactionStatus,
+                'fraud_status' => $fraudStatus ?? null,
+            ]);
         }
 
         $payment->save();
-
+    
         // Return OK to Midtrans
         return response()->json(['status' => 'ok']);
     }
-
     /**
      * Handle completed payment redirect
      */
     public function finish($id)
-    {
-        $payment = Payments::findOrFail($id);
+{
+    $payment = Payments::findOrFail($id);
 
-        // Ambil data alamat dari kolom metadata (jika ada)
-        $alamat = $payment->metadata['alamat'] ?? [];
+    // Ambil data alamat, subtotal, ongkir, total dari kolom metadata (jika ada)
+    $alamat = $payment->metadata['alamat'] ?? [];
+    $subtotal = $payment->metadata['subtotal'] ?? 0;
+    $ongkir = $payment->metadata['ongkir'] ?? 0;
+    $total = $payment->metadata['total'] ?? 0;
 
-        // Check the latest status from Midtrans
-        $statusResponse = $this->midtransService->checkTransactionStatus($payment->order_id);
+    // Check the latest status from Midtrans
+    $statusResponse = $this->midtransService->checkTransactionStatus($payment->order_id);
 
-        if ($statusResponse['success']) {
-            $transactionStatus = $statusResponse['status']->transaction_status ?? null;
+    $transactionStatus = null;
+    if ($statusResponse['success']) {
+        $transactionStatus = $statusResponse['status']->transaction_status ?? null;
 
-            if ($transactionStatus == 'settlement' || $transactionStatus == 'capture') {
-    if ($payment->status != 'success') {
-        $payment->status = 'success';
-        $payment->paid_at = now();
-        $payment->save();
+        if ($transactionStatus == 'settlement' || $transactionStatus == 'capture') {
+            if ($payment->status != 'success') {
+                $payment->status = 'success';
+                $payment->paid_at = now();
+                $payment->save();
 
-        // === Tambahkan proses ini ===
+                // Proses pembuatan pesanan
+                $user = auth()->user();
+                $cart = $user->cart()->with('items.produk')->first();
+                if ($cart && $cart->items->count() > 0) {
+                    foreach ($cart->items as $item) {
+                        Pesanan::create([
+                            'user_id' => $user->id,
+                            'produk_id' => $item->produk_id,
+                            'jumlah' => $item->jumlah,
+                            'total_harga' => $item->produk->harga * $item->jumlah,
+                            'status' => 'Rencana',
+                            'payment_id' => $payment->id,
+                            'alamat_pengiriman' => json_encode($alamat), // Pastikan ini di-encode sebagai JSON
+                        ]);
+                    }
+                    // Kosongkan cart setelah checkout
+                    $cart->items()->delete();
+                }
+            }
+        }
+    }
+
+    // Ambil data items untuk ditampilkan
+    $items = collect();
+    
+    // Coba ambil dari pesanan yang sudah dibuat
+    $pesananItems = Pesanan::where('payment_id', $payment->id)
+        ->with('produk')
+        ->get();
+    
+    if ($pesananItems->count() > 0) {
+        $items = $pesananItems;
+    } else {
+        // Jika belum ada pesanan, ambil dari cart (fallback)
         $user = auth()->user();
         $cart = $user->cart()->with('items.produk')->first();
-        if ($cart) {
-            foreach ($cart->items as $item) {
-                Pesanan::create([
-                    'user_id' => $user->id,
-                    'produk_id' => $item->produk_id,
-                    'jumlah' => $item->jumlah,
-                    'total_harga' => $item->produk->harga * $item->jumlah,
-                    'status' => 'Rencana',
-                    'payment_id' => $payment->id,
-                ]);
+        if ($cart && $cart->items->count() > 0) {
+            $items = $cart->items;
+        } else {
+            // Jika cart sudah kosong, coba ambil dari metadata payment
+            if (isset($payment->metadata['items'])) {
+                $items = collect($payment->metadata['items']);
             }
-            // Kosongkan cart setelah checkout
-            $cart->items()->delete();
         }
     }
-    return view('user.payments.success', compact('payment', 'alamat'));
-}
-        }
 
-        // Jika status tidak settlement atau capture, tampilkan pesan error
-        return view('user.payments.error', [
-            'message' => 'Pembayaran tidak berhasil. Silakan coba lagi.',
-            'payment' => $payment,
-            'alamat' => $alamat,
-        ]);
+    // Debug: log data untuk troubleshooting
+    \Log::info('Payment finish debug', [
+        'payment_id' => $payment->id,
+        'transaction_status' => $transactionStatus,
+        'items_count' => $items->count(),
+        'pesanan_count' => $pesananItems->count(),
+    ]);
+
+    // Jika status success, tampilkan halaman success
+    if ($transactionStatus == 'settlement' || $transactionStatus == 'capture' || $payment->status == 'success') {
+        return view('user.payments.success', compact('payment', 'alamat', 'subtotal', 'ongkir', 'total', 'items'));
     }
+
+    // Jika status tidak success, tampilkan pesan error
+    return view('user.payments.error', [
+        'message' => 'Pembayaran tidak berhasil. Silakan coba lagi.',
+        'payment' => $payment,
+        'alamat' => $alamat,
+        'items' => $items,
+    ]);
+}
+public function success($order_id)
+{
+    $payment = Payments::where('order_id', $order_id)->firstOrFail();
+
+    // Ambil data alamat, subtotal, ongkir, total dari metadata
+    $alamat = $payment->metadata['alamat'] ?? [];
+    $subtotal = $payment->metadata['subtotal'] ?? 0;
+    $ongkir = $payment->metadata['ongkir'] ?? 0;
+    $total = $payment->metadata['total'] ?? 0;
+
+    // Ambil data items dari pesanan jika sudah ada, fallback ke metadata jika belum
+    $items = Pesanan::where('payment_id', $payment->id)
+        ->with('produk')
+        ->get();
+
+    if ($items->count() == 0 && isset($payment->metadata['items'])) {
+        // Fallback ke metadata jika pesanan belum ada
+        $items = collect($payment->metadata['items']);
+    }
+
+    return view('user.payments.success', compact('payment', 'items', 'alamat', 'subtotal', 'ongkir', 'total'));
+}
 }
