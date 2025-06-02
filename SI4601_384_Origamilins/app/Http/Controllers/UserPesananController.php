@@ -49,7 +49,7 @@ class UserPesananController extends Controller
 
         return redirect()->route('user.pesanan.index')
             ->with('success', 'Pesanan telah dikonfirmasi diterima.');
-
+    }
     public function konfirmasiTerima($id)
     {
         $pesanan = Pesanan::findOrFail($id);
