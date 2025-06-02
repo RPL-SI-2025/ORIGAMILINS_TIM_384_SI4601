@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); font-family:'Poppins',Arial,sans-serif;">
+<nav class="navbar navbar-expand-lg navbar-light" style="background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); font-family:'Poppins',Arial,sans-serif;">
     <div class="container">
         {{-- Logo --}}
         <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ url('/') }}">
@@ -16,11 +16,11 @@
             {{-- Menu tengah --}}
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ route('home') }}">Beranda</a></li>
-                <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ route('etalase') }}">Katalog</a></li>
+                <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ route('etalase') }}">Etalase</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ url('/#layanan') }}">Layanan</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ route('user.event.index') }}">Event</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ url('/#tentang-kami') }}">Tentang Kami</a></li>
-                <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ url('/#kontak') }}">Kontak</a></li>
+                <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ url('/#faq') }}">FAQ</a></li>
             </ul>
 
             {{-- Ikon Kanan (Search, Notifikasi, Cart, User) --}}
@@ -41,15 +41,7 @@
                         <!-- Header -->
                         <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
                             <h6 class="mb-0">Notifikasi</h6>
-                            <a href="#" class="text-muted"><i class="fas fa-cog"></i></a>
                         </div>
-
-                        <!-- Tabs (Only Transaksi) -->
-                        <ul class="nav nav-tabs nav-fill px-3" role="tablist" style="border-bottom: none;">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="transaksi-tab" data-bs-toggle="tab" data-bs-target="#transaksi" type="button" role="tab" aria-controls="transaksi" aria-selected="true" style="border: none;">Transaksi</button>
-                            </li>
-                        </ul>
 
                         <!-- Tab Content -->
                         <div class="tab-content" id="notificationTabsContent">
@@ -69,36 +61,19 @@
                 <small class="text-muted">{{ \Carbon\Carbon::parse($notif->updated_at)->diffForHumans() }}</small>
                     </a>
         @endforeach
-    @else
-        <div class="dropdown-item text-center text-muted py-3">Tidak ada notifikasi baru.</div>
-    @endif
+        @else
+            <div class="dropdown-item text-center text-muted py-3">Tidak ada notifikasi baru.</div>
+        @endif
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Footer -->
-                        <div class="d-flex justify-content-between align-items-center p-2 border-top" style="font-size: 0.9rem;">
-                            <a href="#" class="text-success text-decoration-none dropdown-footer-link">Tandai semua dibaca</a>
-                            <a href="#" class="text-success text-decoration-none dropdown-footer-link">Lihat selengkapnya</a>
-                        </div>
                     </ul>
                 </div>
 
                 <!-- Cart -->
                 <a href="{{ url('/cart') }}" class="btn btn-link position-relative p-0 navbar-icon icon-cart" aria-label="Keranjang">
                     <i class="fas fa-shopping-cart fs-5"></i>
-                    @if(isset($cartItemCount) && $cartItemCount > 0)
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style="font-size: 0.6rem; padding: 0.3em 0.6em; transform: translate(50%, -50%);" id="cartItemCountBadge">
-                            {{ $cartItemCount }}
-                            <span class="visually-hidden">items in cart</span>
-                        </span>
-                    @else
-                         {{-- Tambahkan placeholder badge meskipun jumlah 0, agar elemennya selalu ada di DOM --}}
-                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style="font-size: 0.6rem; padding: 0.3em 0.6em; transform: translate(50%, -50%); display: none;" id="cartItemCountBadge">
-                            0
-                             <span class="visually-hidden">items in cart</span>
-                         </span>
-                    @endif
                 </a>
 
                 <!-- User -->
@@ -119,12 +94,6 @@
                                     <i class="fas fa-box me-2"></i> Pesanan Saya
                                 </a>
                             </li>
-                                                        <li>
-                                <a class="dropdown-item" href="{{ route('user.payments.history') }}">
-                                    <i class="fas fa-receipt me-2"></i>  Riwayat Transaksi
-                                </a>
-                            </li>
-
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
