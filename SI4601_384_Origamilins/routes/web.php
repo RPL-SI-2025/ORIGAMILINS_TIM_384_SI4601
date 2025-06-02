@@ -23,6 +23,7 @@ use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\UserPaymentHistoryController;
 use App\Http\Controllers\UserNotifikasiController;
 use App\Http\Controllers\UserPesananController;
+use App\Http\Controllers\UserArtikelController;
 
 // Home
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
@@ -31,6 +32,10 @@ Route::get('/', [WelcomeController::class, 'index'])->name('home');
 Route::get('/event', [UserEventController::class, 'index'])->name('event.melihat_event');
 
 // Authentication
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect('/');
+})->name('logout');
 
 // User Profile (butuh login)
 Route::middleware(['auth'])->group(function () {
@@ -137,7 +142,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cart/update-total', [CartController::class, 'updateTotal'])->name('cart.update-total');
     Route::get('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
     Route::get('/cart-item-count', [CartController::class, 'getCartItemCount'])->name('cart.item.count');
-    
+
 
     // Payment History Routes
     Route::get('/payments/history', [UserPaymentHistoryController::class, 'index'])->name('user.payments.history');
@@ -166,6 +171,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pesanan/{id}/terima', [UserPesananController::class, 'konfirmasiTerima'])->name('pesanan.terima');
     // Simpan ulasan
     Route::post('/pesanan/{id}/ulasan', [UserPesananController::class, 'simpanUlasan'])->name('ulasan.store');
+
+    // Artikel User
+    Route::get('/artikel', [UserArtikelController::class, 'index'])->name('user.artikel.index');
+    Route::get('/artikel/{id}', [UserArtikelController::class, 'show'])->name('user.artikel.show');
+
+    Route::get('/events', [UserEventController::class, 'index'])->name('user.event.index');
+    Route::get('/events/{id}', [UserEventController::class, 'show'])->name('user.event.show');
 });
 
 // Produk Input Publik
@@ -286,10 +298,10 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
 
 // Pembayaran
 Route::prefix('user/payments')->name('user.payments.')->middleware(['auth'])->group(function () {
-    Route::get('/', [PaymentsController::class, 'index'])->name('index'); // Menampilkan form pembayaran
-    Route::post('/', [PaymentsController::class, 'store'])->name('store'); // Menyimpan data pembayaran
-    Route::get('/{payment}/finish', [PaymentsController::class, 'finish'])->name('finish'); // Redirect setelah pembayaran selesai
-    Route::post('/callback', [PaymentsController::class, 'callback'])->name('callback'); // Callback dari Midtrans
+    Route::get('/', [PaymentsController::class, 'index'])->name('index');
+    Route::post('/', [PaymentsController::class, 'store'])->name('store');
+    Route::get('/{payment}/finish', [PaymentsController::class, 'finish'])->name('finish');
+    Route::post('/callback', [PaymentsController::class, 'callback'])->name('callback');
 });
 
 // Debug Route
@@ -309,6 +321,5 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name(
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/pesanan-saya', [App\Http\Controllers\UserPesananController::class, 'index'])->name('user.pesanan.index');
+    Route::get('/pesanan-saya', [UserPesananController::class, 'index'])->name('user.pesanan.index');
 });
-

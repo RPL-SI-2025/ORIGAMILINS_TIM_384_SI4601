@@ -19,6 +19,7 @@
                 <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ route('etalase') }}">Etalase</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ url('/#layanan') }}">Layanan</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ route('user.event.index') }}">Event</a></li>
+                <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ route('user.artikel.index') }}">Artikel</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ url('/#tentang-kami') }}">Tentang Kami</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ url('/#faq') }}">FAQ</a></li>
             </ul>
