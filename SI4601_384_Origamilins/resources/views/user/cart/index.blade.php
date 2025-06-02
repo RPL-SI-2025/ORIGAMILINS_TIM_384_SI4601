@@ -13,9 +13,9 @@
             font-family: 'Poppins', sans-serif;
         }
         .cart-container {
-            max-width: 650px;
-            margin: 40px auto 0 auto;
-            padding: 24px 0 40px 0;
+            max-width: 1200px;
+            margin: 80px auto 0 auto;
+            padding: 24px;
         }
         .cart-header {
             font-size: 1.5rem;
@@ -130,7 +130,6 @@
             background: #fff;
             border-radius: 16px;
             padding: 28px 24px;
-            margin-top: 32px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
         .summary-row {
@@ -202,7 +201,7 @@
         <button class="back-btn" onclick="window.location.href='{{ route('etalase') }}'">
             <i class="fas fa-arrow-left"></i> Kembali ke Katalog
         </button>
-        <h1 class="cart-header">Tambah ke Keranjang</h1>
+        <h1 class="cart-header">Keranjang Saya</h1>
 
         @if($items->isEmpty())
             <div class="empty-cart">
@@ -211,65 +210,70 @@
                 <a href="{{ route('etalase') }}" class="btn btn-primary mt-3">Belanja Sekarang</a>
             </div>
         @else
-            @foreach($items as $item)
-            <div class="cart-item">
-                <img src="{{ asset('uploads/produk/' . $item->produk->gambar_url) }}"
-                     alt="{{ $item->produk->nama }}"
-                     class="product-image"
-                     onerror="this.onerror=null;this.src='https://via.placeholder.com/80x80?text=No+Image';">
-                <div class="product-info">
-                    <h6 title="{{ $item->produk->nama }}">{{ $item->produk->nama }}</h6>
-                    <span class="product-category">{{ $item->produk->kategori ?? '' }}</span>
-                    <div class="product-price">Rp {{ number_format($item->produk->harga,0,',','.') }}</div>
+            <div class="row">
+                <div class="col-md-7">
+                    @foreach($items as $item)
+                    <div class="cart-item">
+                        <img src="{{ asset($item->produk->gambar) }}"
+                             alt="{{ $item->produk->nama }}"
+                             class="product-image"
+                             onerror="this.onerror=null;this.src='https://via.placeholder.com/80x80?text=No+Image';">
+                        <div class="product-info">
+                            <h6 title="{{ $item->produk->nama }}">{{ $item->produk->nama }}</h6>
+                            <span class="product-category">{{ $item->produk->kategori ?? '' }}</span>
+                            <div class="product-price">Rp {{ number_format($item->produk->harga,0,',','.') }}</div>
+                        </div>
+                        <div>
+                            <div class="quantity-controls">
+                                <!-- Kurangi -->
+                                <form action="{{ route('cart.update') }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    <input type="hidden" name="item_id" value="{{ $item->id }}">
+                                    <input type="hidden" name="jumlah" value="{{ $item->jumlah - 1 }}">
+                                    <button type="submit" class="quantity-btn" {{ $item->jumlah <= 1 ? 'disabled' : '' }} title="Kurangi">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </form>
+                                <span class="quantity-input">{{ $item->jumlah }}</span>
+                                <!-- Tambah -->
+                                <form action="{{ route('cart.update') }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    <input type="hidden" name="item_id" value="{{ $item->id }}">
+                                    <input type="hidden" name="jumlah" value="{{ $item->jumlah + 1 }}">
+                                    <button type="submit" class="quantity-btn" title="Tambah">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </form>
+                                <!-- Hapus -->
+                                <form action="{{ route('cart.delete') }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="hidden" name="item_id" value="{{ $item->id }}">
+                                    <button type="submit" class="delete-btn" title="Hapus" dusk="btn-hapus-produk-{{ $item->produk->id }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
-                <div>
-                    <div class="quantity-controls">
-                        <!-- Kurangi -->
-                        <form action="{{ route('cart.update') }}" method="POST" style="display:inline;">
-                            @csrf
-                            <input type="hidden" name="item_id" value="{{ $item->id }}">
-                            <input type="hidden" name="jumlah" value="{{ $item->jumlah - 1 }}">
-                            <button type="submit" class="quantity-btn" {{ $item->jumlah <= 1 ? 'disabled' : '' }} title="Kurangi">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </form>
-                        <span class="quantity-input">{{ $item->jumlah }}</span>
-                        <!-- Tambah -->
-                        <form action="{{ route('cart.update') }}" method="POST" style="display:inline;">
-                            @csrf
-                            <input type="hidden" name="item_id" value="{{ $item->id }}">
-                            <input type="hidden" name="jumlah" value="{{ $item->jumlah + 1 }}">
-                            <button type="submit" class="quantity-btn" title="Tambah">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </form>
-                        <!-- Hapus -->
-                        <form action="{{ route('cart.delete') }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <input type="hidden" name="item_id" value="{{ $item->id }}">
-                            <button type="submit" class="delete-btn" title="Hapus" dusk="btn-hapus-produk-{{ $item->produk->id }}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
+                <div class="col-md-5">
+                    <!-- Summary Section -->
+                    <div class="summary-section">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">Rp{{ number_format($total,0,',','.') }}</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="total">Rp{{ number_format($total,0,',','.') }}</span>
+                        </div>
+                        <a href="{{ route('user.payments.create') }}" class="checkout-btn text-center d-block" style="text-decoration:none;">
+                            Lanjut Ke Pembayaran
+                        </a>
                     </div>
                 </div>
-            </div>
-            @endforeach
-
-            <!-- Summary Section -->
-            <div class="summary-section">
-                <div class="summary-row">
-                    <span>Subtotal</span>
-                    <span id="subtotal">Rp{{ number_format($total,0,',','.') }}</span>
-                </div>
-                <div class="summary-row total">
-                    <span>Total</span>
-                    <span id="total">Rp{{ number_format($total,0,',','.') }}</span>
-                </div>
-                <a href="{{ route('user.payments.create') }}" class="checkout-btn text-center d-block" style="text-decoration:none;">
-                    Lanjut Ke Pembayaran
-                </a>
             </div>
         @endif
     </div>
