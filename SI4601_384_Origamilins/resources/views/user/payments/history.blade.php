@@ -20,8 +20,8 @@
                                     <tr>
                                         <th>ID Transaksi</th>
                                         <th>Tanggal</th>
-                                        <th>Nama</th>
                                         <th>Total</th>
+                                        <th>Metode Pembayaran</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -31,27 +31,53 @@
                                         <tr>
                                             <td>{{ $payment->order_id }}</td>
                                             <td>{{ $payment->created_at->format('d M Y H:i') }}</td>
-                                            <td>{{ $payment->nama }}</td>
                                             <td>Rp {{ number_format($payment->total, 0, ',', '.') }}</td>
                                             <td>
-                                                @switch($payment->status)
-                                                    @case('success')
-                                                        <span class="badge bg-success">Sukses</span>
+                                                @switch($payment->payment_type)
+                                                    @case('bank_transfer')
+                                                        Transfer Bank
                                                         @break
-                                                    @case('pending')
-                                                        <span class="badge bg-warning">Menunggu</span>
+                                                    @case('credit_card')
+                                                        Kartu Kredit
                                                         @break
-                                                    @case('failed')
-                                                        <span class="badge bg-danger">Gagal</span>
+                                                    @case('e_wallet')
+                                                        E-Wallet
                                                         @break
-                                                    @case('refund_requested')
-                                                        <span class="badge bg-info">Refund Diminta</span>
+                                                    @case('gopay')
+                                                        GoPay
                                                         @break
-                                                    @case('refunded')
-                                                        <span class="badge bg-primary">Dikembalikan</span>
+                                                    @case('shopeepay')
+                                                        ShopeePay
+                                                        @break
+                                                    @case('qris')
+                                                        QRIS
                                                         @break
                                                     @default
-                                                        <span class="badge bg-secondary">{{ $payment->status }}</span>
+                                                        {{ $payment->payment_type ?? '-' }}
+                                                @endswitch
+                                            </td>
+                                            <td>
+                                                @switch($payment->status)
+                                                    @case('pending')
+                                                        <span class="badge bg-warning text-dark">Menunggu Pembayaran</span>
+                                                        @break
+                                                    @case('success')
+                                                        <span class="badge bg-success text-white">Pembayaran Berhasil</span>
+                                                        @break
+                                                    @case('failed')
+                                                        <span class="badge bg-danger text-white">Pembayaran Gagal</span>
+                                                        @break
+                                                    @case('refund_requested')
+                                                        <span class="badge bg-info text-white">Refund Diminta</span>
+                                                        @break
+                                                    @case('refunded')
+                                                        <span class="badge bg-success text-white">Refund Diterima</span>
+                                                        @break
+                                                    @case('refund_rejected')
+                                                        <span class="badge bg-danger text-white">Refund Ditolak</span>
+                                                        @break
+                                                    @default
+                                                        <span class="badge bg-secondary text-white">{{ $payment->status }}</span>
                                                 @endswitch
                                             </td>
                                             <td>

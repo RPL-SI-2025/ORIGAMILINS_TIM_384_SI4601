@@ -21,7 +21,8 @@ class Payments extends Model
         'snap_token',
         'payment_type',
         'transaction_id',
-        'metadata'
+        'metadata',
+        'user_id'
     ];
 
     protected $casts = [
@@ -39,6 +40,12 @@ class Payments extends Model
     const STATUS_REFUND_REQUESTED = 'refund_requested';
     const STATUS_REFUNDED = 'refunded';
     const STATUS_REFUND_REJECTED = 'refund_rejected';
+
+    // Add user relationship
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // Scope for refund requests
     public function scopeRefundRequests($query)
