@@ -43,10 +43,19 @@
             padding: 1.5rem;
         }
 
+        .event-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
         .event-info h1 {
             font-size: 2rem;
             font-weight: 700;
             color: #0835d8;
+            margin-bottom: 0;
         }
 
         .event-price {
@@ -59,7 +68,11 @@
             .event-image-container {
                 height: 200px;
             }
-
+            .event-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
             .event-info h1 {
                 font-size: 1.5rem;
             }
@@ -69,7 +82,6 @@
             .main-content {
                 padding-top: 60px;
             }
-
             .event-image-container {
                 height: 160px;
             }
@@ -100,7 +112,12 @@
 
                 {{-- Detail Event --}}
                 <div class="event-info">
-                    <h1 class="mb-3">{{ $event->nama_event }}</h1>
+                    <div class="event-header">
+                        <h1>{{ $event->nama_event }}</h1>
+                        <a href="{{ route('user.event.register.form', $event->id) }}" class="btn btn-primary ms-auto">
+                            <i class="fas fa-ticket-alt me-2"></i> Daftar Event
+                        </a>
+                    </div>
 
                     <div class="mb-3">
                         <span class="event-price">Rp {{ number_format($event->harga, 0, ',', '.') }}</span>
@@ -119,7 +136,6 @@
                     </div>
 
                     <hr>
-
                     <div>
                         <strong>Deskripsi Event:</strong>
                         <p class="text-muted mt-2">{!! nl2br(e($event->deskripsi)) !!}</p>

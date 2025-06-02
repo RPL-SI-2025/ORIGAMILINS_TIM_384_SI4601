@@ -13,7 +13,7 @@
         }
 
         .main-content {
-            padding-top: 80px; /* Lebih rapat ke navbar */
+            padding-top: 80px; 
             min-height: 100vh;
         }
 
@@ -133,14 +133,6 @@
             text-align: center;
         }
 
-        .event-description {
-            padding: 0.8rem;
-            background: rgba(3, 53, 216, 0.02);
-            border-radius: 12px;
-            margin: 0.5rem 0;
-            border: 1px solid rgba(3, 53, 216, 0.05);
-        }
-
         .btn-detail {
             margin-top: 1rem; /* Add margin above button */
             border-radius: 20px;
@@ -203,33 +195,36 @@
                 <div class="col-lg-9 col-md-8">
                     <div class="event-grid">
                          @forelse($events as $event)
-                            <div class="event-card">
-                                @if($event->poster)
-                                    <div style="width:100%;height:180px;overflow:hidden;background:#f8f9fa;">
-                                        <img src="{{ asset($event->poster) }}" alt="Poster {{ $event->nama }}" style="width:100%;height:100%;object-fit:cover;">
+                            <a href="{{ route('user.event.show', $event->id) }}" style="text-decoration:none; color:inherit;">
+                                <div class="event-card" style="cursor:pointer;">
+                                    @if($event->poster)
+                                        <div style="width:100%;height:180px;overflow:hidden;background:#f8f9fa;">
+                                            <img src="{{ asset($event->poster) }}" alt="Poster {{ $event->nama }}" style="width:100%;height:100%;object-fit:cover;">
+                                        </div>
+                                    @else
+                                        <div style="width:100%;height:180px;display:flex;align-items:center;justify-content:center;background:#f8f9fa;color:#bbb;">
+                                            <i class="fas fa-image fa-3x"></i>
+                                        </div>
+                                    @endif
+                                    <div class="event-content">
+                                        <div class="event-title">
+                                            {{ $event->nama_event }}
+                                        </div>
+                                        <div class="event-date"><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($event->tanggal_pelaksanaan)->format('d M Y') }}</div>
+                                        <div class="event-location"><i class="fas fa-map-marker-alt"></i> {{ $event->lokasi }}</div>
+                                        <div class="event-quota">Kuota: {{ $event->kuota }}</div>
+                                        <div class="event-price" style="font-size:1.1rem; font-weight:700; color:#0835d8; margin-bottom: 0.8rem;">
+                                            Harga: Rp {{ number_format($event->harga, 0, ',', '.') }}
+                                        </div>
                                     </div>
-                                @else
-                                    <div style="width:100%;height:180px;display:flex;align-items:center;justify-content:center;background:#f8f9fa;color:#bbb;">
-                                        <i class="fas fa-image fa-3x"></i>
-                                    </div>
-                                @endif
-                                <div class="event-content">
-                                    <div class="event-title">{{ $event->nama_event }}</div>
-                                    <div class="event-date"><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($event->tanggal_pelaksanaan)->format('d M Y') }}</div>
-                                    <div class="event-location"><i class="fas fa-map-marker-alt"></i> {{ $event->lokasi }}</div>
-                                    <div class="event-quota">Kuota: {{ $event->kuota }}</div>
-                                    <div class="event-description text-muted mb-2" style="font-size: 0.95rem;">
-                                         {!! nl2br(e($event->deskripsi)) !!}
-                                    </div>
-                                    <div class="event-price" style="font-size:1.1rem; font-weight:700; color:#0835d8; margin-bottom: 0.8rem;">Harga: Rp {{ number_format($event->harga, 0, ',', '.') }}</div>
                                 </div>
-                            </div>
+                            </a>
                         @empty
                             <div class="no-events">Tidak ada event untuk ditampilkan.</div>
                         @endforelse
                     </div>
                      <div class="mt-4">
-                        {{-- {{ $events->links() }} --}} {{-- Add pagination if needed --}}
+                    
                     </div>
                  </div>
              </div>
