@@ -20,6 +20,11 @@ class PesananEventController extends Controller
             return redirect('/login');
         }
 
+        // Ambil data pendaftar event (pesanan event) dari tabel event_registrations
+        $registrations = \App\Models\EventRegistration::with('event', 'user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         $query = PesananEvent::query();
 
         // Search with partial word matching
@@ -48,8 +53,8 @@ class PesananEventController extends Controller
 
         $pesanan = $query->orderBy('id_pesanan_event', 'asc')->get();
         $statusOptions = PesananEvent::getStatusOptions();
-        return view('admin.pesananevent.index', compact('pesanan', 'statusOptions'));
-    }
+        return view('admin.pesananevent.index', compact('registrations'));
+}
 
     public function edit($id_pesanan_event)
     {

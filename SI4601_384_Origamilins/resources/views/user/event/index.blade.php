@@ -224,7 +224,7 @@
                         @endforelse
                     </div>
                      <div class="mt-4">
-                        {{-- {{ $events->links() }} --}} {{-- Add pagination if needed --}}
+                    
                     </div>
                  </div>
              </div>

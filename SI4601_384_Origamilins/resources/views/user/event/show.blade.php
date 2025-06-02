@@ -43,10 +43,19 @@
             padding: 1.5rem;
         }
 
+        .event-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
         .event-info h1 {
             font-size: 2rem;
             font-weight: 700;
             color: #0835d8;
+            margin-bottom: 0;
         }
 
         .event-price {
@@ -59,7 +68,11 @@
             .event-image-container {
                 height: 200px;
             }
-
+            .event-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
             .event-info h1 {
                 font-size: 1.5rem;
             }
@@ -69,7 +82,6 @@
             .main-content {
                 padding-top: 60px;
             }
-
             .event-image-container {
                 height: 160px;
             }
@@ -100,7 +112,12 @@
 
                 {{-- Detail Event --}}
                 <div class="event-info">
-                    <h1 class="mb-3">{{ $event->nama_event }}</h1>
+                    <div class="event-header">
+                        <h1>{{ $event->nama_event }}</h1>
+                        <a href="{{ route('user.event.register.form', $event->id) }}" class="btn btn-primary ms-auto">
+                            <i class="fas fa-ticket-alt me-2"></i> Daftar Event
+                        </a>
+                    </div>
 
                     <div class="mb-3">
                         <span class="event-price">Rp {{ number_format($event->harga, 0, ',', '.') }}</span>
@@ -122,62 +139,6 @@
                     <div>
                         <strong>Deskripsi Event:</strong>
                         <p class="text-muted mt-2">{!! nl2br(e($event->deskripsi)) !!}</p>
-                    {{-- Tombol Daftar Event --}}
-<div class="mt-4">
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#daftarEventModal">
-        <i class="fas fa-ticket-alt me-2"></i> Daftar Event
-    </button>
-</div>
-
-<!-- Modal Form Daftar Event -->
-<div class="modal fade" id="daftarEventModal" tabindex="-1" aria-labelledby="daftarEventModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="POST" action="{{ route('user.event.register', $event->id) }}">
-        @csrf
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="daftarEventModalLabel">Form Pendaftaran Event</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-                <label for="nama" class="form-label">Nama Lengkap</label>
-                <input type="text" class="form-control" id="nama" name="nama" value="{{ Auth::user()->name ?? '' }}" required>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="{{ Auth::user()->email ?? '' }}" required>
-            </div>
-            <div class="mb-3">
-                <label for="telepon" class="form-label">No. Telepon</label>
-                <input type="text" class="form-control" id="telepon" name="telepon" required>
-            </div>
-            <div class="mb-3">
-                <label for="jumlah_tiket" class="form-label">Jumlah Tiket</label>
-                <input type="number" class="form-control" id="jumlah_tiket" name="jumlah_tiket" min="1" max="{{ $event->kuota ?? 100 }}" value="1" required>
-            </div>
-            <div class="mb-3">
-                <label for="metode_pembayaran" class="form-label">Metode Pembayaran</label>
-                <select class="form-select" id="metode_pembayaran" name="metode_pembayaran" required>
-                    <option value="">Pilih Metode</option>
-                    <option value="transfer">Transfer Bank</option>
-                    <option value="ewallet">E-Wallet</option>
-                    <option value="cod">Bayar di Tempat</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="catatan" class="form-label">Catatan Tambahan (Opsional)</label>
-                <textarea class="form-control" id="catatan" name="catatan" rows="2"></textarea>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-            <button type="submit" class="btn btn-primary">Konfirmasi Pendaftaran</button>
-          </div>
-        </div>
-    </form>
-  </div>
-</div>
                     </div>
                 </div>
             </div>

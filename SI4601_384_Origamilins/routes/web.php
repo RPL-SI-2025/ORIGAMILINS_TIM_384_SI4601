@@ -127,8 +127,6 @@ Route::middleware(['auth'])->group(function () {
 
         return view('user.produk.produk-detail', compact('produk', 'ulasan', 'cartCount', 'produkTerkait'));
     })->name('detail.produk');
-    Route::get('/events', [UserEventController::class, 'index'])->name('user.event.index');
-    Route::get('/events/{id}', [UserEventController::class, 'show'])->name('user.event.show');
 
     // Cart Routes
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -189,6 +187,13 @@ Route::post('/logout', function () {
     return redirect('/');
 })->name('logout');
 
+  // Route user event
+    Route::get('/events', [UserEventController::class, 'index'])->name('user.event.index');
+    Route::get('/events/{id}', [UserEventController::class, 'show'])->name('user.event.show');
+    Route::get('/events/{id}/register', [UserEventController::class, 'registerForm'])->name('user.event.register.form');
+Route::post('/events/{id}/register', [UserEventController::class, 'register'])->name('user.event.register');
+
+
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(function () {
     // Manajemen User (CRUD lengkap)
@@ -209,17 +214,17 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
         Route::delete('/{product}', [Produk_Controller::class, 'destroy'])->name('destroy');
     });
 
-    // Manajemen Event
-    Route::prefix('event')->name('admin.event.')->group(function () {
-        Route::get('/', [EventController::class, 'index'])->name('index');
-        Route::get('/create', [EventController::class, 'create'])->name('create');
-        Route::post('/', [EventController::class, 'store'])->name('store');
-        Route::get('/{event}', [EventController::class, 'show'])->name('show');
-        Route::get('/{event}/edit', [EventController::class, 'edit'])->name('edit');
-        Route::put('/{event}', [EventController::class, 'update'])->name('update');
-        Route::delete('/{event}', [EventController::class, 'destroy'])->name('destroy');
-        Route::get('/event/{id}', [UserEventController::class, 'show'])->name('user.event.show');
-        Route::post('/event/{id}/register', [UserEventController::class, 'register'])->name('user.event.register');
+    // Route admin event
+    Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(function () {
+        Route::prefix('event')->name('admin.event.')->group(function () {
+            Route::get('/', [EventController::class, 'index'])->name('index');
+            Route::get('/create', [EventController::class, 'create'])->name('create');
+            Route::post('/', [EventController::class, 'store'])->name('store');
+            Route::get('/{event}', [EventController::class, 'show'])->name('show');
+            Route::get('/{event}/edit', [EventController::class, 'edit'])->name('edit');
+            Route::put('/{event}', [EventController::class, 'update'])->name('update');
+            Route::delete('/{event}', [EventController::class, 'destroy'])->name('destroy');
+        });
     });
 
     // Manajemen Artikel
