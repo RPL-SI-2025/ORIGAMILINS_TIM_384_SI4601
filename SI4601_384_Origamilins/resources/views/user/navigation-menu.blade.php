@@ -41,15 +41,7 @@
                         <!-- Header -->
                         <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
                             <h6 class="mb-0">Notifikasi</h6>
-                            <a href="#" class="text-muted"><i class="fas fa-cog"></i></a>
                         </div>
-
-                        <!-- Tabs (Only Transaksi) -->
-                        <ul class="nav nav-tabs nav-fill px-3" role="tablist" style="border-bottom: none;">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="transaksi-tab" data-bs-toggle="tab" data-bs-target="#transaksi" type="button" role="tab" aria-controls="transaksi" aria-selected="true" style="border: none;">Transaksi</button>
-                            </li>
-                        </ul>
 
                         <!-- Tab Content -->
                         <div class="tab-content" id="notificationTabsContent">
@@ -78,8 +70,6 @@
                         
                         <!-- Footer -->
                         <div class="d-flex justify-content-between align-items-center p-2 border-top" style="font-size: 0.9rem;">
-                            <a href="#" class="text-success text-decoration-none dropdown-footer-link">Tandai semua dibaca</a>
-                            <a href="#" class="text-success text-decoration-none dropdown-footer-link">Lihat selengkapnya</a>
                         </div>
                     </ul>
                 </div>
