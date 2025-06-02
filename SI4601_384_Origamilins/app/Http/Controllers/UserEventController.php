@@ -7,10 +7,6 @@ use Illuminate\Http\Request;
 
 class UserEventController extends Controller
 {
-    public function index()
-    {
-        $events = Event::where('is_public', true)->get();
-        return view('user.event.index', compact('events'));
     /**
      * Display a listing of the resource.
      */
@@ -49,7 +45,6 @@ class UserEventController extends Controller
 
         // Teruskan request filter ke view untuk mempertahankan nilai di form
         return view('user.event.index', ['events' => $events, 'request' => $request]);
- main
     }
 
     public function show($id)
@@ -57,4 +52,15 @@ class UserEventController extends Controller
         $event = Event::findOrFail($id);
         return view('user.event.show', compact('event'));
     }
-} 
+
+    public function register(Request $request, $id)
+{
+    $request->validate([
+        'nama' => 'required|string|max:255',
+        'email' => 'required|email',
+        'telepon' => 'required|string|max:20',
+        'jumlah_tiket' => 'required|integer|min:1',
+        'metode_pembayaran' => 'required|string',
+        'catatan' => 'nullable|string',
+    ]);
+}}

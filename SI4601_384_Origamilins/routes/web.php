@@ -23,6 +23,7 @@ use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\UserPaymentHistoryController;
 use App\Http\Controllers\UserNotifikasiController;
 use App\Http\Controllers\UserPesananController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 // Home
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
@@ -177,6 +178,13 @@ Route::get('/test-admin', function () {
     return "Logged in as: {$user->name} (Role: {$user->role})";
 })->middleware(['auth', AdminMiddleware::class]);
 
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/');
+})->name('logout');
+
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(function () {
     // Manajemen User (CRUD lengkap)
@@ -206,6 +214,8 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
         Route::get('/{event}/edit', [EventController::class, 'edit'])->name('edit');
         Route::put('/{event}', [EventController::class, 'update'])->name('update');
         Route::delete('/{event}', [EventController::class, 'destroy'])->name('destroy');
+        Route::get('/event/{id}', [UserEventController::class, 'show'])->name('user.event.show');
+        Route::post('/event/{id}/register', [UserEventController::class, 'register'])->name('user.event.register');
     });
 
     // Manajemen Artikel

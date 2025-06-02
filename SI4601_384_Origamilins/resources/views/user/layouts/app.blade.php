@@ -57,12 +57,15 @@
                         <h4 class="brand-text">Origamilins</h4>
                     </div>
                     <div>
-                        @auth
-                            <span class="me-3 text-muted">{{ Auth::user()->name }}</span>
-                            <a href="{{ route('logout') }}" class="btn btn-outline-danger btn-sm">
+                    @auth
+                        <span class="me-3 text-muted">{{ Auth::user()->name }}</span>
+                        <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
                                 <i class="fas fa-sign-out-alt"></i> Logout
-                            </a>
-                        @endauth
+                            </button>
+                        </form>
+                    @endauth
                         <button id="sidebarToggle" class="d-md-none">
                             <i class="fas fa-bars"></i>
                         </button>
@@ -89,10 +92,15 @@
                         </a>
                         <a href="{{ route('profile.create') }}" class="list-group-item">
                             <i class="fas fa-user me-2"></i> Profil
-                        </a>
-                        <a href="{{ route('logout') }}" class="list-group-item text-danger">
-                            <i class="fas fa-sign-out-alt me-2"></i> Logout
-                        </a>
+                        @auth
+                            <span class="me-3 text-muted">{{ Auth::user()->name }}</span>
+                            <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
+                        @endauth
                     </div>
                 </div>
                 <!-- Main Content -->
