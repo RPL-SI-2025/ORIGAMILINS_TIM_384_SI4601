@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\Produk_Controller;
-use App\Http\Controllers\Admin\EventController as AdminEventController;
-use App\Http\Controllers\EventController;
+use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\UserEventController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Middleware\AdminMiddleware;
@@ -28,7 +28,7 @@ use App\Http\Controllers\UserPesananController;
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
 
 // Event Publik
-Route::get('/event', [EventController::class, 'index'])->name('event.melihat_event');
+Route::get('/event', [UserEventController::class, 'index'])->name('event.melihat_event');
 
 // Authentication
 Route::get('/logout', function () {
@@ -126,8 +126,8 @@ Route::middleware(['auth'])->group(function () {
         
         return view('user.produk.produk-detail', compact('produk', 'ulasan', 'cartCount', 'produkTerkait'));
     })->name('detail.produk');
-    Route::get('/events', [EventController::class, 'index'])->name('user.event.index');
-    Route::get('/events/{id}', [EventController::class, 'show'])->name('user.event.show');
+    Route::get('/events', [UserEventController::class, 'index'])->name('user.event.index');
+    Route::get('/events/{id}', [UserEventController::class, 'show'])->name('user.event.show');
 
     // Cart Routes
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

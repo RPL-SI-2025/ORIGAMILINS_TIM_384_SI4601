@@ -103,11 +103,6 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ route('dashboard') }}">
-                                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
-                                </a>
-                            </li>
-                            <li>
                                 <a class="dropdown-item" href="{{ route('user.pesanan.index') }}">
                                     <i class="fas fa-box me-2"></i> Pesanan Saya
                                 </a>
