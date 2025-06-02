@@ -101,8 +101,10 @@ class PesananController extends Controller
         if (isset($notif[$status])) {
             Notification::create([
                 'user_id' => $user->id,
+                'pesanan_id' => $pesanan->id_pesanan,
                 'title'   => $notif[$status][0],
                 'message' => $notif[$status][1],
+                'is_read' => false,
             ]);
         }
 

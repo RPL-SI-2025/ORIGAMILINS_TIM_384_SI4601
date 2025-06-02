@@ -30,6 +30,7 @@
                     <a href="{{ route('etalase') }}">Etalase</a>
                     <a href="#layanan">Layanan</a>
                     <a href="{{ route('user.event.index') }}">Event</a>
+                    <a href="{{ route('user.artikel.index') }}">Artikel</a>
                     <a href="#tentang-kami">Tentang Kami</a>
                     <a href="#faq">FAQ</a>
                 </div>  
