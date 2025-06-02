@@ -2,6 +2,10 @@
   <h5 class="mb-3"><i class="fa fa-filter"></i> FILTER</h5>
   <form method="GET" action="">
     <div class="mb-3">
+      <label for="nama" class="form-label fw-bold mb-2">Nama Produk</label>
+      <input type="text" class="form-control" id="nama" name="nama" placeholder="Cari nama produk..." value="{{ request('nama') }}">
+    </div>
+    <div class="mb-3">
       <label class="fw-bold mb-2">Kategori</label>
       <div class="form-check">
         <input class="form-check-input" type="checkbox" id="checkAllKategori">

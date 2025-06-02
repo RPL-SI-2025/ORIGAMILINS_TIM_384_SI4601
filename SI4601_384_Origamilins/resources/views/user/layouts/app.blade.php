@@ -84,7 +84,7 @@
                         <a href="{{ route('etalase') }}" class="list-group-item {{ request()->routeIs('etalase') ? 'active' : '' }}">
                             <i class="fas fa-store me-2"></i> Etalase Produk
                         </a>
-                        <a href="{{ route('pesananproduk.index') }}" class="list-group-item {{ request()->routeIs('pesananproduk.*') ? 'active' : '' }}">
+                        <a href="{{ route('user.pesanan.index') }}" class="list-group-item {{ request()->routeIs('/my-orders*') ? 'active' : '' }}">
                             <i class="fas fa-shopping-cart me-2"></i> Pesanan Saya
                         </a>
                         <a href="{{ route('user.payments.history') }}" class="list-group-item {{ request()->routeIs('user.payments.*') ? 'active' : '' }}">
