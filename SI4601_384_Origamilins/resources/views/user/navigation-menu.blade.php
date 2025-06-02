@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light" style="background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); font-family:'Poppins',Arial,sans-serif; position:fixed; width:100%; top:0; z-index:1000;">
+<nav class="navbar navbar-expand-lg navbar-light" style="background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); font-family:'Poppins',Arial,sans-serif;">
     <div class="container">
         {{-- Logo --}}
         <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ url('/') }}">
@@ -19,7 +19,6 @@
                 <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ route('etalase') }}">Etalase</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ url('/#layanan') }}">Layanan</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ route('user.event.index') }}">Event</a></li>
-                <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ route('user.artikel.index') }}">Artikel</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ url('/#tentang-kami') }}">Tentang Kami</a></li>
                 <li class="nav-item"><a class="nav-link text-info fw-medium px-3" href="{{ url('/#faq') }}">FAQ</a></li>
             </ul>

@@ -57,15 +57,12 @@
                         <h4 class="brand-text">Origamilins</h4>
                     </div>
                     <div>
-                    @auth
-                        <span class="me-3 text-muted">{{ Auth::user()->name }}</span>
-                        <form method="POST" action="{{ route('logout') }}" style="display:inline;">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                        @auth
+                            <span class="me-3 text-muted">{{ Auth::user()->name }}</span>
+                            <a href="{{ route('logout') }}" class="btn btn-outline-danger btn-sm">
                                 <i class="fas fa-sign-out-alt"></i> Logout
-                            </button>
-                        </form>
-                    @endauth
+                            </a>
+                        @endauth
                         <button id="sidebarToggle" class="d-md-none">
                             <i class="fas fa-bars"></i>
                         </button>
@@ -76,33 +73,38 @@
         <div class="container-fluid">
             <div class="row">
                 <!-- Sidebar User -->
-                <div class="col-auto p-0 admin-sidebar">
-                    <div class="list-group">
-                        <a href="{{ route('dashboard') }}" class="list-group-item {{ request()->routeIs('dashboard') && !request()->has('etalase') ? 'active' : '' }}">
-                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
-                        </a>
-                        <a href="{{ route('etalase') }}" class="list-group-item {{ request()->routeIs('etalase') ? 'active' : '' }}">
-                            <i class="fas fa-store me-2"></i> Etalase Produk
-                        </a>
-                        <a href="{{ route('user.pesanan.index') }}" class="list-group-item {{ request()->routeIs('/my-orders*') ? 'active' : '' }}">
-                            <i class="fas fa-shopping-cart me-2"></i> Pesanan Saya
-                        </a>
-                        <a href="{{ route('user.payments.history') }}" class="list-group-item {{ request()->routeIs('user.payments.*') ? 'active' : '' }}">
-                            <i class="fas fa-history me-2"></i> Riwayat Transaksi
-                        </a>
-                        <a href="{{ route('profile.create') }}" class="list-group-item">
-                            <i class="fas fa-user me-2"></i> Profil
-                        @auth
-                            <span class="me-3 text-muted">{{ Auth::user()->name }}</span>
-                            <form method="POST" action="{{ route('logout') }}" style="display:inline;">
-                                @csrf
-                                <button type="submit" class="btn btn-outline-danger btn-sm">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                </button>
-                            </form>
-                        @endauth
-                    </div>
-                </div>
+<!-- Sidebar User -->
+        <div class="col-auto p-0 admin-sidebar">
+            <div class="list-group">
+
+                <a href="{{ route('dashboard') }}" class="list-group-item {{ request()->routeIs('dashboard') && !request()->has('etalase') ? 'active' : '' }}">
+                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                </a>
+
+                <a href="{{ route('etalase') }}" class="list-group-item {{ request()->routeIs('etalase') ? 'active' : '' }}">
+                    <i class="fas fa-store me-2"></i> Etalase Produk
+                </a>
+
+                <a href="{{ route('user.pesanan.index') }}" class="list-group-item {{ request()->routeIs('user.pesanan.index') ? 'active' : '' }}">
+                    <i class="fas fa-box me-2"></i> Pesanan Saya
+                </a>
+
+                <a href="{{ route('user.payments.history') }}" class="list-group-item {{ request()->routeIs('user.payments.*') ? 'active' : '' }}">
+                    <i class="fas fa-receipt me-2"></i> Riwayat Transaksi
+                </a>
+
+                <a href="{{ route('profile.show') }}" class="list-group-item {{ request()->routeIs('profile.show') ? 'active' : '' }}">
+                    <i class="fas fa-user me-2"></i> Profil
+                </a>
+
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="list-group-item text-danger text-start border-0 bg-transparent">
+                <i class="fas fa-sign-out-alt me-2"></i> Logout
+            </button>
+        </form>
+    </div>
+</div>
                 <!-- Main Content -->
                 <div class="col ps-md-4">
                     <div class="admin-content">
