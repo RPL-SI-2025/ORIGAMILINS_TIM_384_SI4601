@@ -6,27 +6,31 @@
                 Jl. Cimendong No.3, Sukamaju, Kec. Cibeunying Kidul,<br>
                 Kota Bandung, Jawa Barat 40121
             </div>
-            <div class="social-links">
-                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            <div class="d-flex align-items-center mb-3">
+                <span class="text-muted me-2">Hubungi Kami</span>
+                <a href="https://wa.me/628111580800" class="text-success me-2" target="_blank">
+                    <i class="fab fa-whatsapp fa-lg"></i>
+                </a>
+                <a href="https://www.instagram.com/klub.origami.indonesia?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="text-danger" target="_blank">
+                    <i class="fab fa-instagram fa-lg"></i>
+                </a>
             </div>
         </div>
         <div class="footer-links">
             <div class="footer-link-group">
-                <a href="/tentang-kami" class="footer-link footer-link-primary">Tentang Kami</a>
+                <a href="#" class="footer-link footer-link-primary">Tentang Kami</a>
                 <a href="{{ url('/#layanan') }}" class="footer-link">Layanan</a>
-                <a href="/#artikel" class="footer-link">Blog</a>
+                <a href="{{ url('/#faq') }}" class="footer-link">FAQ</a>
+                <a href="{{route('user.artikel.index')}}" class="footer-link">Artikel</a>
             </div>
             <div class="footer-link-group">
-                <a href="/dukungan" class="footer-link footer-link-primary">Dukung Kami</a>
+                <a href="#" class="footer-link footer-link-primary">Dukung Kami</a>
                 <a href="/kontak" class="footer-link">Kontak Kami</a>
-            </div>
-            <div class="footer-link-group">
-                <a href="/karir" class="footer-link footer-link-primary">Lowongan</a>
                 <a href="/tim" class="footer-link">Tim Kami</a>
-                <a href="/privasi" class="footer-link">Privasi</a>
             </div>
             <div class="footer-link-group">
-                <a href="{{ route('etalase') }}" class="footer-link footer-link-primary">Etalas</a>
+                <a href="#" class="footer-link footer-link-primary">Fitur Kami</a>
+                <a href="{{ route('etalase') }}" class="footer-link">Etalase Produk</a>
                 <a href="{{ route('user.event.index') }}" class="footer-link">Informasi Event</a>
             </div>
         </div>
@@ -36,8 +40,8 @@
             © Copyright {{ date('Y') }} Koperasi Origami Indonesia, Inc. All rights reserved.
         </div>
         <div style="display:flex; gap:1.5rem;">
-            <a href="/terms" class="footer-bottom-link">Terms & Conditions</a>
-            <a href="/privacy" class="footer-bottom-link">Privacy Policy</a>
+            <a href="#" class="footer-bottom-link">Terms & Conditions</a>
+            <a href="#" class="footer-bottom-link">Privacy Policy</a>
         </div>
     </div>
 </footer>
@@ -82,30 +86,6 @@ footer {
     font-size: 1rem;
     margin-bottom: 1.3rem;
     line-height: 1.5;
-}
-
-.social-links {
-    display: flex;
-    gap: 0.7rem;
-}
-
-.social-link {
-    background: #f7f7f7;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #333; /* Ubah ke abu tua */
-    box-shadow: 0 1px 4px rgba(8,53,216,0.07);
-    transition: background 0.2s, color 0.2s;
-    text-decoration: none;
-}
-
-.social-link:hover {
-    background: #333; /* Abu tua saat hover */
-    color: #fff;
 }
 
 .footer-links {

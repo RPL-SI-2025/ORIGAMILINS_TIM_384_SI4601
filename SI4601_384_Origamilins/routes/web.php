@@ -175,8 +175,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/artikel', [UserArtikelController::class, 'index'])->name('user.artikel.index');
     Route::get('/artikel/{id}', [UserArtikelController::class, 'show'])->name('user.artikel.show');
 
+    // Route user event
     Route::get('/events', [UserEventController::class, 'index'])->name('user.event.index');
     Route::get('/events/{id}', [UserEventController::class, 'show'])->name('user.event.show');
+    Route::get('/events/{id}/register', [UserEventController::class, 'registerForm'])->name('user.event.register.form');
+    Route::post('/events/{id}/register', [UserEventController::class, 'register'])->name('user.event.register');
 });
 
 // Produk Input Publik
@@ -198,12 +201,6 @@ Route::post('/logout', function () {
     request()->session()->regenerateToken();
     return redirect('/');
 })->name('logout');
-
-  // Route user event
-    Route::get('/events', [UserEventController::class, 'index'])->name('user.event.index');
-    Route::get('/events/{id}', [UserEventController::class, 'show'])->name('user.event.show');
-    Route::get('/events/{id}/register', [UserEventController::class, 'registerForm'])->name('user.event.register.form');
-Route::post('/events/{id}/register', [UserEventController::class, 'register'])->name('user.event.register');
 
 
 // Admin Routes
