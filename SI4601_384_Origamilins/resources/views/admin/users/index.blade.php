@@ -1,0 +1,86 @@
+@extends('admin.layouts.app')
+
+@section('content')
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Daftar User</h2>
+        <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+            + Tambah User
+        </a>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Filter User</h5>
+        </div>
+        <div class="card-body">
+            <form method="GET" action="{{ route('admin.users.index') }}" class="row g-3">
+                <div class="col-md-4 mb-3">
+                    <label for="name" class="form-label">Nama User</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ request('name') }}" placeholder="Cari nama user...">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="email" name="email" value="{{ request('email') }}" placeholder="Cari email...">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">Semua Status</option>
+                        <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Aktif</option>
+                        <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Non-aktif</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Cari</button>
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($users as $i => $user)
+                <tr>
+                    <td>{{ $i + 1 }}</td>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>
+                        <span class="badge {{ $user->is_active ? 'bg-success' : 'bg-danger' }}">
+                            {{ $user->is_active ? 'Aktif' : 'Non-aktif' }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-warning btn-sm" dusk="edit-user-{{ $user->id }}">Edit</a>
+                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" dusk="hapus-user-{{ $user->id }}">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center">Tidak ada data user.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+@endsection

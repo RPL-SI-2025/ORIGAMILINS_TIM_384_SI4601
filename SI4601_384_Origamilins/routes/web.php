@@ -178,8 +178,12 @@ Route::get('/test-admin', function () {
 
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(function () {
+    // Manajemen User (CRUD lengkap)
+    Route::resource('users', UserManagementController::class, [
+        'as' => 'admin'
+    ]);
     // Dashboard
-    Route::get('/', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     // Manajemen Produk
     Route::prefix('produk')->name('admin.produk.')->group(function () {

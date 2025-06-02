@@ -129,7 +129,7 @@ class AdminDashboardController extends Controller
 
         // Produk terlaris bulan ini
         $bulanNow = date('m');
-        $produkTerlaris = \App\Models\Pesanan::with('produk')
+        $produkTerlaris = Pesanan::with('produk')
             ->whereMonth('created_at', $bulanNow)
             ->selectRaw('produk_id, SUM(jumlah) as total')
             ->groupBy('produk_id')
