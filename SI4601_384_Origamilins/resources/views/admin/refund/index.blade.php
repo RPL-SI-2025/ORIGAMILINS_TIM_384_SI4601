@@ -75,11 +75,11 @@
                                         <td>Rp {{ number_format($refund->total, 0, ',', '.') }}</td>
                                         <td>
                                             @if($refund->status === \App\Models\Payments::STATUS_REFUND_REQUESTED)
-                                                <span class="badge badge-warning">Menunggu Refund</span>
+                                                <span class="badge bg-warning text-dark">Menunggu Refund</span>
                                             @elseif($refund->status === \App\Models\Payments::STATUS_REFUNDED)
-                                                <span class="badge badge-success">Refund Diterima</span>
+                                                <span class="badge bg-success text-white">Refund Diterima</span>
                                             @else
-                                                <span class="badge badge-danger">Refund Ditolak</span>
+                                                <span class="badge bg-danger text-white">Refund Ditolak</span>
                                             @endif
                                         </td>
                                         <td>{{ $refund->created_at->format('d/m/Y H:i') }}</td>

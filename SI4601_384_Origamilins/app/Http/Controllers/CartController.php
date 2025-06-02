@@ -46,45 +46,45 @@ class CartController extends Controller
     }
 
     public function add(Request $request)
-{
-    $request->validate([
-        'produk_id' => 'required|exists:produk,id',
-        'jumlah' => 'required|integer|min:1'
-    ]);
-
-    $user = Auth::user();
-    $cart = $user->getOrCreateCart();
-    $produk = Produk::findOrFail($request->produk_id);
-
-    $subtotal = $request->jumlah * $produk->harga;
-
-    $cartItem = $cart->items()->where('produk_id', $produk->id)->first();
-
-    if ($cartItem) {
-        $newJumlah = $cartItem->jumlah + $request->jumlah;
-        $cartItem->update([
-            'jumlah' => $newJumlah,
-            'subtotal' => $newJumlah * $produk->harga
+    {
+        $request->validate([
+            'produk_id' => 'required|exists:produk,id',
+            'jumlah' => 'required|integer|min:1'
         ]);
-    } else {
-        $cart->items()->create([
-            'produk_id' => $produk->id,
-            'jumlah' => $request->jumlah,
-            'subtotal' => $subtotal
-        ]);
-    }
 
-    // Handle buy now action (redirect to cart if requested)
-    if ($request->has('redirect_to_cart')) {
-        return redirect()->route('cart.index');
-    }
+        $user = Auth::user();
+        $cart = $user->getOrCreateCart();
+        $produk = Produk::findOrFail($request->produk_id);
 
-    if ($request->ajax() || $request->wantsJson()) {
-        return response()->json(['success' => true]);
-    }
+        $subtotal = $request->jumlah * $produk->harga;
 
-    return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang');
-}
+        $cartItem = $cart->items()->where('produk_id', $produk->id)->first();
+
+        if ($cartItem) {
+            $newJumlah = $cartItem->jumlah + $request->jumlah;
+            $cartItem->update([
+                'jumlah' => $newJumlah,
+                'subtotal' => $newJumlah * $produk->harga
+            ]);
+        } else {
+            $cart->items()->create([
+                'produk_id' => $produk->id,
+                'jumlah' => $request->jumlah,
+                'subtotal' => $subtotal
+            ]);
+        }
+
+        // Handle buy now action (redirect to cart if requested)
+        if ($request->has('redirect_to_cart')) {
+            return redirect()->route('cart.index');
+        }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => true]);
+        }
+
+        return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang');
+    }
 
     /**
      * Mengubah jumlah produk di keranjang (POST /cart/update).
@@ -158,5 +158,21 @@ class CartController extends Controller
         // ...
 
         return redirect()->route('checkout.index');
+    }
+
+    /**
+     * Get the count of items in the authenticated user's cart.
+     */
+    public function getCartItemCount()
+    {
+        $user = auth()->user();
+        $cartItemCount = 0;
+        if ($user) {
+            $cart = $user->cart()->first();
+            if ($cart) {
+                $cartItemCount = $cart->items()->sum('jumlah');
+            }
+        }
+        return response()->json(['count' => $cartItemCount]);
     }
 }

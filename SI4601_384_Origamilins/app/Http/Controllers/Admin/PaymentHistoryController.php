@@ -31,7 +31,10 @@ class PaymentHistoryController extends Controller
             $query->where(function($q) use ($search) {
                 $q->where('order_id', 'like', "%{$search}%")
                   ->orWhere('nama', 'like', "%{$search}%")
-                  ->orWhere('transaction_id', 'like', "%{$search}%");
+                  ->orWhereHas('user', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                  });
             });
         }
 

@@ -494,25 +494,59 @@
                             <h2 class="card-title">Detail Produk</h2>
                         </div>
                         <div class="card-body">
-                        @forelse($payment->items ?? [] as $item)
-                            <div class="product-item">
-                                <div class="product-image">
-                                    @if($item->produk->gambar)
-                                        <img src="{{ $item->produk->gambar }}" alt="{{ $item->produk->nama }}" style="width:60px;height:60px;border-radius:8px;">
-                                    @else
-                                        🐦
-                                    @endif
-                                </div>
-                                <div class="product-details">
-                                    <div class="product-name">{{ $item->produk->nama }}</div>
-                                    <div class="product-category">{{ $item->produk->kategori }}</div>
-                                    <div class="product-qty">Qty: {{ $item->jumlah }}</div>
-                                </div>
-                                <div class="product-price">Rp {{ number_format($item->produk->harga * $item->jumlah, 0, ',', '.') }}</div>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
+    @forelse($items as $item)
+    <div class="product-item">
+        <div class="product-image">
+            @php
+                // Jika dari model Pesanan, ambil relasi produk
+                if (is_object($item) && isset($item->produk)) {
+                    $produk = $item->produk;
+                    $jumlah = $item->jumlah;
+                } elseif (is_array($item)) {
+                    $produk = (object) $item;
+                    $jumlah = $item['jumlah'] ?? 1;
+                } else {
+                    $produk = null;
+                    $jumlah = 1;
+                }
+                $gambar = $produk->gambar ?? null;
+                $nama = $produk->nama ?? 'Produk';
+                $kategori = $produk->kategori ?? 'Kategori';
+                $harga = $produk->harga ?? 0;
+            @endphp
+
+            @if($gambar)
+                <img src="{{ $gambar }}" alt="{{ $nama }}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;">
+            @else
+                🐦
+            @endif
+        </div>
+        <div class="product-details">
+            <div class="product-name">{{ $nama }}</div>
+            <div class="product-category">{{ $kategori }}</div>
+            <div class="product-qty">Qty: {{ $jumlah }}</div>
+            <div class="product-price">
+                Rp {{ number_format($harga * $jumlah, 0, ',', '.') }}
+            </div>
+        </div>
+    </div>
+@empty
+    <div class="text-center text-muted py-4">
+        <i class="fas fa-box-open fa-3x mb-3"></i>
+        <p>Tidak ada produk ditemukan</p>
+        @if(auth()->check())
+            <div class="mt-3">
+                <small class="text-info">
+                    Debug Info: 
+                    Payment ID: {{ $payment->id ?? 'N/A' }} | 
+                    Items Count: {{ is_countable($items) ? count($items) : $items->count() }} |
+                    User ID: {{ auth()->id() }}
+                </small>
+            </div>
+        @endif
+    </div>
+@endforelse
+</div>
 
                     <div class="content-card mt-4">
                         <div class="card-header">

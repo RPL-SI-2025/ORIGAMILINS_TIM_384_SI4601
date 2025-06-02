@@ -80,4 +80,55 @@ class MidtransService
             ];
         }
     }
+
+    public function createTransaction($params)
+    {
+        try {
+            $snapToken = Snap::getSnapToken($params);
+            return [
+                'success' => true,
+                'data' => [
+                    'snap_token' => $snapToken
+                ]
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+    public function refundTransaction($orderId, $params)
+    {
+        try {
+            $refundResponse = Transaction::refund($orderId, $params);
+            
+            return [
+                'success' => true,
+                'data' => $refundResponse
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+    public function getTransactionStatus($orderId)
+    {
+        try {
+            $status = Transaction::status($orderId);
+            return [
+                'success' => true,
+                'data' => $status
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
 }

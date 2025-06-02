@@ -31,10 +31,6 @@ Route::get('/', [WelcomeController::class, 'index'])->name('home');
 Route::get('/event', [UserEventController::class, 'index'])->name('event.melihat_event');
 
 // Authentication
-Route::get('/logout', function () {
-    Auth::logout();
-    return redirect('/');
-})->name('logout');
 
 // User Profile (butuh login)
 Route::middleware(['auth'])->group(function () {
@@ -84,7 +80,7 @@ Route::middleware(['auth'])->group(function () {
         }
         $products = $query->paginate(9);
         $categories = \App\Models\Produk::distinct()->pluck('kategori');
-        
+
         $cartCount = 0;
         if (Auth::check()) {
             try {
@@ -96,20 +92,20 @@ Route::middleware(['auth'])->group(function () {
                 $cartCount = 0;
             }
         }
-        
+
         return view('user.produk.etalase', compact('products', 'categories', 'cartCount'));
     })->name('etalase');
 
     // Detail Produk Route 
     Route::get('/produk/{id}', function ($id) {
         $produk = \App\Models\Produk::findOrFail($id);
-        
+
         // Ambil ulasan produk
         $ulasan = \App\Models\ProductReview::where('produk_id', $id)
-                                    ->with('user')
-                                    ->orderBy('created_at', 'desc')
-                                    ->get();
-        
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         // Hitung jumlah item di keranjang
         $cartCount = 0;
         if (Auth::check()) {
@@ -117,13 +113,13 @@ Route::middleware(['auth'])->group(function () {
             $cart = $cartService->getOrCreateCart(Auth::user());
             $cartCount = $cart->items()->sum('jumlah');
         }
-        
+
         // Ambil produk terkait (kategori sama, exclude produk saat ini)
         $produkTerkait = \App\Models\Produk::where('kategori', $produk->kategori)
-                                        ->where('id', '!=', $id)
-                                        ->limit(4)
-                                        ->get();
-        
+            ->where('id', '!=', $id)
+            ->limit(4)
+            ->get();
+
         return view('user.produk.produk-detail', compact('produk', 'ulasan', 'cartCount', 'produkTerkait'));
     })->name('detail.produk');
     Route::get('/events', [UserEventController::class, 'index'])->name('user.event.index');
@@ -136,6 +132,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cart/delete', [CartController::class, 'delete'])->name('cart.delete');
     Route::post('/cart/update-total', [CartController::class, 'updateTotal'])->name('cart.update-total');
     Route::get('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::get('/cart-item-count', [CartController::class, 'getCartItemCount'])->name('cart.item.count');
     
 
     // Payment History Routes
@@ -148,19 +145,23 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/payments/shipping', [PaymentsController::class, 'shipping'])->name('user.payments.shipping');
     Route::get('/user/payments/checkout', [PaymentsController::class, 'checkout'])->name('user.payments.checkout');
 
-    Route::get('/payment/success/{order_id}', function($order_id) {
-        $payment = \App\Models\Payments::where('order_id', $order_id)->firstOrFail();
-        return view('user.payments.success', compact('payment'));
-    })->name('payment.success');
+    Route::get('/payment/success/{order_id}', [PaymentsController::class, 'success'])->name('payment.success');
 
-    Route::get('/payment/pending/{order_id}', function($order_id) {
+    Route::get('/payment/pending/{order_id}', function ($order_id) {
         $payment = \App\Models\Payments::where('order_id', $order_id)->firstOrFail();
         return view('user.payments.status', compact('payment'));
     })->name('payment.pending');
 
+    Route::post('/payments/callback', [PaymentsController::class, 'callback']);
+
     // Notifikasi Routes
     Route::get('/notifikasi', [UserNotifikasiController::class, 'index'])->name('user.notifikasi');
     Route::post('/notifikasi/{id}/read', [UserNotifikasiController::class, 'read'])->name('user.notifikasi.read');
+
+    // Konfirmasi terima barang
+    Route::post('/pesanan/{id}/terima', [UserPesananController::class, 'konfirmasiTerima'])->name('pesanan.terima');
+    // Simpan ulasan
+    Route::post('/pesanan/{id}/ulasan', [UserPesananController::class, 'simpanUlasan'])->name('ulasan.store');
 });
 
 // Produk Input Publik
@@ -279,16 +280,16 @@ Route::prefix('admin')->middleware(['auth', AdminMiddleware::class])->group(func
     });
 });
 
-    // Pembayaran
-    Route::prefix('user/payments')->name('user.payments.')->middleware(['auth'])->group(function () {
-        Route::get('/', [PaymentsController::class, 'index'])->name('index'); // Menampilkan form pembayaran
-        Route::post('/', [PaymentsController::class, 'store'])->name('store'); // Menyimpan data pembayaran
-        Route::get('/{payment}/finish', [PaymentsController::class, 'finish'])->name('finish'); // Redirect setelah pembayaran selesai
-        Route::post('/callback', [PaymentsController::class, 'callback'])->name('callback'); // Callback dari Midtrans
-    });
+// Pembayaran
+Route::prefix('user/payments')->name('user.payments.')->middleware(['auth'])->group(function () {
+    Route::get('/', [PaymentsController::class, 'index'])->name('index'); // Menampilkan form pembayaran
+    Route::post('/', [PaymentsController::class, 'store'])->name('store'); // Menyimpan data pembayaran
+    Route::get('/{payment}/finish', [PaymentsController::class, 'finish'])->name('finish'); // Redirect setelah pembayaran selesai
+    Route::post('/callback', [PaymentsController::class, 'callback'])->name('callback'); // Callback dari Midtrans
+});
 
 // Debug Route
-Route::post('/user/profile/photo', function(Request $request) {
+Route::post('/user/profile/photo', function (Request $request) {
     $request->validate([
         'photo' => 'required|image|max:1024',
     ]);
@@ -302,7 +303,9 @@ Route::post('/user/profile/photo', function(Request $request) {
 Route::get('/reset-password', [ResetPasswordController::class, 'showForm'])->name('reset.password.form');
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset.password');
 
-Route::middleware(['auth'])->group(function() {
+Route::middleware(['auth'])->group(function () {
     Route::get('/pesanan-saya', [App\Http\Controllers\UserPesananController::class, 'index'])->name('user.pesanan.index');
 });
+
+
 
