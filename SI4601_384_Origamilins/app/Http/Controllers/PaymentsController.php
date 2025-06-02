@@ -2,6 +2,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payments;
+use Illuminate\Support\Facades\View;
+use App\Models\Pesanan;
+use App\Models\Notification;
 use App\Services\MidtransService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -19,6 +22,19 @@ class PaymentsController extends Controller
     /**
      * Show payment form
      */
+    public function boot()
+{
+    View::composer('user.*', function ($view) {
+        $notifBelumDibuka = 0;
+        if (auth()->check()) {
+            $notifBelumDibuka = Pesanan::where('user_id', auth()->id())
+                ->whereIn('status', ['Dalam Proses', 'Siap Dikirim', 'Dikirim'])
+                ->where('is_read', 0)
+                ->count();
+        }
+        $view->with('notifBelumDibuka', $notifBelumDibuka);
+    });
+}
     public function create()
     {
         $user = Auth::user();
@@ -26,7 +42,7 @@ class PaymentsController extends Controller
         $cart = $user->cart()->with('items.produk')->first();
 
         $products = [];
-        $subtotal = 0; // Tambahkan inisialisasi subtotal
+        $subtotal = 0; 
         if ($cart) {
             foreach ($cart->items as $item) {
                 $products[] = [
@@ -66,7 +82,16 @@ class PaymentsController extends Controller
             ['nama' => 'Lembang (Bandung Barat)', 'jarak' => 21],
     ];
 
-        return view('user.payments.create', compact('products', 'kecamatanList', 'subtotal'));
+    $notifBelumDibuka = Pesanan::where('user_id', auth()->id())
+        ->whereIn('status', ['Dalam Proses', 'Siap Dikirim', 'Dikirim'])
+        ->where('is_read', 0)
+        ->count();
+
+    $notifikasi = Notification::where('user_id', auth()->id())
+        ->orderBy('created_at', 'desc')
+        ->take(10)
+        ->get();
+         return view('user.payments.create', compact('products', 'kecamatanList', 'subtotal', 'notifBelumDibuka', 'notifikasi'));
     }
 
     public function index()
@@ -225,15 +250,38 @@ class PaymentsController extends Controller
             $transactionStatus = $statusResponse['status']->transaction_status ?? null;
 
             if ($transactionStatus == 'settlement' || $transactionStatus == 'capture') {
-                if ($payment->status != 'success') {
-                    $payment->status = 'success';
-                    $payment->paid_at = now();
-                    $payment->save();
-                }
-                    return view('user.payments.success', compact('payment', 'alamat'));
+    if ($payment->status != 'success') {
+        $payment->status = 'success';
+        $payment->paid_at = now();
+        $payment->save();
+
+        // === Tambahkan proses ini ===
+        $user = auth()->user();
+        $cart = $user->cart()->with('items.produk')->first();
+        if ($cart) {
+            foreach ($cart->items as $item) {
+                Pesanan::create([
+                    'user_id' => $user->id,
+                    'produk_id' => $item->produk_id,
+                    'jumlah' => $item->jumlah,
+                    'total_harga' => $item->produk->harga * $item->jumlah,
+                    'status' => 'Rencana',
+                    'payment_id' => $payment->id,
+                ]);
             }
+            // Kosongkan cart setelah checkout
+            $cart->items()->delete();
+        }
+    }
+    return view('user.payments.success', compact('payment', 'alamat'));
+}
         }
 
-        return view('user.payments.status', compact('payment'));
+        // Jika status tidak settlement atau capture, tampilkan pesan error
+        return view('user.payments.error', [
+            'message' => 'Pembayaran tidak berhasil. Silakan coba lagi.',
+            'payment' => $payment,
+            'alamat' => $alamat,
+        ]);
     }
 }
