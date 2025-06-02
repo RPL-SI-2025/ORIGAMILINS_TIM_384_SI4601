@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light" style="background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); font-family:'Poppins',Arial,sans-serif;">
+<nav class="navbar navbar-expand-lg navbar-light" style="background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); font-family:'Poppins',Arial,sans-serif; position:fixed; width:100%; top:0; z-index:1000;">
     <div class="container">
         {{-- Logo --}}
         <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ url('/') }}">
@@ -94,6 +94,13 @@
                                     <i class="fas fa-box me-2"></i> Pesanan Saya
                                 </a>
                             </li>
+
+                            <li>
+                                <a class="dropdown-item" href="{{ route('user.payments.history') }}">
+                                    <i class="fas fa-receipt me-2"></i>  Riwayat Transaksi
+                                </a>
+                            </li>
+
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
