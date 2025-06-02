@@ -12,7 +12,7 @@
         }
 
         .main-content {
-            padding-top: 20px; 
+            padding-top: 80px; 
             min-height: 100vh;
         }
 

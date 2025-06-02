@@ -44,9 +44,9 @@
                                 @if($payment->status == 'refund_requested')
                                     <span class="badge bg-warning text-dark">Menunggu Refund</span>
                                 @elseif($payment->status == 'refunded')
-                                    <span class="badge bg-success">Refund Diterima</span>
+                                    <span class="badge bg-success text-white">Refund Diterima</span>
                                 @elseif($payment->status == 'refund_rejected')
-                                    <span class="badge bg-danger">Refund Ditolak</span>
+                                    <span class="badge bg-danger text-white">Refund Ditolak</span>
                                 @endif
                             </td>
                         </tr>

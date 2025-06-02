@@ -132,7 +132,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cart/delete', [CartController::class, 'delete'])->name('cart.delete');
     Route::post('/cart/update-total', [CartController::class, 'updateTotal'])->name('cart.update-total');
     Route::get('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
-
+    Route::get('/cart-item-count', [CartController::class, 'getCartItemCount'])->name('cart.item.count');
+    
 
     // Payment History Routes
     Route::get('/payments/history', [UserPaymentHistoryController::class, 'index'])->name('user.payments.history');
