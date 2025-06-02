@@ -41,8 +41,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profilpengguna', [UserProfileController::class, 'create'])->name('profile.create');
     Route::post('/profilpengguna', [UserProfileController::class, 'store'])->name('profile.store');
 
-    // pesanan saya
-    Route::get('/pesanan-saya/{id_pesanan}', [UserPesananController::class, 'show'])->name('pesanan.show');
+    // Pesanan User Routes
+    Route::prefix('my-orders')->name('user.pesanan.')->group(function () {
+        Route::get('/', [UserPesananController::class, 'index'])->name('index');
+        Route::get('/{id_pesanan}', [UserPesananController::class, 'show'])->name('show');
+        Route::post('/{id_pesanan}/selesai', [UserPesananController::class, 'selesai'])->name('selesai');
+    });
 
     // Dashboard
     Route::get('/dashboard', function () {
@@ -52,7 +56,7 @@ Route::middleware(['auth'])->group(function () {
         return redirect()->route('etalase');
     })->name('dashboard');
 
-    // Pesanan Produk
+    // Pesanan Produk Routes
     Route::get('/pesananproduk', [PesananController::class, 'index'])->name('pesananproduk.index');
     Route::get('/pesananproduk/{id_pesanan}/edit', [PesananController::class, 'edit'])->name('pesananproduk.edit');
     Route::put('/pesananproduk/{id_pesanan}', [PesananController::class, 'update'])->name('pesananproduk.update');
@@ -302,8 +306,4 @@ Route::post('/user/profile/photo', function(Request $request) {
 
 Route::get('/reset-password', [ResetPasswordController::class, 'showForm'])->name('reset.password.form');
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset.password');
-
-Route::middleware(['auth'])->group(function() {
-    Route::get('/pesanan-saya', [App\Http\Controllers\UserPesananController::class, 'index'])->name('user.pesanan.index');
-});
 

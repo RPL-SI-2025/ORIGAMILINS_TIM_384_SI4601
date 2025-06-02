@@ -92,19 +92,24 @@ class Pesanan extends Model
         return $query;
     }
 
-    // Accessor for status badge
+    // Get status badge class
     public function getStatusBadgeAttribute()
     {
-        $badges = [
-            'Rencana' => 'bg-warning',
-            'Dalam Proses' => 'bg-info',
-            'Siap Dikirim' => 'bg-primary',
-            'Dikirim' => 'bg-purple',
-            'Selesai' => 'bg-success',
-            'Dibatalkan' => 'bg-danger'
-        ];
+        return match($this->status) {
+            'Rencana' => 'bg-warning text-dark',
+            'Dalam Proses' => 'bg-info text-white',
+            'Siap Dikirim' => 'bg-primary text-white',
+            'Dikirim' => 'bg-warning text-dark',
+            'Selesai' => 'bg-success text-white',
+            'Dibatalkan' => 'bg-danger text-white',
+            default => 'bg-secondary text-white'
+        };
+    }
 
-        return $badges[$this->status] ?? 'bg-secondary';
+    // Get status badge class for payment
+    public function getPaymentStatusBadgeAttribute()
+    {
+        return $this->status_pembayaran === 'Paid' ? 'bg-success text-white' : 'bg-danger text-white';
     }
 
     // Helper methods
