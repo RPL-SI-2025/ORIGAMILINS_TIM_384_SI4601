@@ -23,7 +23,7 @@
                 </div>
                 <div class="card-body py-2">
                     <form action="{{ route('admin.event.index') }}" method="GET">
-                        <div class="row g-2">
+                        <div class="row g-2 align-items-end">
                             <div class="col-md-3">
                                 <div class="mb-2">
                                     <label for="nama_event" class="form-label small">Nama Event</label>
@@ -49,15 +49,21 @@
                                 </div>
                             </div>
                             <div class="col-md-2">
+                                <div class="mb-2">
                                     <label for="status" class="form-label small">Status</label>
                                     <select class="form-select form-select-sm" id="status" name="status">
                                         <option value="">Semua Status</option>
                                         <option value="tersedia" {{ request('status') == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
                                         <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-2">
                                     <label for="harga_range" class="form-label small">Rentang Harga</label>
-                                    <select class="form-select" id="harga_range" name="harga_range">
+                                    <select class="form-select form-select-sm" id="harga_range" name="harga_range">
                                         <option value="">Semua Harga</option>
-                                        <option value="0-10000" {{ request('harga_range') == '0-10000' ? 'selected' : '' }}>Rp 0 - 100.00</option>
+                                        <option value="0-10000" {{ request('harga_range') == '0-10000' ? 'selected' : '' }}>Rp 0 - 10.000</option>
                                         <option value="10000-25000" {{ request('harga_range') == '10000-25000' ? 'selected' : '' }}>Rp 10.000 - 25.000</option>
                                         <option value="25000-50000" {{ request('harga_range') == '25000-50000' ? 'selected' : '' }}>Rp 25.000 - 50.000</option>
                                         <option value="50000-75000" {{ request('harga_range') == '50000-75000' ? 'selected' : '' }}>Rp 50.000 - 75.000</option>
@@ -66,10 +72,10 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="d-flex gap-2 mt-2">
-                            <button type="submit" class="btn btn-primary">Cari</button>
-                            <a href="{{ route('admin.event.index') }}" class="btn btn-secondary">Reset</a>
+                            <div class="col-md-12 d-flex gap-2 mt-2">
+                                <button type="submit" class="btn btn-primary">Cari</button>
+                                <a href="{{ route('admin.event.index') }}" class="btn btn-secondary">Reset</a>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -201,4 +207,4 @@
     margin-bottom: 1rem;
 }
 </style>
-@endsection 
+@endsection
